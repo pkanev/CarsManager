@@ -1,7 +1,7 @@
 ﻿using CarsManager.Application.Common.Mappings;
 using CarsManager.Domain.Entities;
 
-namespace CarsManager.Application.Employees.Queries.GetEmployeesWithPagination
+namespace CarsManager.Application.Employees.Queries.Dtos
 {
     public class EmployeeDto : IMapFrom<Employee>
     {

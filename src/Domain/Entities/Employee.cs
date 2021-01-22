@@ -15,8 +15,8 @@ namespace CarsManager.Domain.Entities
         public string PostCode { get; set; }
         public string Telephone { get; set; }
         public byte[] Photo { get; set; }
-        public int? VehicleId { get; set; }
-        public Vehicle Vehicle { get; set; }
+
+        public ICollection<Vehicle> Vehicles { get; set; } = new HashSet<Vehicle>();
         public ICollection<DomainEvent> DomainEvents { get; set; } = new HashSet<DomainEvent>();
     }
 }

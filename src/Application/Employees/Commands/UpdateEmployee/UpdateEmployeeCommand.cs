@@ -17,7 +17,6 @@ namespace CarsManager.Application.Employees.Commands.UpdateEmployee
         public string PostCode { get; set; }
         public string Telephone { get; set; }
         public byte[] Photo { get; set; }
-        public int? VehicleId { get; set; }
     }
 
     public class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmployeeCommand>
@@ -33,9 +32,7 @@ namespace CarsManager.Application.Employees.Commands.UpdateEmployee
             var entity = await context.Employees.FindAsync(request.Id);
 
             if (entity == null)
-            {
                 throw new NotFoundException(nameof(Employees), request.Id);
-            }
 
             entity.GivenName = request.GivenName;
             entity.MiddleName = request.MiddleName;
@@ -45,7 +42,6 @@ namespace CarsManager.Application.Employees.Commands.UpdateEmployee
             entity.PostCode = request.PostCode;
             entity.Telephone = request.Telephone;
             entity.Photo = request.Photo;
-            entity.VehicleId = request.VehicleId;
 
             await context.SaveChangesAsync(cancellationToken);
 
