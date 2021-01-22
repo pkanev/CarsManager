@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CarsManager.Domain.Common;
+using CarsManager.Domain.Enums;
 
 namespace CarsManager.Domain.Entities
 {
@@ -9,6 +10,8 @@ namespace CarsManager.Domain.Entities
         public int Id { get; set; }
         public Model Model { get; set; }
         public DateTime Year { get; set; }
+        public FuelType Fuel { get; set; }
+        public int EngineDisplacement { get; set; }
         public int Mileage { get; set; }
         public string LicencePlate { get; set; }
         public string Color { get; set; }
@@ -19,9 +22,8 @@ namespace CarsManager.Domain.Entities
         public int CoolantMileage { get; set; }
         public int FuelConsumption { get; set; }
         public int OilMileage { get; set; }
-        public int EmployeeId { get; set; }
-        public Employee Employee { get; set; }
 
+        public ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
         public ICollection<Repair> Repairs { get; private set; } = new HashSet<Repair>();
         public ICollection<MOT> MOTs { get; private set; } = new HashSet<MOT>();
         public ICollection<CivilLiability> CivilLiabilities { get; private set; } = new HashSet<CivilLiability>();

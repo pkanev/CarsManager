@@ -17,7 +17,6 @@ namespace CarsManager.Application.Employees.Commands.CreateEmployee
         public string PostCode { get; set; }
         public string Telephone { get; set; }
         public byte[] Photo { get; set; }
-        public int? VehicleId { get; set; }
     }
 
     public class CreateEmployeeCommandHandler : IRequestHandler<CreateEmployeeCommand, int>
@@ -40,14 +39,12 @@ namespace CarsManager.Application.Employees.Commands.CreateEmployee
                 Address = request.Address,
                 PostCode = request.PostCode,
                 Telephone = request.Telephone,
-                Photo = request.Photo,
-                VehicleId = request.VehicleId
+                Photo = request.Photo
             };
 
             entity.DomainEvents.Add(new EmployeeCreatedEvent(entity));
 
-            context.Employees.Add(entity);
-
+            await context.Employees.AddAsync(entity);
             await context.SaveChangesAsync(cancellationToken);
 
             return entity.Id;
