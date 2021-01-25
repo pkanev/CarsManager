@@ -5,7 +5,7 @@ using CarsManager.Domain.Enums;
 
 namespace CarsManager.Domain.Entities
 {
-    public class Vehicle : AuditableEntity, IHasDomainEvent
+    public class Vehicle : AuditableEntity
     {
         public int Id { get; set; }
         public Model Model { get; set; }
@@ -29,6 +29,5 @@ namespace CarsManager.Domain.Entities
         public ICollection<CivilLiability> CivilLiabilities { get; private set; } = new HashSet<CivilLiability>();
         public ICollection<CarInsurance> CarInsurances { get; private set; } = new HashSet<CarInsurance>();
         public ICollection<Vignette> Vignettes { get; private set; } = new HashSet<Vignette>();
-        public ICollection<DomainEvent> DomainEvents { get; set; } = new HashSet<DomainEvent>();
     }
 }

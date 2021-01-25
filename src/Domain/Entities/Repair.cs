@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using CarsManager.Domain.Common;
 
 namespace CarsManager.Domain.Entities
 {
-    public class Repair : AuditableEntity, IHasDomainEvent
+    public class Repair : AuditableEntity
     {
         public int Id { get; set; }
         public int VehicleId { get; set; }
@@ -23,7 +22,5 @@ namespace CarsManager.Domain.Entities
         public bool IsOtherWorkDone { get; set; }
         public string Description { get; set; }
         public decimal InitialPrice { get; set; }
-
-        public ICollection<DomainEvent> DomainEvents { get; set; } = new HashSet<DomainEvent>();
     }
 }
