@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using CarsManager.Domain.Common;
 
 namespace CarsManager.Domain.Entities
 {
-    public class Make : AuditableEntity
+    public class Make
     {
         public int Id { get; set; }
         public string Name { get; set; }
