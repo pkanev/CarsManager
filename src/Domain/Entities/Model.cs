@@ -1,9 +1,8 @@
-﻿using CarsManager.Domain.Common;
-using CarsManager.Domain.Enums;
+﻿using CarsManager.Domain.Enums;
 
 namespace CarsManager.Domain.Entities
 {
-    public class Model : AuditableEntity
+    public class Model
     {
         public int Id { get; set; }
         public string Name { get; set; }

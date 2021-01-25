@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using CarsManager.Domain.Common;
 
 namespace CarsManager.Domain.Entities
 {
-    public class Employee : AuditableEntity
+    public class Employee
     {
         public int Id { get; set; }
         public string GivenName { get; set; }

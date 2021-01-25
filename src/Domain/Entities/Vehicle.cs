@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using CarsManager.Domain.Common;
 using CarsManager.Domain.Enums;
 
 namespace CarsManager.Domain.Entities
 {
-    public class Vehicle : AuditableEntity
+    public class Vehicle
     {
         public int Id { get; set; }
         public Model Model { get; set; }
