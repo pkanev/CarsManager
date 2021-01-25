@@ -3,7 +3,7 @@ using CarsManager.Domain.Common;
 
 namespace CarsManager.Domain.Entities
 {
-    public class Employee : AuditableEntity, IHasDomainEvent
+    public class Employee : AuditableEntity
     {
         public int Id { get; set; }
         public string GivenName { get; set; }
@@ -17,6 +17,5 @@ namespace CarsManager.Domain.Entities
         public byte[] Photo { get; set; }
 
         public ICollection<Vehicle> Vehicles { get; set; } = new HashSet<Vehicle>();
-        public ICollection<DomainEvent> DomainEvents { get; set; } = new HashSet<DomainEvent>();
     }
 }

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Domain.Entities;
-using CarsManager.Domain.Events;
 using MediatR;
 
 namespace CarsManager.Application.Makes.Commands.CreateMake
@@ -27,8 +26,6 @@ namespace CarsManager.Application.Makes.Commands.CreateMake
             {
                 Name = request.Name
             };
-
-            entity.DomainEvents.Add(new MakeCreatedEvent(entity));
 
             await context.Makes.AddAsync(entity);
             await context.SaveChangesAsync(cancellationToken);

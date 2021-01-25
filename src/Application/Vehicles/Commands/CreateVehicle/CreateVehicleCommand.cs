@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Domain.Entities;
 using CarsManager.Domain.Enums;
-using CarsManager.Domain.Events;
 using MediatR;
 
 namespace CarsManager.Application.Vehicles.Commands.CreateVehicle
@@ -71,8 +70,6 @@ namespace CarsManager.Application.Vehicles.Commands.CreateVehicle
 
             if (request.Vignette != null)
                 entity.Vignettes.Add(request.Vignette);
-
-            entity.DomainEvents.Add(new VehicleCreatedEvent(entity));
 
             context.Vehicles.Add(entity);
 

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Domain.Entities;
-using CarsManager.Domain.Events;
 using MediatR;
 
 namespace CarsManager.Application.Employees.Commands.CreateEmployee
@@ -41,8 +40,6 @@ namespace CarsManager.Application.Employees.Commands.CreateEmployee
                 Telephone = request.Telephone,
                 Photo = request.Photo
             };
-
-            entity.DomainEvents.Add(new EmployeeCreatedEvent(entity));
 
             await context.Employees.AddAsync(entity);
             await context.SaveChangesAsync(cancellationToken);
