@@ -1,4 +1,5 @@
-﻿using CarsManager.Application.Common.Interfaces;
+﻿using System;
+using CarsManager.Application.Common.Interfaces;
 using CarsManager.Infrastructure.Identity;
 using CarsManager.Infrastructure.Persistence;
 using CarsManager.Infrastructure.Services;
@@ -24,7 +25,11 @@ namespace CarsManager.Infrastructure
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseNpgsql(
                         configuration.GetConnectionString("DefaultConnection"),
-                        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+                        b =>
+                        {
+                            b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+                            b.ProvidePasswordCallback((string host, int port, string database, string username) => configuration["DbPassword"]);
+                        }));
             }
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
