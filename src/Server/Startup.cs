@@ -2,6 +2,7 @@ using CarsManager.Application;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Infrastructure;
 using CarsManager.Infrastructure.Persistence;
+using CarsManager.Server.Filters;
 using CarsManager.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,7 +37,8 @@ namespace Server
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>();
 
-            services.AddControllers();
+            services.AddControllers(options =>
+                options.Filters.Add<ApiExceptionFilterAttribute>());
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Server", Version = "v1" });

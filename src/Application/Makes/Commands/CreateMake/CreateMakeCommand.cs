@@ -24,7 +24,7 @@ namespace CarsManager.Application.Makes.Commands.CreateMake
         {
             var entity = new Make
             {
-                Name = request.Name
+                Name = request.Name.Trim()
             };
 
             await context.Makes.AddAsync(entity);

@@ -11,6 +11,8 @@ namespace CarsManager.Infrastructure.Persistence.Configurations
             builder.Property(m => m.Name)
                 .HasMaxLength(50)
                 .IsRequired();
+            builder.HasIndex(u => u.Name)
+                .IsUnique();
         }
     }
 }

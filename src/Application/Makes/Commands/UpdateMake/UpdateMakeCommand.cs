@@ -10,6 +10,10 @@ namespace CarsManager.Application.Makes.Commands.UpdateMake
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        public override bool Equals(object obj) => Id == (obj as UpdateMakeCommand).Id;
+
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     public class UpdateMakeCommandHandler : IRequestHandler<UpdateMakeCommand, Unit>
@@ -28,7 +32,7 @@ namespace CarsManager.Application.Makes.Commands.UpdateMake
             if (entity == null)
                 throw new NotFoundException(nameof(Makes), request.Id);
 
-            entity.Name = request.Name;
+            entity.Name = request.Name.Trim();
 
             await context.SaveChangesAsync(cancellationToken);
 
