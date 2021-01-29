@@ -24,11 +24,11 @@ namespace CarsManager.Application.Vehicles
         public int EmployeeId { get; set; }
         public Employee Employee { get; set; }
 
-        public ICollection<Repair> Repairs { get; private set; } = new HashSet<Repair>();
-        public ICollection<MOT> MOTs { get; private set; } = new HashSet<MOT>();
-        public ICollection<CivilLiability> CivilLiabilities { get; private set; } = new HashSet<CivilLiability>();
-        public ICollection<CarInsurance> CarInsurances { get; private set; } = new HashSet<CarInsurance>();
-        public ICollection<Vignette> Vignettes { get; private set; } = new HashSet<Vignette>();
+        //public ICollection<Repair> Repairs { get; private set; } = new HashSet<Repair>();
+        //public ICollection<MOT> MOTs { get; private set; } = new HashSet<MOT>();
+        //public ICollection<CivilLiability> CivilLiabilities { get; private set; } = new HashSet<CivilLiability>();
+        //public ICollection<CarInsurance> CarInsurances { get; private set; } = new HashSet<CarInsurance>();
+        //public ICollection<Vignette> Vignettes { get; private set; } = new HashSet<Vignette>();
 
         //public void Mapping(Profile profile)
         //{

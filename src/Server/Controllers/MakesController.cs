@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Makes.Commands.CreateMake;
 using CarsManager.Application.Makes.Commands.DeleteMake;
 using CarsManager.Application.Makes.Commands.UpdateMake;
+using CarsManager.Application.Makes.Queries.GetMake;
 using CarsManager.Application.Makes.Queries.GetMakes;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,15 +12,15 @@ namespace CarsManager.Server.Controllers
     {
         [HttpGet]
         public async Task<ActionResult<MakesVm>> Get()
-        {
-            return await Mediator.Send(new GetMakesQuery());
-        }
+            => await Mediator.Send(new GetMakesQuery());
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<MakeVm>> Get(int id)
+            => await Mediator.Send(new GetMakeQuery { Id = id });
 
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateMakeCommand command)
-        {
-            return await Mediator.Send(command);
-        }
+            => await Mediator.Send(command);
 
         [HttpPut]
         public async Task<ActionResult> Update(int id, UpdateMakeCommand command)

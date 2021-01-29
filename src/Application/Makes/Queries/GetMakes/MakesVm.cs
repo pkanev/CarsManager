@@ -5,6 +5,6 @@ namespace CarsManager.Application.Makes.Queries.GetMakes
 {
     public class MakesVm
     {
-        public List<MakeDto> Makes { get; set; }
+        public IList<MakeDto> Makes { get; set; }
     }
 }

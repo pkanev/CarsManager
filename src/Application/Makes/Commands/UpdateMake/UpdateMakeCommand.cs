@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Domain.Entities;
 using MediatR;
 
 namespace CarsManager.Application.Makes.Commands.UpdateMake
@@ -30,7 +31,7 @@ namespace CarsManager.Application.Makes.Commands.UpdateMake
             var entity = await context.Makes.FindAsync(request.Id);
 
             if (entity == null)
-                throw new NotFoundException(nameof(Makes), request.Id);
+                throw new NotFoundException(nameof(Make), request.Id);
 
             entity.Name = request.Name.Trim();
 

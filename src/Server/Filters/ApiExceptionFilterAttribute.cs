@@ -1,9 +1,10 @@
-﻿using CarsManager.Application.Common.Exceptions;
+﻿using System;
+using System.Collections.Generic;
+using CarsManager.Application.Common.Exceptions;
+using CarsManager.Application.Models.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic;
 
 namespace CarsManager.Server.Filters
 {
@@ -20,6 +21,8 @@ namespace CarsManager.Server.Filters
                 { typeof(NotFoundException), HandleNotFoundException },
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
+                { typeof(NonMatchingMakeException), HandleNonMatchingMakeException },
+                { typeof(InvalidDeleteOperationException), HandleInvalidDeleteOperationException },
             };
         }
 
@@ -137,6 +140,34 @@ namespace CarsManager.Server.Filters
             {
                 StatusCode = StatusCodes.Status500InternalServerError
             };
+
+            context.ExceptionHandled = true;
+        }
+
+        private void HandleNonMatchingMakeException(ExceptionContext context)
+        {
+            var exception = context.Exception as NonMatchingMakeException;
+            var details = new ValidationProblemDetails(context.ModelState)
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Detail = exception.Message,
+            };
+
+            context.Result = new BadRequestObjectResult(details);
+
+            context.ExceptionHandled = true;
+        }
+
+        private void HandleInvalidDeleteOperationException(ExceptionContext context)
+        {
+            var exception = context.Exception as InvalidDeleteOperationException;
+            var details = new ValidationProblemDetails(context.ModelState)
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Detail = exception.Message,
+            };
+
+            context.Result = new BadRequestObjectResult(details);
 
             context.ExceptionHandled = true;
         }

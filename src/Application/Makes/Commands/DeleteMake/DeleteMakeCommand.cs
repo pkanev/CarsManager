@@ -30,11 +30,12 @@ namespace CarsManager.Application.Makes.Commands.DeleteMake
             if (entity == null)
                 throw new NotFoundException(nameof(Make), request.Id);
 
-            var models = await context.Models
-                .Where(m => m.MakeId == request.Id)
-                .ToListAsync();
+            var hasModels = context.Models
+                .Any(m => m.MakeId == request.Id);
 
-            context.Models.RemoveRange(models);
+            if (hasModels)
+                throw new InvalidDeleteOperationException("Cannot delete a make with existing models.");
+
             context.Makes.Remove(entity);
 
             await context.SaveChangesAsync(cancellationToken);
