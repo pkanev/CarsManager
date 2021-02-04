@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Exceptions;
@@ -13,8 +12,8 @@ namespace CarsManager.Application.Vehicles.Commands.UpdateVehicle
     public class UpdateVehicleCommand : IRequest
     {
         public int Id { get; set; }
-        public Model Model { get; set; }
-        public DateTime Year { get; set; }
+        public int ModelId { get; set; }
+        public int Year { get; set; }
         public FuelType Fuel { get; set; }
         public int EngineDisplacement { get; set; }
         public int Mileage { get; set; }
@@ -27,10 +26,6 @@ namespace CarsManager.Application.Vehicles.Commands.UpdateVehicle
         public int CoolantMileage { get; set; }
         public int FuelConsumption { get; set; }
         public int OilMileage { get; set; }
-        public MOT MOT { get; set; }
-        public CivilLiability CivilLiability { get; set; }
-        public CarInsurance CarInsurance { get; set; }
-        public Vignette Vignette { get; set; }
     }
 
     public class UpdateVehicleCommandHandler : IRequestHandler<UpdateVehicleCommand, Unit>
@@ -49,7 +44,7 @@ namespace CarsManager.Application.Vehicles.Commands.UpdateVehicle
             if (entity == null)
                 throw new NotFoundException(nameof(Vehicle), request.Id);
 
-            entity.Model = request.Model;
+            entity.ModelId = request.ModelId;
             entity.Year = request.Year;
             entity.Fuel = request.Fuel;
             entity.EngineDisplacement = request.EngineDisplacement;
@@ -63,18 +58,6 @@ namespace CarsManager.Application.Vehicles.Commands.UpdateVehicle
             entity.CoolantMileage = request.CoolantMileage;
             entity.FuelConsumption = request.FuelConsumption;
             entity.OilMileage = request.OilMileage;
-
-            if (request.MOT != null && entity.MOTs.Last() != request.MOT)
-                entity.MOTs.Add(request.MOT);
-
-            if (request.CivilLiability != null && entity.CivilLiabilities.Last() != request.CivilLiability)
-                entity.CivilLiabilities.Add(request.CivilLiability);
-
-            if (request.CarInsurance != null && entity.CarInsurances.Last() != request.CarInsurance)
-                entity.CarInsurances.Add(request.CarInsurance);
-
-            if (request.Vignette != null && entity.Vignettes.Last() != request.Vignette)
-                entity.Vignettes.Add(request.Vignette);
 
             await context.SaveChangesAsync(cancellationToken);
 

@@ -6,7 +6,6 @@ using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Models.Queries.Dtos;
-using CarsManager.Application.Vehicles;
 using CarsManager.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -40,7 +39,7 @@ namespace CarsManager.Application.Models.Queries.GetModel
 
             var vehicles = await context.Vehicles
                     .AsNoTracking()
-                    .ProjectTo<VehicleDto>(mapper.ConfigurationProvider)
+                    .ProjectTo<VehicleForModelDto>(mapper.ConfigurationProvider)
                     .OrderBy(v => v.LicencePlate)
                     .ToListAsync(cancellationToken);
 

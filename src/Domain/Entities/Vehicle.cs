@@ -9,7 +9,7 @@ namespace CarsManager.Domain.Entities
         public int Id { get; set; }
         public int ModelId { get; set; }
         public Model Model { get; set; }
-        public DateTime Year { get; set; }
+        public int Year { get; set; }
         public FuelType Fuel { get; set; }
         public int EngineDisplacement { get; set; }
         public int Mileage { get; set; }

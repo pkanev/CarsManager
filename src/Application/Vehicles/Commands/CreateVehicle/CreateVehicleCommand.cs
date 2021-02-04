@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Vehicles.Commands.Dtos;
 using CarsManager.Domain.Entities;
 using CarsManager.Domain.Enums;
 using MediatR;
@@ -10,8 +12,8 @@ namespace CarsManager.Application.Vehicles.Commands.CreateVehicle
 {
     public class CreateVehicleCommand : IRequest<int>
     {
-        public Model Model { get; set; }
-        public DateTime Year { get; set; }
+        public int ModelId { get; set; }
+        public int Year { get; set; }
         public FuelType Fuel { get; set; }
         public int EngineDisplacement { get; set; }
         public int Mileage { get; set; }
@@ -24,10 +26,10 @@ namespace CarsManager.Application.Vehicles.Commands.CreateVehicle
         public int CoolantMileage { get; set; }
         public int FuelConsumption { get; set; }
         public int OilMileage { get; set; }
-        public MOT MOT { get; set; }
-        public CivilLiability CivilLiability { get; set; }
-        public CarInsurance CarInsurance { get; set; }
-        public Vignette Vignette { get; set; }
+        public LiabilityDto MOT { get; set; }
+        public LiabilityDto CivilLiability { get; set; }
+        public LiabilityDto CarInsurance { get; set; }
+        public LiabilityDto Vignette { get; set; }
     }
 
     public class CreateVehicleCommandHandler : IRequestHandler<CreateVehicleCommand, int>
@@ -41,14 +43,18 @@ namespace CarsManager.Application.Vehicles.Commands.CreateVehicle
 
         public async Task<int> Handle(CreateVehicleCommand request, CancellationToken cancellationToken)
         {
+            var model = await context.Models.FindAsync(request.ModelId);
+            if (model == null)
+                throw new NotFoundException(nameof(Model), request.ModelId);  
+
             var entity = new Vehicle
             {
-                Model = request.Model,
+                Model = model,
                 Year = request.Year,
                 Fuel = request.Fuel,
                 EngineDisplacement = request.EngineDisplacement,
                 Mileage = request.Mileage,
-                LicencePlate = request.LicencePlate,
+                LicencePlate = request.LicencePlate.ToUpper(),
                 Color = request.Color,
                 FirstRegistration = request.FirstRegistration,
                 BeltMileage = request.BeltMileage,
@@ -60,16 +66,16 @@ namespace CarsManager.Application.Vehicles.Commands.CreateVehicle
             };
 
             if (request.MOT != null)
-                entity.MOTs.Add(request.MOT);
+                entity.MOTs.Add(new MOT { Date = request.MOT.Date, Duration = TimeSpan.FromDays(request.MOT.DurationDays) });
 
             if (request.CivilLiability != null)
-                entity.CivilLiabilities.Add(request.CivilLiability);
+                entity.CivilLiabilities.Add(new CivilLiability { Date = request.CivilLiability.Date, Duration = TimeSpan.FromDays(request.CivilLiability.DurationDays) });
 
             if (request.CarInsurance != null)
-                entity.CarInsurances.Add(request.CarInsurance);
+                entity.CarInsurances.Add(new CarInsurance { Date = request.CarInsurance.Date, Duration = TimeSpan.FromDays(request.CarInsurance.DurationDays) });
 
             if (request.Vignette != null)
-                entity.Vignettes.Add(request.Vignette);
+                entity.Vignettes.Add(new Vignette { Date = request.Vignette.Date, Duration = TimeSpan.FromDays(request.Vignette.DurationDays) });
 
             context.Vehicles.Add(entity);
 

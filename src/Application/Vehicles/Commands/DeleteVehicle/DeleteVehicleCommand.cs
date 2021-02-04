@@ -29,6 +29,11 @@ namespace CarsManager.Application.Vehicles.Commands.DeleteVehicle
                 throw new NotFoundException(nameof(Vehicle), request.Id);
 
             entity.Employees.Clear();
+            entity.Repairs.Clear();
+            entity.MOTs.Clear();
+            entity.CivilLiabilities.Clear();
+            entity.CarInsurances.Clear();
+            entity.Vignettes.Clear();
             context.Vehicles.Remove(entity);
 
             await context.SaveChangesAsync(cancellationToken);
