@@ -16,7 +16,6 @@ namespace CarsManager.Application.Employees.Commands.UpdateEmployee
         public string Address { get; set; }
         public string PostCode { get; set; }
         public string Telephone { get; set; }
-        public byte[] Photo { get; set; }
     }
 
     public class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmployeeCommand>
@@ -41,7 +40,6 @@ namespace CarsManager.Application.Employees.Commands.UpdateEmployee
             entity.Address = request.Address;
             entity.PostCode = request.PostCode;
             entity.Telephone = request.Telephone;
-            entity.Photo = request.Photo;
 
             await context.SaveChangesAsync(cancellationToken);
 

@@ -15,7 +15,6 @@ namespace CarsManager.Application.Employees.Commands.CreateEmployee
         public string Address { get; set; }
         public string PostCode { get; set; }
         public string Telephone { get; set; }
-        public byte[] Photo { get; set; }
     }
 
     public class CreateEmployeeCommandHandler : IRequestHandler<CreateEmployeeCommand, int>
@@ -38,7 +37,6 @@ namespace CarsManager.Application.Employees.Commands.CreateEmployee
                 Address = request.Address,
                 PostCode = request.PostCode,
                 Telephone = request.Telephone,
-                Photo = request.Photo
             };
 
             await context.Employees.AddAsync(entity);
