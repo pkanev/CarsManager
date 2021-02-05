@@ -1,6 +1,8 @@
 using System.Reflection;
 using AutoMapper;
 using CarsManager.Application.Common.Behaviours;
+using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Utils;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +20,7 @@ namespace CarsManager.Application
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorisationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
+            services.AddSingleton<IImageManager, ImageManager>();
 
             return services;
         }

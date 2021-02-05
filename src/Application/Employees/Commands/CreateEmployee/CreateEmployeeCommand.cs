@@ -1,12 +1,15 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Mappings;
 using CarsManager.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace CarsManager.Application.Employees.Commands.CreateEmployee
 {
-    public class CreateEmployeeCommand : IRequest<int>
+    public class CreateEmployeeCommand : IRequest<int>, IMapFrom<CreateEmployeeDto>
     {
         public string GivenName { get; set; }
         public string MiddleName { get; set; }
@@ -15,29 +18,41 @@ namespace CarsManager.Application.Employees.Commands.CreateEmployee
         public string Address { get; set; }
         public string PostCode { get; set; }
         public string Telephone { get; set; }
+        public IFormFile File { get; set; }
+        public string Path { get; set; }
     }
 
     public class CreateEmployeeCommandHandler : IRequestHandler<CreateEmployeeCommand, int>
     {
         private readonly IApplicationDbContext context;
+        private readonly IImageManager imageManager;
 
-        public CreateEmployeeCommandHandler(IApplicationDbContext context)
+        public CreateEmployeeCommandHandler(IApplicationDbContext context, IImageManager imageManager)
         {
             this.context = context;
+            this.imageManager = imageManager;
         }
 
         public async Task<int> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
         {
+            var town = await context.Towns.FindAsync(request.TownId);
+            if (town == null)
+                throw new NotFoundException(nameof(Town), request.TownId);
+
             var entity = new Employee
             {
                 GivenName = request.GivenName,
                 MiddleName = request.MiddleName,
                 Surname = request.Surname,
-                TownId = request.TownId,
+                Town = town,
                 Address = request.Address,
                 PostCode = request.PostCode,
                 Telephone = request.Telephone,
             };
+
+            entity.ImageName = request.File == null
+                ? string.Empty
+                : await imageManager.SaveFileAsync(request.Path, request.File, cancellationToken);
 
             await context.Employees.AddAsync(entity);
             await context.SaveChangesAsync(cancellationToken);
