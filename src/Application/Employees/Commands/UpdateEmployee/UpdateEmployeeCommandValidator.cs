@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using System.Text.RegularExpressions;
+using CarsManager.Application.Common.Constants;
+using FluentValidation;
 
 namespace CarsManager.Application.Employees.Commands.UpdateEmployee
 {
@@ -7,15 +9,20 @@ namespace CarsManager.Application.Employees.Commands.UpdateEmployee
         public UpdateEmployeeCommandValidator()
         {
             RuleFor(e => e.GivenName)
-                .MaximumLength(100)
+                .MaximumLength(EmployeeConstants.NAME_MAX_LENGTH)
+                .Matches(EmployeeConstants.NAME_REGEX, RegexOptions.IgnoreCase)
                 .NotEmpty();
+            RuleFor(e => e.MiddleName)
+                .MaximumLength(EmployeeConstants.NAME_MAX_LENGTH)
+                .Matches(EmployeeConstants.NAME_REGEX, RegexOptions.IgnoreCase);
             RuleFor(e => e.Surname)
-                .MaximumLength(100)
+                .MaximumLength(EmployeeConstants.NAME_MAX_LENGTH)
+                .Matches(EmployeeConstants.NAME_REGEX, RegexOptions.IgnoreCase)
                 .NotEmpty();
             RuleFor(e => e.Address)
-                .MaximumLength(256);
+                .MaximumLength(EmployeeConstants.ADDRESS_MAX_LENGTH);
             RuleFor(e => e.Telephone)
-                .Matches(@"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$");
+                .Matches(EmployeeConstants.PHONE_REGEX);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using CarsManager.Application.Common.Constants;
 using FluentValidation;
 
 namespace CarsManager.Application.Vehicles.Commands.CreateVehicle
@@ -19,7 +20,7 @@ namespace CarsManager.Application.Vehicles.Commands.CreateVehicle
             RuleFor(v => v.Mileage)
                 .GreaterThanOrEqualTo(0);
             RuleFor(v => v.LicencePlate)
-                .Matches(@"^[A-Z]{1,2}[0-9]{4}[A-Z]{1,2}$", RegexOptions.IgnoreCase)
+                .Matches(VehicleConstants.LICENSE_PLATE_REGEX, RegexOptions.IgnoreCase)
                 .NotEmpty();
             RuleFor(v => v.Color)
                 .NotEmpty();

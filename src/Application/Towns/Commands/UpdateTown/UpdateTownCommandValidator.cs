@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CarsManager.Application.Common.Constants;
+using FluentValidation;
 
 namespace CarsManager.Application.Towns.Commands.UpdateTown
 {
@@ -7,7 +8,7 @@ namespace CarsManager.Application.Towns.Commands.UpdateTown
         public UpdateTownCommandValidator()
         {
             RuleFor(t => t.Name)
-                .MaximumLength(100)
+                .MaximumLength(TownConstants.NAME_MAX_LENGTH)
                 .NotEmpty();
         }
     }

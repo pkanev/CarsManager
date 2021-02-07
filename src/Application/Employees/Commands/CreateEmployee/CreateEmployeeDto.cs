@@ -11,6 +11,6 @@ namespace CarsManager.Application.Employees.Commands.CreateEmployee
         public string Address { get; set; }
         public string PostCode { get; set; }
         public string Telephone { get; set; }
-        public IFormFile File { get; set; }
+        public IFormFile Photo { get; set; }
     }
 }

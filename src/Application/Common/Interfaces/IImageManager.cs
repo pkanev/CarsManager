@@ -6,6 +6,7 @@ namespace CarsManager.Application.Common.Interfaces
 {
     public interface IImageManager
     {
-        Task<string> SaveFileAsync(string path, IFormFile file, CancellationToken cancellationToken);
+        Task<string> SaveFileAsync(string directory, IFormFile file, CancellationToken cancellationToken);
+        void DeleteFileAsync(string directory, string filename, CancellationToken cancellationToken);
     }
 }

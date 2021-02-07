@@ -10,15 +10,18 @@ namespace CarsManager.Application.Employees.Commands.DeleteEmplyee
     public class DeleteEmployeeCommand : IRequest
     {
         public int Id { get; set; }
+        public string PhotoPath { get; set; }
     }
 
     public class DeleteEmployeeCommandHandler : IRequestHandler<DeleteEmployeeCommand>
     {
         private readonly IApplicationDbContext context;
+        private readonly IImageManager imageManager;
 
-        public DeleteEmployeeCommandHandler(IApplicationDbContext context)
+        public DeleteEmployeeCommandHandler(IApplicationDbContext context, IImageManager imageManager)
         {
             this.context = context;
+            this.imageManager = imageManager;
         }
 
         public async Task<Unit> Handle(DeleteEmployeeCommand request, CancellationToken cancellationToken)
@@ -28,6 +31,10 @@ namespace CarsManager.Application.Employees.Commands.DeleteEmplyee
             if (entity == null)
                 throw new NotFoundException(nameof(Employee), request.Id);
 
+            if (!string.IsNullOrEmpty(entity.ImageName))
+                imageManager.DeleteFileAsync(request.PhotoPath, entity.ImageName, cancellationToken);
+
+            entity.Vehicles.Clear();
             context.Employees.Remove(entity);
             await context.SaveChangesAsync(cancellationToken);
             return Unit.Value;

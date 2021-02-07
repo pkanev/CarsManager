@@ -13,15 +13,15 @@ namespace CarsManager.Application.Common.Utils
     {
         private readonly string[] imageExtensions = new string[] { ".png", ".jpg", ".jpeg" };
 
-        public async Task<string> SaveFileAsync(string path, IFormFile file, CancellationToken cancellationToken)
+        public async Task<string> SaveFileAsync(string directory, IFormFile file, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(directory))
                 throw new ArgumentNullException("Image store path cannot be null or empty");
 
             if (file.Length == 0)
                 throw new ArgumentNullException("Image file length cannot be null");
 
-            Directory.CreateDirectory(path);
+            Directory.CreateDirectory(directory);
 
             string extension = Path.GetExtension(file.FileName).ToLower();
             if (!IsValidImage(extension))
@@ -29,12 +29,23 @@ namespace CarsManager.Application.Common.Utils
 
             string fileName = $"{Guid.NewGuid()}{extension}";
 
-            using (var fileStream = new FileStream(Path.Combine(path, fileName), FileMode.Create, FileAccess.Write))
+            using (var fileStream = new FileStream(Path.Combine(directory, fileName), FileMode.Create, FileAccess.Write))
             {
                 await file.CopyToAsync(fileStream, cancellationToken);
             }
 
             return fileName;
+        }
+
+        public void DeleteFileAsync(string directory, string filename, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(directory))
+                throw new ArgumentNullException("Image store path cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(filename))
+                throw new ArgumentNullException("File name cannot be null or empty");
+
+            File.Delete(Path.Combine(directory, filename));
         }
 
         private bool IsValidImage(string extension)

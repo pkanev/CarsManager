@@ -18,8 +18,8 @@ namespace CarsManager.Application.Employees.Commands.CreateEmployee
         public string Address { get; set; }
         public string PostCode { get; set; }
         public string Telephone { get; set; }
-        public IFormFile File { get; set; }
-        public string Path { get; set; }
+        public IFormFile Photo { get; set; }
+        public string PhotoPath { get; set; }
     }
 
     public class CreateEmployeeCommandHandler : IRequestHandler<CreateEmployeeCommand, int>
@@ -50,9 +50,9 @@ namespace CarsManager.Application.Employees.Commands.CreateEmployee
                 Telephone = request.Telephone,
             };
 
-            entity.ImageName = request.File == null
+            entity.ImageName = request.Photo == null
                 ? string.Empty
-                : await imageManager.SaveFileAsync(request.Path, request.File, cancellationToken);
+                : await imageManager.SaveFileAsync(request.PhotoPath, request.Photo, cancellationToken);
 
             await context.Employees.AddAsync(entity);
             await context.SaveChangesAsync(cancellationToken);
