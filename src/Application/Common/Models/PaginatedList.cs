@@ -1,8 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Common.Models
 {
@@ -13,7 +13,7 @@ namespace CarsManager.Application.Common.Models
         public int TotalPages { get; }
         public int TotalCount { get; }
 
-        public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
+        private PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);

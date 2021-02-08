@@ -9,30 +9,31 @@ using CarsManager.Application.Common.Mappings;
 using CarsManager.Application.Common.Models;
 using MediatR;
 
-namespace CarsManager.Application.Vehicles.Queries.GetVehiclesWithPagination
+namespace CarsManager.Application.MOTs.Queries.GetMOTsForVehicleWithPagination
 {
-    public class GetVehiclesWithPaginationQuery : IRequest<PaginatedList<ListedVehicleDto>>
+    public class GetMOTsForVehicleWithPaginationQuery : IRequest<PaginatedList<ListedMOTDto>>
     {
+        public int VehicleId { get; set; }
         public int PageNumber { get; set; } = PageConstants.DEFAULT_PAGE_NUMBER;
         public int PageSize { get; set; } = PageConstants.DEFAULT_PAGE_SIZE;
     }
 
-    public class GetVehiclesWithPaginationQueryHandler : IRequestHandler<GetVehiclesWithPaginationQuery, PaginatedList<ListedVehicleDto>>
+    public class GetMOTsForVehicleWithPaginationQueryHandler : IRequestHandler<GetMOTsForVehicleWithPaginationQuery, PaginatedList<ListedMOTDto>>
     {
         private readonly IApplicationDbContext context;
         private readonly IMapper mapper;
 
-        public GetVehiclesWithPaginationQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetMOTsForVehicleWithPaginationQueryHandler(IApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
         }
 
-        public async Task<PaginatedList<ListedVehicleDto>> Handle(GetVehiclesWithPaginationQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<ListedMOTDto>> Handle(GetMOTsForVehicleWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            return await context.Vehicles
-                .OrderBy(v => v.LicencePlate)
-                .ProjectTo<ListedVehicleDto>(mapper.ConfigurationProvider)
+            return await context.MOTs
+                .OrderByDescending(m => m.Date)
+                .ProjectTo<ListedMOTDto>(mapper.ConfigurationProvider)
                 .PaginatedListAsync(request.PageNumber, request.PageSize);
         }
     }

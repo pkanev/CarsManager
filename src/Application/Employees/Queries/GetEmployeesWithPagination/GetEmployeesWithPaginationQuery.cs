@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using CarsManager.Application.Common.Constants;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Mappings;
 using CarsManager.Application.Common.Models;
@@ -12,8 +13,8 @@ namespace CarsManager.Application.Employees.Queries.GetEmployeesWithPagination
 {
     public class GetEmployeesWithPaginationQuery : IRequest<PaginatedList<EmployeeDto>>
     {
-        public int PageNumber { get; set; } = 1;
-        public int PageSize { get; set; } = 10;
+        public int PageNumber { get; set; } = PageConstants.DEFAULT_PAGE_NUMBER;
+        public int PageSize { get; set; } = PageConstants.DEFAULT_PAGE_SIZE;
     }
 
     public class GetEmployeesWithPaginationQueryHandler : IRequestHandler<GetEmployeesWithPaginationQuery, PaginatedList<EmployeeDto>>
