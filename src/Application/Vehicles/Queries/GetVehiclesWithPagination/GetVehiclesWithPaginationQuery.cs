@@ -10,13 +10,13 @@ using MediatR;
 
 namespace CarsManager.Application.Vehicles.Queries.GetVehiclesWithPagination
 {
-    public class GetVehiclesWithPaginationQuery : IRequest<PaginatedList<VehicleDto>>
+    public class GetVehiclesWithPaginationQuery : IRequest<PaginatedList<ListedVehicleDto>>
     {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
     }
 
-    public class GetVehiclesWithPaginationQueryHandler : IRequestHandler<GetVehiclesWithPaginationQuery, PaginatedList<VehicleDto>>
+    public class GetVehiclesWithPaginationQueryHandler : IRequestHandler<GetVehiclesWithPaginationQuery, PaginatedList<ListedVehicleDto>>
     {
         private readonly IApplicationDbContext context;
         private readonly IMapper mapper;
@@ -27,12 +27,11 @@ namespace CarsManager.Application.Vehicles.Queries.GetVehiclesWithPagination
             this.mapper = mapper;
         }
 
-        public async Task<PaginatedList<VehicleDto>> Handle(GetVehiclesWithPaginationQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<ListedVehicleDto>> Handle(GetVehiclesWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            return await context.Employees
-                .OrderBy(e => e.Surname)
-                .ThenBy(e => e.GivenName)
-                .ProjectTo<VehicleDto>(mapper.ConfigurationProvider)
+            return await context.Vehicles
+                .OrderBy(v => v.LicencePlate)
+                .ProjectTo<ListedVehicleDto>(mapper.ConfigurationProvider)
                 .PaginatedListAsync(request.PageNumber, request.PageSize);
         }
     }

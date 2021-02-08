@@ -1,7 +1,9 @@
-﻿using CarsManager.Application.Vehicles.Commands.CreateVehicle;
+﻿using CarsManager.Application.Common.Models;
+using CarsManager.Application.Vehicles.Commands.CreateVehicle;
 using CarsManager.Application.Vehicles.Commands.DeleteVehicle;
 using CarsManager.Application.Vehicles.Commands.UpdateVehicle;
 using CarsManager.Application.Vehicles.Queries.GetVehicle;
+using CarsManager.Application.Vehicles.Queries.GetVehiclesWithPagination;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -9,6 +11,12 @@ namespace CarsManager.Server.Controllers
 {
     public class VehiclesController : ApiControllerBase
     {
+        [HttpGet]
+        public async Task<ActionResult<PaginatedList<ListedVehicleDto>>> GetTodoItemsWithPagination([FromQuery] GetVehiclesWithPaginationQuery query)
+        {
+            return await Mediator.Send(query);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<VehicleVm>> Get(int id)
             => await Mediator.Send(new GetVehicleQuery { Id = id });

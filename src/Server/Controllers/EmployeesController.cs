@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using CarsManager.Application.Employees.Commands.AssignVehicle;
 using CarsManager.Application.Employees.Commands.CreateEmployee;
 using CarsManager.Application.Employees.Commands.DeleteEmplyee;
+using CarsManager.Application.Employees.Commands.RemoveVehicle;
 using CarsManager.Application.Employees.Commands.UpdateEmployee;
 using CarsManager.Application.Employees.Commands.UploadPhoto;
 using CarsManager.Application.Employees.Queries.GetEmployee;
@@ -68,6 +70,22 @@ namespace CarsManager.Server.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             await Mediator.Send(new DeleteEmployeeCommand { Id = id, PhotoPath = configuration.GetValue<string>(PATH) });
+
+            return NoContent();
+        }
+
+        [HttpPost("{id}/vehicle/{vehicleId}")]
+        public async Task<ActionResult> AssignVehicle(int id, int vehicleId)
+        {
+            await Mediator.Send(new AssignVehicleCommand { EmployeeId = id, VehicleId = vehicleId });
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}/vehicle/{vehicleId}")]
+        public async Task<ActionResult> RemoveVehicle(int id, int vehicleId)
+        {
+            await Mediator.Send(new RemoveVehicleCommand { EmployeeId = id, VehicleId = vehicleId });
 
             return NoContent();
         }
