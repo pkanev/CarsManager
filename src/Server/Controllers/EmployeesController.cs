@@ -4,6 +4,8 @@ using CarsManager.Application.Employees.Commands.CreateEmployee;
 using CarsManager.Application.Employees.Commands.DeleteEmplyee;
 using CarsManager.Application.Employees.Commands.UpdateEmployee;
 using CarsManager.Application.Employees.Commands.UploadPhoto;
+using CarsManager.Application.Employees.Queries.GetEmployee;
+using CarsManager.Application.Employees.Queries.GetEmployees;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -11,6 +13,8 @@ namespace CarsManager.Server.Controllers
 {
     public class EmployeesController : ApiControllerBase
     {
+        private const string PATH = "Photos:Path";
+
         private readonly IConfiguration configuration;
         private readonly IMapper mapper;
 
@@ -20,11 +24,19 @@ namespace CarsManager.Server.Controllers
             this.mapper = mapper;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<EmployeesVm>> Get()
+            => await Mediator.Send(new GetEmployeesQuery());
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<EmployeeVm>> Get(int id)
+            => await Mediator.Send(new GetEmployeeQuery { Id = id, PhotoPath = configuration.GetValue<string>(PATH) });
+
         [HttpPost]
         public async Task<ActionResult<int>> Create([FromForm] CreateEmployeeDto dto)
         {
             var command = mapper.Map<CreateEmployeeCommand>(dto);
-            command.PhotoPath = configuration.GetValue<string>("Photos:Path");
+            command.PhotoPath = configuration.GetValue<string>(PATH);
             return await Mediator.Send(command);
         }
 
@@ -46,7 +58,7 @@ namespace CarsManager.Server.Controllers
                 return BadRequest();
 
             var command = mapper.Map<UploadPhotoCommand>(dto);
-            command.PhotoPath = configuration.GetValue<string>("Photos:Path");
+            command.PhotoPath = configuration.GetValue<string>(PATH);
             await Mediator.Send(command);
 
             return NoContent();
@@ -55,7 +67,7 @@ namespace CarsManager.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await Mediator.Send(new DeleteEmployeeCommand { Id = id, PhotoPath = configuration.GetValue<string>("Photos:Path") });
+            await Mediator.Send(new DeleteEmployeeCommand { Id = id, PhotoPath = configuration.GetValue<string>(PATH) });
 
             return NoContent();
         }

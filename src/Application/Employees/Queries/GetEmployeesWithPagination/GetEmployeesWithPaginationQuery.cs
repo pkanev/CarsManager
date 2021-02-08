@@ -6,7 +6,6 @@ using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Mappings;
 using CarsManager.Application.Common.Models;
-using CarsManager.Application.Employees.Queries.Dtos;
 using MediatR;
 
 namespace CarsManager.Application.Employees.Queries.GetEmployeesWithPagination

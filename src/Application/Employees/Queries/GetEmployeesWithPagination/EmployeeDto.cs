@@ -1,7 +1,7 @@
 ﻿using CarsManager.Application.Common.Mappings;
 using CarsManager.Domain.Entities;
 
-namespace CarsManager.Application.Employees.Queries.Dtos
+namespace CarsManager.Application.Employees.Queries.GetEmployeesWithPagination
 {
     public class EmployeeDto : IMapFrom<Employee>
     {
@@ -13,7 +13,6 @@ namespace CarsManager.Application.Employees.Queries.Dtos
         public string Address { get; set; }
         public string PostCode { get; set; }
         public string Telephone { get; set; }
-        public byte[] Photo { get; set; }
-        public int? VehicleId { get; set; }
+        public string ImageName { get; set; }
     }
 }

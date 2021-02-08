@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Interfaces;
-using CarsManager.Application.Employees.Queries.Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,9 +29,10 @@ namespace CarsManager.Application.Employees.Queries.GetEmployees
             return new EmployeesVm
             {
                 Employees = await context.Employees
-                    .ProjectTo<EmployeeDto>(mapper.ConfigurationProvider)
+                    .ProjectTo<ListedEmployeeDto>(mapper.ConfigurationProvider)
                     .OrderBy(e => e.Surname)
                     .ThenBy(e => e.GivenName)
+                    .ThenBy(e => e.MiddleName)
                     .ToListAsync()
             };
         }
