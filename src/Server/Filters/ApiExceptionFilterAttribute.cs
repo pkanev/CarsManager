@@ -25,6 +25,7 @@ namespace CarsManager.Server.Filters
                 { typeof(InvalidDeleteOperationException), HandleInvalidDeleteOperationException },
                 { typeof(InvalidImageTypeException), HandleInvalidImageTypeException },
                 { typeof(VehicleAlreadyRegisteredException), HandleVehicleAlreadyRegisteredException},
+                { typeof(InvalidLiabilityTypeException), HandleInvalidLiabilityTypeException},
             };
         }
 
@@ -191,6 +192,20 @@ namespace CarsManager.Server.Filters
         private void HandleVehicleAlreadyRegisteredException(ExceptionContext context)
         {
             var exception = context.Exception as VehicleAlreadyRegisteredException;
+            var details = new ValidationProblemDetails(context.ModelState)
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Detail = exception.Message,
+            };
+
+            context.Result = new BadRequestObjectResult(details);
+
+            context.ExceptionHandled = true;
+        }
+
+        private void HandleInvalidLiabilityTypeException(ExceptionContext context)
+        {
+            var exception = context.Exception as InvalidLiabilityTypeException;
             var details = new ValidationProblemDetails(context.ModelState)
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",

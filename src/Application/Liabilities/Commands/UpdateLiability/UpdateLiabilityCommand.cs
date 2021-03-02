@@ -3,33 +3,37 @@ using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Mappings;
 using CarsManager.Domain.Entities;
 using MediatR;
 
-namespace CarsManager.Application.MOTs.Commands.UpdateMOT
+namespace CarsManager.Application.Liabilities.Commands.UpdateLiability
 {
-    public class UpdateMOTCommand : IRequest
+    public class UpdateLiabilityCommand : IRequest, IMapFrom<UpdateLiabilityCommandDto>
     {
         public int Id { get; set; }
         public int VehicleId { get; set; }
         public DateTime Date { get; set; }
         public int DurationDays { get; set; }
+        public LiabilityType Liability { get; set; }
     }
 
-    public class UpdateMOTCommandHandler : IRequestHandler<UpdateMOTCommand>
+    public class UpdateLiabilityCommandHandler : IRequestHandler<UpdateLiabilityCommand>
     {
         private readonly IApplicationDbContext context;
+        private readonly ILiabilityUtils liabilityUtils;
 
-        public UpdateMOTCommandHandler(IApplicationDbContext context)
+        public UpdateLiabilityCommandHandler(IApplicationDbContext context, ILiabilityUtils liabilityUtils)
         {
             this.context = context;
+            this.liabilityUtils = liabilityUtils;
         }
-
-        public async Task<Unit> Handle(UpdateMOTCommand request, CancellationToken cancellationToken)
+        
+        public async Task<Unit> Handle(UpdateLiabilityCommand request, CancellationToken cancellationToken)
         {
-            var entity = await context.MOTs.FindAsync(request.Id);
+            var entity = await liabilityUtils.FindLiabilityAsync(request.Id, request.Liability, context);
             if (entity == null)
-                throw new NotFoundException(nameof(MOT), request.Id);
+                throw new NotFoundException(liabilityUtils.GetLiabilityName(request.Liability), request.Id);
 
             var vehicle = await context.Vehicles.FindAsync(request.VehicleId);
 

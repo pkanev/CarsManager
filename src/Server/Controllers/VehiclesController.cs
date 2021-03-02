@@ -12,7 +12,7 @@ namespace CarsManager.Server.Controllers
     public class VehiclesController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<ListedVehicleDto>>> GetTodoItemsWithPagination([FromQuery] GetVehiclesWithPaginationQuery query)
+        public async Task<ActionResult<PaginatedList<ListedVehicleDto>>> GetVehiclesWithPagination([FromQuery] GetVehiclesWithPaginationQuery query)
             => await Mediator.Send(query);
 
         [HttpGet("{id}")]

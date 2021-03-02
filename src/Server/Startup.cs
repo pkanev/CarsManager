@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CarsManager.Application;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Infrastructure;
@@ -41,7 +42,33 @@ namespace Server
                 options.Filters.Add<ApiExceptionFilterAttribute>());
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Server", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CarsManager", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Description = "Type into the textbox: Bearer {your JWT token}.",
+                    Scheme = "Bearer",
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        },
+                        new List<string>()
+                    }
+                });
             });
 
             // Customise default API behaviour
