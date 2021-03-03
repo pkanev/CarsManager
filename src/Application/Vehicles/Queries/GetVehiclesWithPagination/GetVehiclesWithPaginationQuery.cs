@@ -28,12 +28,10 @@ namespace CarsManager.Application.Vehicles.Queries.GetVehiclesWithPagination
             this.mapper = mapper;
         }
 
-        public async Task<PaginatedList<ListedVehicleDto>> Handle(GetVehiclesWithPaginationQuery request, CancellationToken cancellationToken)
-        {
-            return await context.Vehicles
+        public async Task<PaginatedList<ListedVehicleDto>> Handle(GetVehiclesWithPaginationQuery request, CancellationToken cancellationToken) =>
+            await context.Vehicles
                 .OrderBy(v => v.LicencePlate)
                 .ProjectTo<ListedVehicleDto>(mapper.ConfigurationProvider)
                 .PaginatedListAsync(request.PageNumber, request.PageSize);
-        }
     }
 }

@@ -25,8 +25,8 @@ namespace CarsManager.Application.Towns.Queries.GetTowns
             this.mapper = mapper;
         }
 
-        public async Task<TownsVm> Handle(GetTownsQuery request, CancellationToken cancellationToken)
-            => new TownsVm
+        public async Task<TownsVm> Handle(GetTownsQuery request, CancellationToken cancellationToken) =>
+            new TownsVm
             {
                 Towns = await context.Towns
                     .ProjectTo<TownDto>(mapper.ConfigurationProvider)

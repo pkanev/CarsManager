@@ -24,9 +24,8 @@ namespace CarsManager.Application.Employees.Queries.GetEmployees
             this.mapper = mapper;
         }
 
-        public async Task<EmployeesVm> Handle(GetEmployeesQuery request, CancellationToken cancellationToken)
-        {
-            return new EmployeesVm
+        public async Task<EmployeesVm> Handle(GetEmployeesQuery request, CancellationToken cancellationToken) =>
+            new EmployeesVm
             {
                 Employees = await context.Employees
                     .ProjectTo<ListedEmployeeDto>(mapper.ConfigurationProvider)
@@ -35,6 +34,5 @@ namespace CarsManager.Application.Employees.Queries.GetEmployees
                     .ThenBy(e => e.MiddleName)
                     .ToListAsync()
             };
-        }
     }
 }

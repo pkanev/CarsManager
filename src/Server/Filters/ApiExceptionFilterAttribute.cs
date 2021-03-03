@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Models.Exceptions;
+using CarsManager.Application.Vehicles.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

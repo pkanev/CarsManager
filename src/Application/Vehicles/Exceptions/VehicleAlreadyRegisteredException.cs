@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CarsManager.Application.Common.Exceptions
+namespace CarsManager.Application.Vehicles.Exceptions
 {
     public class VehicleAlreadyRegisteredException : Exception
     {

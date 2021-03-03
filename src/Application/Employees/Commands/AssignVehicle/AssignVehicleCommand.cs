@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Vehicles.Exceptions;
 using CarsManager.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

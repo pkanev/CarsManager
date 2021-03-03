@@ -28,13 +28,11 @@ namespace CarsManager.Application.Employees.Queries.GetEmployeesWithPagination
             this.mapper = mapper;
         }
 
-        public async Task<PaginatedList<EmployeeDto>> Handle(GetEmployeesWithPaginationQuery request, CancellationToken cancellationToken)
-        {
-            return await context.Employees
+        public async Task<PaginatedList<EmployeeDto>> Handle(GetEmployeesWithPaginationQuery request, CancellationToken cancellationToken) =>
+            await context.Employees
                 .OrderBy(e => e.Surname)
                 .ThenBy(e => e.GivenName)
                 .ProjectTo<EmployeeDto>(mapper.ConfigurationProvider)
                 .PaginatedListAsync(request.PageNumber, request.PageSize);
-        }
     }
 }

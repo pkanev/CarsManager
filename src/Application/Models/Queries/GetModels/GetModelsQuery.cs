@@ -26,8 +26,8 @@ namespace CarsManager.Application.Models.Queries.GetModels
             this.mapper = mapper;
         }
 
-        public async Task<ModelsVm> Handle(GetModelsQuery request, CancellationToken cancellationToken)
-            => new ModelsVm
+        public async Task<ModelsVm> Handle(GetModelsQuery request, CancellationToken cancellationToken) =>
+            new ModelsVm
             {
                 Models = await context.Models
                     .Where(m => m.MakeId == request.Id)
