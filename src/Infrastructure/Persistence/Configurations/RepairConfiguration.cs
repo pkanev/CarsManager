@@ -1,5 +1,4 @@
-﻿using System;
-using CarsManager.Application.Common.Interfaces;
+﻿using CarsManager.Application.Common.Interfaces;
 using CarsManager.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

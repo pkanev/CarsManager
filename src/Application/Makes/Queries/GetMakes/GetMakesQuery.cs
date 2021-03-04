@@ -25,8 +25,9 @@ namespace CarsManager.Application.Makes.Queries.GetMakes
             this.mapper = mapper;
         }
 
-        public async Task<MakesVm> Handle(GetMakesQuery request, CancellationToken cancellationToken) => 
-            new MakesVm
+        public async Task<MakesVm> Handle(
+            GetMakesQuery request,
+            CancellationToken cancellationToken) => new MakesVm
             {
                 Makes = await context.Makes
                     .ProjectTo<MakeDto>(mapper.ConfigurationProvider)

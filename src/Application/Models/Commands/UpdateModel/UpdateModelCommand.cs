@@ -34,7 +34,7 @@ namespace CarsManager.Application.Models.Commands.UpdateModel
                 throw new NotFoundException(nameof(Model), request.Id);
 
             if (entity.MakeId != request.MakeId)
-                throw new NonMatchingMakeException($"Request with Id: {request.Id} has incorrect MakeId: {request.MakeId}");
+                throw new NonMatchingMakeException($"Model with Id: {request.Id} has incorrect MakeId: {request.MakeId}");
 
             entity.Name = request.Name.Trim();
             entity.VehicleType = request.VehicleType;

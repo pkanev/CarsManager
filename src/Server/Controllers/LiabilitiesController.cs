@@ -31,10 +31,8 @@ namespace CarsManager.Server.Controllers
             int id,
             [FromQuery] GetLiabilitiesForVehicleWithPaginationQueryDto dto)
         {
-            if (id != dto.VehicleId)
-                return BadRequest();
-
             var query = mapper.Map<GetLiabilitiesForVehicleWithPaginationQuery>(dto);
+            query.VehicleId = id;
             query.Liability = liabilityType;
 
             return await Mediator.Send(query);

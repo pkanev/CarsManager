@@ -12,7 +12,7 @@ namespace CarsManager.Application.Vehicles.Queries.GetVehiclesWithPagination
         public int MakeId { get; set; }
         public string MakeName { get; set; }
         public int Year { get; set; }
-        public string LicencePlate { get; set; }        
+        public string LicencePlate { get; set; }
 
         public void Mapping(Profile profile)
         {

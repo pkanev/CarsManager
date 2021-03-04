@@ -37,22 +37,26 @@ namespace CarsManager.Application.Liabilities.Queries.GetLiabilitiesForVehicleWi
             CancellationToken cancellationToken) => request.Liability switch
             {
                 LiabilityType.MOT => await context.MOTs
-                    .OrderByDescending(m => m.Date)
+                    .Where(l => l.VehicleId == request.VehicleId)
+                    .OrderByDescending(l => l.Date)
                     .ProjectTo<ListedLiabilityDto>(mapper.ConfigurationProvider)
                     .PaginatedListAsync(request.PageNumber, request.PageSize),
 
                 LiabilityType.CivilLiability => await context.CivilLiabilities
-                    .OrderByDescending(m => m.Date)
+                    .Where(l => l.VehicleId == request.VehicleId)
+                    .OrderByDescending(l => l.Date)
                     .ProjectTo<ListedLiabilityDto>(mapper.ConfigurationProvider)
                     .PaginatedListAsync(request.PageNumber, request.PageSize),
 
                 LiabilityType.CarInsurance => await context.CarInsurances
-                    .OrderByDescending(m => m.Date)
+                    .Where(l => l.VehicleId == request.VehicleId)
+                    .OrderByDescending(l => l.Date)
                     .ProjectTo<ListedLiabilityDto>(mapper.ConfigurationProvider)
                     .PaginatedListAsync(request.PageNumber, request.PageSize),
 
                 LiabilityType.Vignette => await context.Vignettes
-                    .OrderByDescending(m => m.Date)
+                    .Where(l => l.VehicleId == request.VehicleId)
+                    .OrderByDescending(l => l.Date)
                     .ProjectTo<ListedLiabilityDto>(mapper.ConfigurationProvider)
                     .PaginatedListAsync(request.PageNumber, request.PageSize),
 

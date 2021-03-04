@@ -25,8 +25,9 @@ namespace CarsManager.Application.RepairShops.Queries.GetRepairShops
             this.mapper = mapper;
         }
 
-        public async Task<RepairShopsVm> Handle(GetRepairShopsQuery request, CancellationToken cancellationToken) => 
-            new RepairShopsVm
+        public async Task<RepairShopsVm> Handle(
+            GetRepairShopsQuery request,
+            CancellationToken cancellationToken) => new RepairShopsVm
             {
                 RepairShops = await context.RepairShops
                     .ProjectTo<RepairShopDto>(mapper.ConfigurationProvider)
