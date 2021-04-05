@@ -7,7 +7,7 @@ namespace CarsManager.Domain.Entities
         public int Id { get; set; }
         public int VehicleId { get; set; }
         public Vehicle Vehicle { get; set; }
-        public DateTime Date { get; set; } = DateTime.Now;
-        public TimeSpan Duration { get; set; } = TimeSpan.FromDays(365);
+        public DateTime StartDate { get; set; } = DateTime.Today;
+        public DateTime EndDate { get; set; } = DateTime.Today;
     }
 }

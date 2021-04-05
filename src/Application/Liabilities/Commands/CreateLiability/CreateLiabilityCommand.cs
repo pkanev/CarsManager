@@ -12,8 +12,8 @@ namespace CarsManager.Application.Liabilities.Commands.CreateLiability
     public class CreateLiabilityCommand : IRequest<int>, IMapFrom<CreateLiabilityCommandDto>
     {
         public int VehicleId { get; set; }
-        public DateTime Date { get; set; }
-        public int DurationDays { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public LiabilityType Liability { get; set; }
     }
 
@@ -36,8 +36,8 @@ namespace CarsManager.Application.Liabilities.Commands.CreateLiability
             var entity = CreateLiability(request.Liability);
 
             entity.Vehicle = vehicle;
-            entity.Date = request.Date;
-            entity.Duration = TimeSpan.FromDays(request.DurationDays);
+            entity.StartDate = request.StartDate;
+            entity.EndDate = request.EndDate;
 
             await AddToContextAsync(entity, cancellationToken, request.Liability);
             await context.SaveChangesAsync(cancellationToken);

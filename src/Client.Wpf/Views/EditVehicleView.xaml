@@ -1,0 +1,481 @@
+﻿<local:BaseVehicleView x:Class="Client.Wpf.Views.EditVehicleView"
+             xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Client.Wpf.Views"
+             xmlns:converters="clr-namespace:Client.Wpf.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="750" d:DesignWidth="1000">
+    <local:BaseView.Resources>
+        <converters:ImageValueConverter x:Key="ImageValueConverter"/>
+    </local:BaseView.Resources>
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal" Margin="15 0 0 0">
+            <Button Width="25" Height="25" FontSize="14" VerticalAlignment="Top" VerticalContentAlignment="Top" mvx:Bi.nd="Command GoHomeCommand">
+                <Image Source="{StaticResource Home}" />
+            </Button>
+            <TextBlock Text="Редактиране на данни" Style="{StaticResource ViewTitle}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="15 0 0 0">
+            <TextBlock Text="Рег. номер:" Margin="0 0 5 0" VerticalAlignment="Center" />
+            <ComboBox mvx:Bi.nd="ItemsSource Vehicles" SelectedItem="{Binding Vehicle}" Width="100">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding LicencePlate}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+        <TabControl Margin="15 5 15 15" SelectedIndex="{Binding SelectedTab}" IsSynchronizedWithCurrentItem="True">
+            <TabItem Header="Обща информация">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="250"/>
+                        <RowDefinition />
+                        <RowDefinition Height="250"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Основни данни" Style="{StaticResource SectionHeader}" />
+                    <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource SectionBorder}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="Марка:" />
+                            <ComboBox Grid.Column="1" Grid.Row="0" mvx:Bi.nd="ItemsSource Makes" SelectedItem="{Binding Make}" IsSynchronizedWithCurrentItem="True">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <TextBlock Grid.Column="0" Grid.Row="1" Text="Вид:" />
+                            <ComboBox Grid.Column="1" Grid.Row="1" mvx:Bi.nd="ItemsSource VehicleTypes" SelectedItem="{Binding VehicleType}" IsSynchronizedWithCurrentItem="True">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <TextBlock Grid.Column="0" Grid.Row="2" Text="Модел:" />
+                            <ComboBox Grid.Column="1" Grid.Row="2" mvx:Bi.nd="ItemsSource Models" SelectedItem="{Binding Model, Mode=TwoWay}" IsEnabled="{Binding CanSelectModel}" IsSynchronizedWithCurrentItem="True">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <TextBlock Grid.Column="0" Grid.Row="3" Text="Цвят:" />
+                            <ComboBox Grid.Column="1" Grid.Row="3" ItemsSource="{Binding Colors}" SelectedItem="{Binding Color}" IsSynchronizedWithCurrentItem="True">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Rectangle Fill="{Binding Name}" Height="20" Width="250" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <TextBlock Grid.Column="0" Grid.Row="4" Text="Рег. Номер:" />
+                            <TextBox Grid.Column="1" Grid.Row="4" mvx:Bi.nd="Text LicencePlate" />
+                            <TextBlock Grid.Column="0" Grid.Row="5" Text="Обем на двигателя (cm3):" />
+                            <TextBox Grid.Column="1" Grid.Row="5" mvx:Bi.nd="Text Vehicle.EngineDisplacement" PreviewTextInput="NumberValidationTextBox" />
+                            <TextBlock Grid.Column="0" Grid.Row="6" Text="Произведен през:" />
+                            <TextBox Grid.Column="1" Grid.Row="6" mvx:Bi.nd="Text Vehicle.Year" PreviewTextInput="NumberValidationTextBox" />
+                            <TextBlock Grid.Column="0" Grid.Row="7" Text="Тип гориво:" />
+                            <ComboBox Grid.Column="1" Grid.Row="7" mvx:Bi.nd="ItemsSource FuelTypes" SelectedItem="{Binding FuelType}" IsSynchronizedWithCurrentItem="True">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <TextBlock Grid.Column="0" Grid.Row="8" Text="Пробег:" />
+                            <TextBox Grid.Column="1" Grid.Row="8" mvx:Bi.nd="Text Vehicle.Mileage" PreviewTextInput="NumberValidationTextBox" />
+                            <TextBlock Grid.Column="0" Grid.Row="9" Text="Първа регистрация:" />
+                            <DatePicker Grid.Column="1" Grid.Row="9" mvx:Bi.nd="SelectedDate Vehicle.FirstRegistration"/>
+                        </Grid>
+                    </Border>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Пробег преди следваща смяна" Style="{StaticResource SectionHeader}" />
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource SectionBorder}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Масло:" />
+                            <TextBox Grid.Row="1" mvx:Bi.nd="Text Vehicle.OilMileage" PreviewTextInput="NumberValidationTextBox" />
+                            <TextBlock Grid.Row="2" Text="Ролкки и ремъци:" />
+                            <TextBox Grid.Row="3" mvx:Bi.nd="Text Vehicle.BeltMileage" PreviewTextInput="NumberValidationTextBox" />
+                            <TextBlock Grid.Row="4" Text="Накладки:" />
+                            <TextBox Grid.Row="5" mvx:Bi.nd="Text Vehicle.BrakeLiningsMileage" PreviewTextInput="NumberValidationTextBox" />
+                            <TextBlock Grid.Row="6" Text="Спирачни дискове:" />
+                            <TextBox Grid.Row="7" mvx:Bi.nd="Text Vehicle.BrakeDisksMileage" PreviewTextInput="NumberValidationTextBox" />
+                            <TextBlock Grid.Row="8" Text="Антифриз:" />
+                            <TextBox Grid.Row="9" mvx:Bi.nd="Text Vehicle.CoolantMileage" PreviewTextInput="NumberValidationTextBox" />
+                        </Grid>
+                    </Border>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="Снимка" Style="{StaticResource SectionHeader}" />
+                    <Border Grid.Row="3" Grid.Column="2" Style="{StaticResource SectionBorder}">
+                        <StackPanel Orientation="Vertical" Margin="15">
+                            <Image Height="175" Source="{Binding ImageAddress, Converter={StaticResource ImageValueConverter}, FallbackValue={StaticResource Van}}" />
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button mvx:Bi.nd="Command SelectImageCommand" Content="&#10133;" />
+                                <Button mvx:Bi.nd="Command RemoveImageCommand" Content="&#10134;" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Допълнителна информация" Style="{StaticResource SectionHeader}" />
+                    <Border Grid.Row="3" Grid.Column="0" Style="{StaticResource SectionBorder}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.6*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="0.5*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="70" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="Дата на сключване:" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="0 0 0 10"/>
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="Крайна дата:" VerticalAlignment="Bottom" Margin="0 0 0 10"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Технически преглед:" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text ="{Binding RecentLiabilities.LastMOT.StartDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding RecentLiabilities.LastMOT.EndDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                            <Button Grid.Row="1" Grid.Column="3" mvx:Bi.nd="Command CreateLiabilityCommand, CommandParameter=MOT" Content="&#10133;" IsEnabled="{Binding IsVehicleLoaded}" Style="{StaticResource SmallButton}" />
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Застраховка &quot;ГО&quot;:" />
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text ="{Binding RecentLiabilities.LastCivilLiability.StartDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding RecentLiabilities.LastCivilLiability.EndDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                            <Button Grid.Row="2" Grid.Column="3" mvx:Bi.nd="Command CreateLiabilityCommand, CommandParameter=CivilLiability" IsEnabled="{Binding IsVehicleLoaded}" Content="&#10133;" Style="{StaticResource SmallButton}" />
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Застраховка &quot;КАСКО&quot;:" />
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text ="{Binding RecentLiabilities.LastCarInsurance.StartDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                            <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding RecentLiabilities.LastCarInsurance.EndDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                            <Button Grid.Row="3" Grid.Column="3" mvx:Bi.nd="Command CreateLiabilityCommand, CommandParameter=CarInsurance" IsEnabled="{Binding IsVehicleLoaded}" Content="&#10133;" Style="{StaticResource SmallButton}" />
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Винетка:" />
+                            <TextBlock Grid.Row="4" Grid.Column="1" Text ="{Binding RecentLiabilities.LastVignette.StartDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                            <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding RecentLiabilities.LastVignette.EndDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                            <Button Grid.Row="4" Grid.Column="3" mvx:Bi.nd="Command CreateLiabilityCommand, CommandParameter=Vignette" IsEnabled="{Binding IsVehicleLoaded}" Content="&#10133;" Style="{StaticResource SmallButton}" />
+                        </Grid>
+                    </Border>
+                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                        <Button mvx:Bi.nd="Command CancelCommand" Content="Откажи" Margin="0 0 15 0" Padding="15 5"/>
+                        <Button mvx:Bi.nd="Command SaveCommand" IsEnabled="{Binding IsValid}" Content="Запиши" Padding="15 5"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Задължения" IsEnabled="{Binding IsVehicleLoaded}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="275" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="275" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Годишни технически прегледи" Style="{StaticResource SectionHeader}" />
+                    <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource SectionBorder}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="1.5*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Дата на сключване:" />
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="Крайна дата:" />
+                            <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                <ItemsControl ItemsSource="{Binding MOTs}" x:Name="MOTs">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Width="425" x:Name="Item">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1.5*" />
+                                                    <ColumnDefinition Width="1.5*" />
+                                                    <ColumnDefinition Width=".5*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding StartDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                                                <TextBlock Grid.Column="1" Text="{Binding EndDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                    <Button
+                                                        Style="{StaticResource SmallButton}"
+                                                        Margin="0 0 20 0"
+                                                        Content="&#128393;"
+                                                        Command="{Binding EditLiabilityCommand}"
+                                                        DataContext="{Binding Source={x:Reference MOTs}, Path=DataContext}"
+                                                        CommandParameter="{Binding ElementName=Item, Path=DataContext}"/>
+                                                    <Button
+                                                        Style="{StaticResource SmallButton}"
+                                                        Content="&#10134;"
+                                                        Command="{Binding DeleteLiabilityCommand}"
+                                                        DataContext="{Binding Source={x:Reference MOTs}, Path=DataContext}"
+                                                        CommandParameter="{Binding ElementName=Item, Path=DataContext}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                        </ScrollViewer>
+                        </Grid>
+                    </Border>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Застраховки &quot;ГО&quot;" Style="{StaticResource SectionHeader}" />
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource SectionBorder}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="1.5*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Дата на сключване:" />
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="Крайна дата:" />
+                            <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                <ItemsControl ItemsSource="{Binding CivilLiabilities}" x:Name="CivilLiabilities">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Width="425" x:Name="Item">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1.5*" />
+                                                    <ColumnDefinition Width="1.5*" />
+                                                    <ColumnDefinition Width=".5*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding StartDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                                                <TextBlock Grid.Column="1" Text="{Binding EndDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                    <Button
+                                                        Style="{StaticResource SmallButton}"
+                                                        Margin="0 0 20 0"
+                                                        Content="&#128393;"
+                                                        Command="{Binding EditLiabilityCommand}"
+                                                        DataContext="{Binding Source={x:Reference CivilLiabilities}, Path=DataContext}"
+                                                        CommandParameter="{Binding ElementName=Item, Path=DataContext}"/>
+                                                    <Button
+                                                        Style="{StaticResource SmallButton}"
+                                                        Content="&#10134;"
+                                                        Command="{Binding DeleteLiabilityCommand}"
+                                                        DataContext="{Binding Source={x:Reference CivilLiabilities}, Path=DataContext}"
+                                                        CommandParameter="{Binding ElementName=Item, Path=DataContext}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                        </ScrollViewer>
+                        </Grid>
+                    </Border>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Застраховки &quot;КАСКО&quot;" Style="{StaticResource SectionHeader}" />
+                    <Border Grid.Row="3" Grid.Column="0" Style="{StaticResource SectionBorder}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="1.5*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Дата на сключване:" />
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="Крайна дата:" />
+                            <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                <ItemsControl ItemsSource="{Binding CarInsurances}" x:Name="CarInsurances">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Width="425" x:Name="Item">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1.5*" />
+                                                    <ColumnDefinition Width="1.5*" />
+                                                    <ColumnDefinition Width=".5*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding StartDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                                                <TextBlock Grid.Column="1" Text="{Binding EndDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                    <Button
+                                                        Style="{StaticResource SmallButton}"
+                                                        Margin="0 0 20 0"
+                                                        Content="&#128393;"
+                                                        Command="{Binding EditLiabilityCommand}"
+                                                        DataContext="{Binding Source={x:Reference CarInsurances}, Path=DataContext}"
+                                                        CommandParameter="{Binding ElementName=Item, Path=DataContext}"/>
+                                                    <Button
+                                                        Style="{StaticResource SmallButton}"
+                                                        Content="&#10134;"
+                                                        Command="{Binding DeleteLiabilityCommand}"
+                                                        DataContext="{Binding Source={x:Reference CarInsurances}, Path=DataContext}"
+                                                        CommandParameter="{Binding ElementName=Item, Path=DataContext}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="Винетки;" Style="{StaticResource SectionHeader}" />
+                    <Border Grid.Row="3" Grid.Column="1" Style="{StaticResource SectionBorder}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="1.5*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Дата на сключване:" />
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="Крайна дата:" />
+                            <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                <ItemsControl ItemsSource="{Binding Vignettes}" x:Name="Vignettes">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Width="425" x:Name="Item">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1.5*" />
+                                                    <ColumnDefinition Width="1.5*" />
+                                                    <ColumnDefinition Width=".5*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding StartDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                                                <TextBlock Grid.Column="1" Text="{Binding EndDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                    <Button
+                                                        Style="{StaticResource SmallButton}"
+                                                        Margin="0 0 20 0"
+                                                        Content="&#128393;"
+                                                        Command="{Binding EditLiabilityCommand}"
+                                                        DataContext="{Binding Source={x:Reference Vignettes}, Path=DataContext}"
+                                                        CommandParameter="{Binding ElementName=Item, Path=DataContext}"/>
+                                                    <Button
+                                                        Style="{StaticResource SmallButton}"
+                                                        Content="&#10134;"
+                                                        Command="{Binding DeleteLiabilityCommand}"
+                                                        DataContext="{Binding Source={x:Reference Vignettes}, Path=DataContext}"
+                                                        CommandParameter="{Binding ElementName=Item, Path=DataContext}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Ремонти" IsEnabled="{Binding IsVehicleLoaded}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <ListView Grid.Column="0" ItemsSource="{Binding Repairs}" SelectedItem="{Binding SelectedRepair}" IsSynchronizedWithCurrentItem="True" Height="600">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Date, StringFormat='{}{0:dd.MM.yyyy}'}"/>
+                                    <TextBlock Text=" "/>
+                                    <TextBlock mvx:Bi.nd="Text RepairShopName"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Служители" IsEnabled="{Binding IsVehicleLoaded}">
+                <StackPanel Orientation="Vertical">
+                    <Border Style="{StaticResource SectionBorder}" Height="250">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Vertical">
+                                <TextBlock Text="Зачислен на:" Style="{StaticResource SectionHeader}" />
+                                <ListView ItemsSource="{Binding EmployeesForVehicle}" SelectedItem="{Binding AssignedEmployee}" IsSynchronizedWithCurrentItem="True" Height="210">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock mvx:Bi.nd="Text Surname" />
+                                                <TextBlock Text=", " />
+                                                <TextBlock mvx:Bi.nd="Text GivenName" />
+                                                <TextBlock Text=" " />
+                                                <TextBlock mvx:Bi.nd="Text MiddleName" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <Image Height="175" Margin="0 0 0 20" Source="{Binding AssignedEmployee.ImageAddress, Converter={StaticResource ImageValueConverter}, FallbackValue={StaticResource Profile}}" />
+                                <Button Content="Премахни" mvx:Bi.nd="Command RemoveVehicleForEmployeeCommand" Padding="15 5" HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource SectionBorder}" Height="250" Margin="0 15 0 0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Vertical">
+                                <TextBlock Text="Всички служители:" Style="{StaticResource SectionHeader}" />
+                                <ListView ItemsSource="{Binding AllEmployees}" SelectedItem="{Binding NonAssignedEmployee}" IsSynchronizedWithCurrentItem="True" Height="210">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock mvx:Bi.nd="Text Surname" />
+                                                <TextBlock Text=", " />
+                                                <TextBlock mvx:Bi.nd="Text GivenName" />
+                                                <TextBlock Text=" " />
+                                                <TextBlock mvx:Bi.nd="Text MiddleName" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <Image Height="175" Margin="0 0 0 20" Source="{Binding NonAssignedEmployee.ImageAddress, Converter={StaticResource ImageValueConverter}, FallbackValue={StaticResource Profile}}" />
+                                <Button Content="Добави" mvx:Bi.nd="Command AddVehicleForEmployeeCommand" IsEnabled="{Binding CanAssignEmployee}" Padding="15 5" HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </StackPanel>
+</local:BaseVehicleView>

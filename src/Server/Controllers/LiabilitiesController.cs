@@ -5,6 +5,7 @@ using CarsManager.Application.Liabilities;
 using CarsManager.Application.Liabilities.Commands.CreateLiability;
 using CarsManager.Application.Liabilities.Commands.DeleteLiability;
 using CarsManager.Application.Liabilities.Commands.UpdateLiability;
+using CarsManager.Application.Liabilities.Queries.GetLiabilities;
 using CarsManager.Application.Liabilities.Queries.GetLiabilitiesForVehicleWithPagination;
 using CarsManager.Application.Liabilities.Queries.GetLiability;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,11 @@ namespace CarsManager.Server.Controllers
             => await Mediator.Send(new GetLiabilityQuery { Id = id, Liability = liabilityType });
 
         [HttpGet("vehicle/{id}")]
-        public async Task<ActionResult<PaginatedList<ListedLiabilityDto>>> GetForVehicle(
+        public async Task<ActionResult<LiabilitiesVm>> GetForVehicle(int id)
+            => await Mediator.Send(new GetLiabilitiesQuery { VehicleId = id, Liability = liabilityType });
+
+        [HttpGet("vehicle/{id}/pages")]
+        public async Task<ActionResult<PaginatedList<ListedLiabilityDto>>> GetPagesForVehicle(
             int id,
             [FromQuery] GetLiabilitiesForVehicleWithPaginationQueryDto dto)
         {

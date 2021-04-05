@@ -17,7 +17,7 @@ namespace CarsManager.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Repair> builder)
         {
             builder.Property(r => r.Date)
-                .HasDefaultValue(dateTime.Now);
+                .HasDefaultValue(dateTime.Today);
         }
     }
 }

@@ -6,8 +6,8 @@ namespace CarsManager.Application.Liabilities.Commands.UpdateLiability
     {
         public UpdateLiabilityCommandValidator()
         {
-            RuleFor(c => c.DurationDays)
-                .GreaterThan(0);
+            RuleFor(c => c.EndDate)
+                .GreaterThanOrEqualTo(c => c.StartDate);
             RuleFor(c => c.Liability)
                 .IsInEnum();
         }

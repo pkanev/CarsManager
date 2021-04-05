@@ -2,7 +2,7 @@
 using CarsManager.Application.Common.Mappings;
 using CarsManager.Domain.Entities;
 
-namespace CarsManager.Application.Vehicles.Queries.GetVehicle
+namespace CarsManager.Application.Vehicles.Queries.GetVehicleExtended
 {
     public class RepairForVehicleDto : IMapFrom<Repair>
     {

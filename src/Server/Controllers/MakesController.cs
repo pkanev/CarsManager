@@ -4,6 +4,8 @@ using CarsManager.Application.Makes.Commands.DeleteMake;
 using CarsManager.Application.Makes.Commands.UpdateMake;
 using CarsManager.Application.Makes.Queries.GetMake;
 using CarsManager.Application.Makes.Queries.GetMakes;
+using CarsManager.Application.Makes.Queries.GetMakesForVehicleType;
+using CarsManager.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarsManager.Server.Controllers
@@ -17,6 +19,10 @@ namespace CarsManager.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MakeVm>> Get(int id)
             => await Mediator.Send(new GetMakeQuery { Id = id });
+
+        [HttpGet("type/{vehicleType}")]
+        public async Task<ActionResult<MakesVm>> GetForVehicleType(VehicleType vehicleType)
+            => await Mediator.Send(new GetMakesForVehicleTypeQuery { VehicleType = vehicleType});
 
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateMakeCommand command)

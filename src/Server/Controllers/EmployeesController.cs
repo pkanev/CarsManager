@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using AutoMapper;
 using CarsManager.Application.Employees.Commands.AssignVehicle;
 using CarsManager.Application.Employees.Commands.CreateEmployee;
@@ -8,17 +10,20 @@ using CarsManager.Application.Employees.Commands.UpdateEmployee;
 using CarsManager.Application.Employees.Commands.UploadPhoto;
 using CarsManager.Application.Employees.Queries.GetEmployee;
 using CarsManager.Application.Employees.Queries.GetEmployees;
+using CarsManager.Server.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Server;
 
 namespace CarsManager.Server.Controllers
 {
     public class EmployeesController : ApiControllerBase
     {
-        private const string PATH = "Photos:Path";
-
         private readonly IConfiguration configuration;
         private readonly IMapper mapper;
+
+        private string path => Path.Combine(Startup.wwwRootFolder, configuration.GetValue<string>("Images:Path"));
+        private string imagesFolder => configuration.GetValue<string>("Images:Path");
 
         public EmployeesController(IConfiguration configuration, IMapper mapper)
         {
@@ -28,19 +33,15 @@ namespace CarsManager.Server.Controllers
 
         [HttpGet]
         public async Task<ActionResult<EmployeesVm>> Get()
-            => await Mediator.Send(new GetEmployeesQuery());
+            => await Mediator.Send(new GetEmployeesQuery { PhotoPath = HttpContext.Request.GetAbsoluteUri(imagesFolder) });
 
         [HttpGet("{id}")]
         public async Task<ActionResult<EmployeeVm>> Get(int id)
-            => await Mediator.Send(new GetEmployeeQuery { Id = id, PhotoPath = configuration.GetValue<string>(PATH) });
+            => await Mediator.Send(new GetEmployeeQuery { Id = id, PhotoPath = HttpContext.Request.GetAbsoluteUri(imagesFolder) });
 
         [HttpPost]
-        public async Task<ActionResult<int>> Create([FromForm] CreateEmployeeDto dto)
-        {
-            var command = mapper.Map<CreateEmployeeCommand>(dto);
-            command.PhotoPath = configuration.GetValue<string>(PATH);
-            return await Mediator.Send(command);
-        }
+        public async Task<ActionResult<int>> Create(CreateEmployeeCommand command)
+            => await Mediator.Send(command);
 
         [HttpPut("{id}")]
         public async Task<ActionResult<int>> Update(int id, UpdateEmployeeCommand command)
@@ -60,7 +61,7 @@ namespace CarsManager.Server.Controllers
                 return BadRequest();
 
             var command = mapper.Map<UploadPhotoCommand>(dto);
-            command.PhotoPath = configuration.GetValue<string>(PATH);
+            command.PhotoPath = path;
             await Mediator.Send(command);
 
             return NoContent();
@@ -69,7 +70,7 @@ namespace CarsManager.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await Mediator.Send(new DeleteEmployeeCommand { Id = id, PhotoPath = configuration.GetValue<string>(PATH) });
+            await Mediator.Send(new DeleteEmployeeCommand { Id = id, PhotoPath = path });
 
             return NoContent();
         }

@@ -13,12 +13,13 @@ namespace CarsManager.Application.Vehicles.Commands.UpdateVehicle
     {
         public int Id { get; set; }
         public int ModelId { get; set; }
-        public int Year { get; set; }
+        public int? Year { get; set; }
         public FuelType Fuel { get; set; }
         public int EngineDisplacement { get; set; }
         public int Mileage { get; set; }
         public string LicencePlate { get; set; }
         public string Color { get; set; }
+        public string ImageName { get; set; }
         public DateTime FirstRegistration { get; set; }
         public int BeltMileage { get; set; }
         public int BrakeLiningsMileage { get; set; }
@@ -49,8 +50,9 @@ namespace CarsManager.Application.Vehicles.Commands.UpdateVehicle
             entity.Fuel = request.Fuel;
             entity.EngineDisplacement = request.EngineDisplacement;
             entity.Mileage = request.Mileage;
-            entity.LicencePlate = request.LicencePlate;
+            entity.LicencePlate = request.LicencePlate.Trim().ToUpper();
             entity.Color = request.Color;
+            entity.Image = request.ImageName;
             entity.FirstRegistration = request.FirstRegistration;
             entity.BeltMileage = request.BeltMileage;
             entity.BrakeLiningsMileage = request.BrakeLiningsMileage;

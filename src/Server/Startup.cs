@@ -17,6 +17,8 @@ namespace Server
 {
     public class Startup
     {
+        public static string wwwRootFolder = string.Empty;
+
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -80,6 +82,7 @@ namespace Server
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            wwwRootFolder = env.WebRootPath;
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -89,6 +92,12 @@ namespace Server
 
             app.UseHealthChecks("/health");
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ServeUnknownFileTypes = true,
+                DefaultContentType = "image/png"
+            });
 
             app.UseRouting();
 

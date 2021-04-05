@@ -4,6 +4,6 @@ namespace CarsManager.Application.Employees.Queries.GetEmployees
 {
     public class EmployeesVm
     {
-        public List<ListedEmployeeDto> Employees { get; set; }
+        public List<BasicEmployeeDto> Employees { get; set; }
     }
 }

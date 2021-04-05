@@ -1,0 +1,39 @@
+﻿<local:BaseWindow x:Class="Client.Wpf.Views.AddLiabilityView"
+        xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client.Wpf.Views"
+        mc:Ignorable="d"
+        Title="{Binding Caption}" Height="200" Width="400" WindowStartupLocation="CenterScreen">
+    <Grid Margin="10 0 10 10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".8*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Рег. номер:" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" mvx:Bi.nd="Text Liability.LicencePlate" VerticalAlignment="Center" d:Text="AA1234BB"/>
+        <local:RequiredLabel Label="Дата:" Grid.Row="1" Grid.Column="0"  />
+        <DatePicker Grid.Row="1" Grid.Column="1" mvx:Bi.nd="SelectedDate StartDate" VerticalAlignment="Top" />
+        <local:RequiredLabel Label="Период на валидност:" Grid.Row="2" Grid.Column="0" Margin="0 0 0 10"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Periods}" SelectedItem="{Binding Period}" IsSynchronizedWithCurrentItem="True" Margin="0 0 0 10">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Label}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"
+ HorizontalAlignment="Center" Margin="0 0 0 5">
+            <Button Content="Откажи" mvx:Bi.nd="Command CancelCommand" Margin="0 0 15 0" Padding="15 5" />
+            <Button Content="Запиши" mvx:Bi.nd="Command SaveCommand" IsEnabled="{Binding CanSave}" Padding="15 5" />
+        </StackPanel>
+    </Grid>
+</local:BaseWindow>

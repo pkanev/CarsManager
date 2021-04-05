@@ -5,6 +5,7 @@ using CarsManager.Application.Repairs.Commands.CreateRepair;
 using CarsManager.Application.Repairs.Commands.DeleteRepair;
 using CarsManager.Application.Repairs.Commands.UpdateRepair;
 using CarsManager.Application.Repairs.Queries.GetRepair;
+using CarsManager.Application.Repairs.Queries.GetRepairs;
 using CarsManager.Application.Repairs.Queries.GetRepairsForVehicleWithPagination;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +25,11 @@ namespace CarsManager.Server.Controllers
             => await Mediator.Send(new GetRepairQuery { Id = id });
 
         [HttpGet("vehicle/{id}")]
-        public async Task<ActionResult<PaginatedList<ListedRepairForVehicleDto>>> GetRepairsForVehicle(
+        public async Task<ActionResult<RepairsVm>> GetRepairsForVehicle(int id)
+            => await Mediator.Send(new GetRepairsQuery { VehicleId = id });
+
+        [HttpGet("vehicle/{id}/pages")]
+        public async Task<ActionResult<PaginatedList<ListedRepairForVehicleDto>>> GetPaginatedRepairsForVehicle(
             int id,
             [FromQuery] GetRepairsForVehicleWithPaginationQueryDto dto)
         {

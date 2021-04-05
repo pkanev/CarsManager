@@ -24,7 +24,7 @@ namespace CarsManager.Application.Models.Commands.DeleteModel
 
         public async Task<Unit> Handle(DeleteModelCommand request, CancellationToken cancellationToken)
         {
-            var entity = await context.Makes.FindAsync(request.Id);
+            var entity = await context.Models.FindAsync(request.Id);
 
             if (entity == null)
                 throw new NotFoundException(nameof(Model), request.Id);
@@ -35,7 +35,7 @@ namespace CarsManager.Application.Models.Commands.DeleteModel
             if (hasVehicles)
                 throw new InvalidDeleteOperationException("Cannot delete a model with existing vehicles.");
 
-            context.Makes.Remove(entity);
+            context.Models.Remove(entity);
 
             await context.SaveChangesAsync(cancellationToken);
 
