@@ -1,0 +1,338 @@
+﻿<local:BaseVehicleView x:Class="Client.Wpf.Views.AddVehicleView"
+             xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Client.Wpf.Views"
+             xmlns:converters="clr-namespace:Client.Wpf.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="700" d:DesignWidth="1000">
+    <local:BaseView.Resources>
+        <converters:ImageValueConverter x:Key="ImageValueConverter"/>
+        <Style TargetType="{x:Type RadioButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Border BorderBrush="#fff" BorderThickness="2" Padding="2" Background="#fff" x:Name="radio_border" Width="85">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="radio_border" Property="Background" Value="#333"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type Button}" x:Key="MenuButtons">
+            <Setter Property="Width" Value="85" />
+            <Setter Property="Height" Value="95"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style TargetType="{x:Type Button}" x:Key="SmallButtons">
+            <Setter Property="FontSize" Value="10"/>
+        </Style>
+    </local:BaseView.Resources>
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal" Margin="15 0 0 0">
+            <Button Width="25" Height="25" FontSize="14" VerticalAlignment="Top" VerticalContentAlignment="Top" mvx:Bi.nd="Command GoHomeCommand">
+                <Image Source="{StaticResource Home}" />
+            </Button>
+            <TextBlock Text="Добавяне на нов автомобил" Style="{StaticResource ViewTitle}" />
+        </StackPanel>
+        <!-- Menu strip -->
+        <StackPanel Orientation="Horizontal" Margin="0 0 0 15">
+            <WrapPanel Margin="50 0 50 0">
+                <Button Style="{StaticResource MenuButtons}" mvx:Bi.nd="Command ClearFormCommand">Изчисти</Button>
+                <Button Style="{StaticResource MenuButtons}" mvx:Bi.nd="Command AddVehicleCommand" IsEnabled="{Binding IsValid}">Добави</Button>
+                <Button Style="{StaticResource MenuButtons}" mvx:Bi.nd="Command DuplicateVehicleCommand" IsEnabled="{Binding IsValid}">Дублирай</Button>
+            </WrapPanel>
+            <WrapPanel>
+                <Border BorderBrush="#333" BorderThickness="1" Margin="0 0 5 0">
+                    <RadioButton GroupName="vehicleType" IsChecked="True" mvx:Bi.nd="Command ChooseVehicleTypeCommand, CommandParameter=Car">
+                        <RadioButton.Content>
+                            <StackPanel Orientation="Vertical">
+                                <Image Source="{StaticResource Car}" />
+                                <TextBlock Background="#fff" Text="Лек" Padding="5 0 0 0"/>
+                            </StackPanel>
+                        </RadioButton.Content>
+                    </RadioButton>
+                </Border>
+                <Border BorderBrush="#333" BorderThickness="1" Margin="0 0 5 0">
+                    <RadioButton GroupName="vehicleType" mvx:Bi.nd="Command ChooseVehicleTypeCommand, CommandParameter=SUV">
+                        <RadioButton.Content>
+                            <StackPanel>
+                                <Image Source="{StaticResource Suv}" />
+                                <TextBlock Background="#fff" Text="Джип" Padding="5 0 0 0"/>
+                            </StackPanel>
+                        </RadioButton.Content>
+                    </RadioButton>
+                </Border>
+                <Border BorderBrush="#333" BorderThickness="1" Margin="0 0 5 0">
+                    <RadioButton GroupName="vehicleType" mvx:Bi.nd="Command ChooseVehicleTypeCommand, CommandParameter=Truck">
+                        <RadioButton.Content>
+                            <StackPanel>
+                                <Image Source="{StaticResource Truck}" />
+                                <TextBlock Background="#fff" Text="Камион" Padding="5 0 0 0"/>
+                            </StackPanel>
+                        </RadioButton.Content>
+                    </RadioButton>
+                </Border>
+                <Border BorderBrush="#333" BorderThickness="1" Margin="0 0 5 0">
+                    <RadioButton GroupName="vehicleType" mvx:Bi.nd="Command ChooseVehicleTypeCommand, CommandParameter=Bus">
+                        <RadioButton.Content>
+                            <StackPanel>
+                                <Image Source="{StaticResource Bus}" />
+                                <TextBlock Background="#fff" Text="Автобус" Padding="5 0 0 0"/>
+                            </StackPanel>
+                        </RadioButton.Content>
+                    </RadioButton>
+                </Border>
+            </WrapPanel>
+            <WrapPanel Margin="50 0 0 0">
+                <Button Style="{StaticResource MenuButtons}" IsEnabled="False" Content="Резервоар"/>
+            </WrapPanel>
+        </StackPanel>
+        <!-- Form -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical" Grid.Column="1">
+            <!-- Основни данни -->
+                <TextBlock Style="{StaticResource SectionHeader}">Основни данни</TextBlock>
+                <Border Style="{StaticResource SectionBorder}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <!-- Марка -->
+                        <local:RequiredLabel Label="Марка:" Grid.Row="0" Grid.Column="0" />
+                        <Grid Grid.Row="0" Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="20" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" ItemsSource="{Binding Makes}" SelectedItem="{Binding Make}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <Button Style="{StaticResource SmallButtons}" Grid.Column="1" mvx:Bi.nd="Command AddMakeCommand">&#10133;</Button>
+                            <Button Style="{StaticResource SmallButtons}" Grid.Column="2" mvx:Bi.nd="Command EditMakeCommand" IsEnabled="{Binding CanEditMake}">&#128393;</Button>
+                            <Button Style="{StaticResource SmallButtons}" Grid.Column="3" mvx:Bi.nd="Command DeleteMakeCommand" IsEnabled="{Binding CanDeleteMake}">&#10134;</Button>
+                        </Grid>
+                        <!-- Модел -->
+                        <local:RequiredLabel Label="Модел:" Grid.Row="1" Grid.Column="0" />
+                        <Grid Grid.Row="1" Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="20" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" ItemsSource="{Binding Models}" SelectedItem="{Binding Model}" IsEnabled="{Binding CanSelectModel}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <Button Style="{StaticResource SmallButtons}" Grid.Column="1" mvx:Bi.nd="Command AddModelCommand" IsEnabled="{Binding CanAddModel}">&#10133;</Button>
+                                <Button Style="{StaticResource SmallButtons}" Grid.Column="2" mvx:Bi.nd="Command EditModelCommand" IsEnabled="{Binding CanEditModel}">&#128393;</Button>
+                                <Button Style="{StaticResource SmallButtons}" Grid.Column="3" mvx:Bi.nd="Command DeleteModelCommand" IsEnabled="{Binding CanDeleteModel}">&#10134;</Button>
+                        </Grid>
+                        <!-- Производство -->
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Производство (година):"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" mvx:Bi.nd="Text Year" PreviewTextInput="NumberValidationTextBox"/>
+                        <!-- Обем на двигател -->
+                        <local:RequiredLabel Label="Обем на двигател (cm3):" Grid.Row="3" Grid.Column="0" />
+                        <TextBox Grid.Row="3" Grid.Column="1" mvx:Bi.nd="Text EngineDisplacement" PreviewTextInput="NumberValidationTextBox" />
+                        <!-- Тип гориво -->
+                        <local:RequiredLabel Label="Тип гориво:" Grid.Row="4" Grid.Column="0" />
+                        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding FuelTypes}" mvx:Bi.nd="SelectedItem FuelType" IsSynchronizedWithCurrentItem="True">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <!-- Рег. номер -->
+                        <local:RequiredLabel Label="Рег. номер:" Grid.Row="5" Grid.Column="0" />
+                        <TextBox Grid.Row="5" Grid.Column="1" mvx:Bi.nd="Text LicencePlate" />
+                        <!-- Пробег -->
+                        <local:RequiredLabel Label="Пробег:" Grid.Row="6" Grid.Column="0" />
+                        <TextBox Grid.Row="6" Grid.Column="1" mvx:Bi.nd="Text Mileage" PreviewTextInput="NumberValidationTextBox"/>
+                    </Grid>
+                </Border>
+                <!-- Допълнителна информация -->
+                <TextBlock Style="{StaticResource SectionHeader}">Допълнителна информация</TextBlock>
+                <Border Style="{StaticResource SectionBorder}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <!-- Технически преглед -->
+                        <local:RequiredLabel Label="Технически преглед:" Grid.Row="0" Grid.Column="0" />
+                        <DatePicker Grid.Row="0" Grid.Column="1" mvx:Bi.nd="SelectedDate MOTStartDate"/>
+                        <local:RequiredLabel Label="Период на валидност:" Grid.Row="1" Grid.Column="0" Margin="0 0 0 10"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding MOTValidityPeriods}" SelectedItem="{Binding MOTPeriod}" IsSynchronizedWithCurrentItem="True" Margin="0 0 0 10">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Label}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <!-- Застраховка "ГО" -->
+                        <local:RequiredLabel Label="Застраховка &quot;ГО&quot;:" Grid.Row="2" Grid.Column="0" />
+                        <DatePicker Grid.Row="2" Grid.Column="1" mvx:Bi.nd="SelectedDate CivilLiabilityStartDate" VerticalAlignment="Top"/>
+                        <local:RequiredLabel Label="Период на валидност:" Grid.Row="3" Grid.Column="0" Margin="0 0 0 10" />
+                        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding CivilLiabilityValidityPeriods}" SelectedItem="{Binding CivilLiabilityPeriod}" IsSynchronizedWithCurrentItem="True" Margin="0 0 0 10">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Label}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <!-- Застраховка "КАСКО" -->
+                        <local:RequiredLabel Label="Застраховка &quot;КАСКО&quot;:" Grid.Row="4" Grid.Column="0" />
+                        <DatePicker Grid.Row="4" Grid.Column="1" mvx:Bi.nd="SelectedDate CarInsuranceStartDate" VerticalAlignment="Top"/>
+                        <local:RequiredLabel Label="Период на валидност:" Grid.Row="5" Grid.Column="0" Margin="0 0 0 10"/>
+                        <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding CarInsurancePeriodValidityPeriods}" SelectedItem="{Binding CarInsurancePeriod}" IsSynchronizedWithCurrentItem="True" Margin="0 0 0 10">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Label}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <!-- Винетка -->
+                        <TextBlock Text="Винетка (дата на сключване):" Grid.Row="6" Grid.Column="0" />
+                        <DatePicker Grid.Row="6" Grid.Column="1" mvx:Bi.nd="SelectedDate VignetteStartDate" VerticalAlignment="Top" />
+                        <TextBlock Text="Период на валидност:" Grid.Row="7" Grid.Column="0" Margin="0 0 0 10" Grid.RowSpan="2" />
+                        <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding VignetteValidityPeriods}" SelectedItem="{Binding VignettePeriod}" IsSynchronizedWithCurrentItem="True" IsEnabled="{Binding HasVignette}" Margin="0 0 0 10">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Label}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <!-- Първа регистрация -->
+                        <local:RequiredLabel Label="Първа регистрация (дата):" Grid.Row="8" Grid.Column="0" />
+                        <DatePicker Grid.Row="8" Grid.Column="1" mvx:Bi.nd="SelectedDate FirstRegistration"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Column="3">
+                <TextBlock Style="{StaticResource SectionHeader}" Text="Поддръжка (пробег преди смяна)" />
+                <Border Style="{StaticResource SectionBorder}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <local:RequiredLabel Label="Масло:" Grid.Row="0" Grid.Column="0" />
+                        <TextBox Grid.Row="0" Grid.Column="1" mvx:Bi.nd="Text OilMileage" PreviewTextInput="NumberValidationTextBox"/>
+                        <local:RequiredLabel Label="Ролки и ремъци:" Grid.Row="1" Grid.Column="0" />
+                        <TextBox Grid.Row="1" Grid.Column="1" mvx:Bi.nd="Text BeltMileage" PreviewTextInput="NumberValidationTextBox"/>
+                        <local:RequiredLabel Label="Накладки:" Grid.Row="2" Grid.Column="0" />
+                        <TextBox Grid.Row="2" Grid.Column="1" mvx:Bi.nd="Text BrakeLiningsMileage" PreviewTextInput="NumberValidationTextBox"/>
+                        <local:RequiredLabel Label="Спирачни дискове:" Grid.Row="3" Grid.Column="0" />
+                        <TextBox Grid.Row="3" Grid.Column="1" mvx:Bi.nd="Text BrakeDisksMileage" PreviewTextInput="NumberValidationTextBox"/>
+                        <local:RequiredLabel Label="Антифриз:" Grid.Row="4" Grid.Column="0" />
+                        <TextBox Grid.Row="4" Grid.Column="1" mvx:Bi.nd="Text CoolantMileage" PreviewTextInput="NumberValidationTextBox"/>
+                    </Grid>
+                </Border>
+                <TextBlock Style="{StaticResource SectionHeader}" Text="Среден разход на гориво"/>
+                <Border Style="{StaticResource SectionBorder}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <local:RequiredLabel Label="Литри:" Grid.Row="0" Grid.Column="0" />
+                        <TextBox Grid.Row="0" Grid.Column="1" mvx:Bi.nd="Text FuelConsumption" PreviewTextInput="NumberValidationTextBox"/>
+                    </Grid>
+                </Border>
+                <TextBlock Style="{StaticResource SectionHeader}" Text="Визуализация" />
+                <Border Style="{StaticResource SectionBorder}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <local:RequiredLabel Label="Цвят:" Grid.Row="0" Grid.Column="0" />
+                        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Colors}" SelectedItem="{Binding Color}" IsSynchronizedWithCurrentItem="True">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Rectangle Fill="{Binding Name}" Height="20" Width="225" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="175" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Row="0" Margin="0 20 0 0" Source="{Binding ImageFile, Converter={StaticResource ImageValueConverter}, FallbackValue={StaticResource Van}}" />
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button mvx:Bi.nd="Command SelectImageCommand" Content="&#10133;" />
+                                <Button mvx:Bi.nd="Command RemoveImageCommand" Content="&#10134;" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Margin="0 10 25 0" HorizontalAlignment="Right">
+            <Button Content="Откажи" Padding="10" Margin="0 0 10 0" mvx:Bi.nd="Command GoHomeCommand"/>
+            <Button Content="Запиши" mvx:Bi.nd="Command SaveVehicleAndCloseCommand" IsEnabled="{Binding IsValid}" Padding="10"/>
+        </StackPanel>
+    </StackPanel>
+</local:BaseVehicleView>

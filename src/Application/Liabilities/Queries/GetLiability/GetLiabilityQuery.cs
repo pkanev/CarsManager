@@ -36,7 +36,7 @@ namespace CarsManager.Application.Liabilities.Queries.GetLiability
                 throw new NotFoundException(liabilityUtils.GetLiabilityName(request.Liability), request.Id);
 
             var liability = mapper.Map<GetLiabilityDto>(entity);
-            liability.LiabilityType = liabilityUtils.GetLiabilityName(request.Liability);
+            liability.LiabilityType = (int)request.Liability;
             return new LiabilityVm { Liability = liability };
         }
 

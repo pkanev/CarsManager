@@ -1,10 +1,13 @@
 ﻿using System;
+using CarsManager.Application.Common.Mappings;
+using CarsManager.Domain.Entities;
 
 namespace CarsManager.Application.Vehicles.Commands.Dtos
 {
-    public class LiabilityDto
+    public class LiabilityDto :IMapFrom<Liability>
     {
-        public DateTime Date { get; set; } = DateTime.Now;
-        public int DurationDays { get; set; } = 365;
+        public int Id { get; set; }
+        public DateTime StartDate { get; set; } = DateTime.Today;
+        public DateTime EndDate { get; set; } = DateTime.Today;
     }
 }

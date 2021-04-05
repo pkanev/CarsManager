@@ -37,7 +37,7 @@ namespace CarsManager.Application.Common.Utils
             return fileName;
         }
 
-        public void DeleteFileAsync(string directory, string filename, CancellationToken cancellationToken)
+        public void DeleteFile(string directory, string filename)
         {
             if (string.IsNullOrWhiteSpace(directory))
                 throw new ArgumentNullException("Image store path cannot be null or empty");

@@ -4,6 +4,7 @@ using CarsManager.Application.Models.Commands.DeleteModel;
 using CarsManager.Application.Models.Commands.UpdateModel;
 using CarsManager.Application.Models.Queries.GetModel;
 using CarsManager.Application.Models.Queries.GetModels;
+using CarsManager.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarsManager.Server.Controllers
@@ -14,9 +15,9 @@ namespace CarsManager.Server.Controllers
         public async Task<ActionResult<ModelVm>> Get(int id)
             => await Mediator.Send(new GetModelQuery { Id = id });
 
-        [HttpGet("make/{id}")]
-        public async Task<ActionResult<ModelsVm>> GetModelsForMake(int id)
-            => await Mediator.Send(new GetModelsQuery { Id = id });
+        [HttpGet("make/{id}/type/{vehicleType}")]
+        public async Task<ActionResult<ModelsVm>> GetModelsForMake(int id, VehicleType vehicleType)
+            => await Mediator.Send(new GetModelsQuery { Id = id, VehicleType = vehicleType });
 
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateModelCommand command)

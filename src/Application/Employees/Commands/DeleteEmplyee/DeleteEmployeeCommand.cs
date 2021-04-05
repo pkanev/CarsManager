@@ -31,8 +31,8 @@ namespace CarsManager.Application.Employees.Commands.DeleteEmplyee
             if (entity == null)
                 throw new NotFoundException(nameof(Employee), request.Id);
 
-            if (!string.IsNullOrEmpty(entity.ImageName))
-                imageManager.DeleteFileAsync(request.PhotoPath, entity.ImageName, cancellationToken);
+            if (!string.IsNullOrEmpty(entity.Image))
+                imageManager.DeleteFile(request.PhotoPath, entity.Image);
 
             entity.Vehicles.Clear();
             context.Employees.Remove(entity);

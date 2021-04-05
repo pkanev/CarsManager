@@ -38,25 +38,25 @@ namespace CarsManager.Application.Liabilities.Queries.GetLiabilitiesForVehicleWi
             {
                 LiabilityType.MOT => await context.MOTs
                     .Where(l => l.VehicleId == request.VehicleId)
-                    .OrderByDescending(l => l.Date)
+                    .OrderByDescending(l => l.StartDate)
                     .ProjectTo<ListedLiabilityDto>(mapper.ConfigurationProvider)
                     .PaginatedListAsync(request.PageNumber, request.PageSize),
 
                 LiabilityType.CivilLiability => await context.CivilLiabilities
                     .Where(l => l.VehicleId == request.VehicleId)
-                    .OrderByDescending(l => l.Date)
+                    .OrderByDescending(l => l.StartDate)
                     .ProjectTo<ListedLiabilityDto>(mapper.ConfigurationProvider)
                     .PaginatedListAsync(request.PageNumber, request.PageSize),
 
                 LiabilityType.CarInsurance => await context.CarInsurances
                     .Where(l => l.VehicleId == request.VehicleId)
-                    .OrderByDescending(l => l.Date)
+                    .OrderByDescending(l => l.StartDate)
                     .ProjectTo<ListedLiabilityDto>(mapper.ConfigurationProvider)
                     .PaginatedListAsync(request.PageNumber, request.PageSize),
 
                 LiabilityType.Vignette => await context.Vignettes
                     .Where(l => l.VehicleId == request.VehicleId)
-                    .OrderByDescending(l => l.Date)
+                    .OrderByDescending(l => l.StartDate)
                     .ProjectTo<ListedLiabilityDto>(mapper.ConfigurationProvider)
                     .PaginatedListAsync(request.PageNumber, request.PageSize),
 

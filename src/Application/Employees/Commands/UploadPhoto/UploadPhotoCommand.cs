@@ -33,10 +33,10 @@ namespace CarsManager.Application.Employees.Commands.UploadPhoto
             if (entity == null)
                 throw new NotFoundException(nameof(Employees), request.EmployeeId);
 
-            if (!string.IsNullOrEmpty(entity.ImageName))
-                imageManager.DeleteFileAsync(request.PhotoPath, entity.ImageName, cancellationToken);
+            if (!string.IsNullOrEmpty(entity.Image))
+                imageManager.DeleteFile(request.PhotoPath, entity.Image);
 
-            entity.ImageName = request.Photo == null
+            entity.Image = request.Photo == null
                 ? string.Empty
                 : await imageManager.SaveFileAsync(request.PhotoPath, request.Photo, cancellationToken);
 

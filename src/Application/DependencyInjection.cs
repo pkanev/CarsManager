@@ -23,6 +23,7 @@ namespace CarsManager.Application
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
             services.AddSingleton<IImageManager, ImageManager>();
             services.AddSingleton<ILiabilityUtils, LiabilityUtils>();
+            services.AddSingleton<IUrlHelper, UrlHelper>();
 
             return services;
         }

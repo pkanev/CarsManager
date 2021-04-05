@@ -15,8 +15,6 @@ namespace CarsManager.Application.Liabilities.Queries.GetLiabilitiesForVehicleWi
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Liability, ListedLiabilityDto>()
-                .ForMember(d => d.StartDate, opt => opt.MapFrom(s => s.Date))
-                .ForMember(d => d.EndDate, opt => opt.MapFrom(s => s.Date.Add(s.Duration)))
                 .ForMember(d => d.LiabilityType, opt => opt.MapFrom(s => s.GetType().Name));
         }
     }

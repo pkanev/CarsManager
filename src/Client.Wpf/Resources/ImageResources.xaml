@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <BitmapImage x:Key="Home" UriSource="/Images/house.png" />
+    <BitmapImage x:Key="Car" UriSource="/Images/car.jpg" />
+    <BitmapImage x:Key="Suv" UriSource="/Images/suv.jpg" />
+    <BitmapImage x:Key="Truck" UriSource="/Images/truck.jpg" />
+    <BitmapImage x:Key="Bus" UriSource="/Images/bus.jpg" />
+    <BitmapImage x:Key="Van" UriSource="/Images/van.png" />
+    <BitmapImage x:Key="Profile" UriSource="/Images/profile.png" />
+</ResourceDictionary>

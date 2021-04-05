@@ -14,5 +14,7 @@ namespace CarsManager.Application.Employees.Queries.GetEmployeesWithPagination
         public string PostCode { get; set; }
         public string Telephone { get; set; }
         public string ImageName { get; set; }
+        public string ImageAddress { get; set; }
+
     }
 }

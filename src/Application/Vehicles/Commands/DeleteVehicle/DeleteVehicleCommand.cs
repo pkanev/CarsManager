@@ -10,15 +10,18 @@ namespace CarsManager.Application.Vehicles.Commands.DeleteVehicle
     public class DeleteVehicleCommand : IRequest
     {
         public int Id { get; set; }
+        public string ImagePath { get; set; }
     }
 
     public class DeleteVehicleCommandHandler : IRequestHandler<DeleteVehicleCommand, Unit>
     {
         private readonly IApplicationDbContext context;
+        private readonly IImageManager imageManager;
 
-        public DeleteVehicleCommandHandler(IApplicationDbContext context)
+        public DeleteVehicleCommandHandler(IApplicationDbContext context, IImageManager imageManager)
         {
             this.context = context;
+            this.imageManager = imageManager;
         }
 
         public async Task<Unit> Handle(DeleteVehicleCommand request, CancellationToken cancellationToken)
@@ -27,6 +30,9 @@ namespace CarsManager.Application.Vehicles.Commands.DeleteVehicle
 
             if (entity == null)
                 throw new NotFoundException(nameof(Vehicle), request.Id);
+
+            if (!string.IsNullOrEmpty(entity.Image))
+                imageManager.DeleteFile(request.ImagePath, entity.Image);
 
             entity.Employees.Clear();
             entity.Repairs.Clear();

@@ -13,7 +13,7 @@ namespace CarsManager.Domain.Entities
         public string Address { get; set; }
         public string PostCode { get; set; }
         public string Telephone { get; set; }
-        public string ImageName { get; set; }
+        public string Image { get; set; }
 
         public ICollection<Vehicle> Vehicles { get; set; } = new HashSet<Vehicle>();
     }

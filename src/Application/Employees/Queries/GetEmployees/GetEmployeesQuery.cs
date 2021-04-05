@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,6 +12,7 @@ namespace CarsManager.Application.Employees.Queries.GetEmployees
 {
     public class GetEmployeesQuery : IRequest<EmployeesVm>
     {
+        public string PhotoPath { get; set; }
     }
 
     public class GetEmployeesQueryHandler : IRequestHandler<GetEmployeesQuery, EmployeesVm>
@@ -24,15 +26,20 @@ namespace CarsManager.Application.Employees.Queries.GetEmployees
             this.mapper = mapper;
         }
 
-        public async Task<EmployeesVm> Handle(GetEmployeesQuery request, CancellationToken cancellationToken) =>
-            new EmployeesVm
-            {
-                Employees = await context.Employees
-                    .ProjectTo<ListedEmployeeDto>(mapper.ConfigurationProvider)
+        public async Task<EmployeesVm> Handle(GetEmployeesQuery request, CancellationToken cancellationToken)
+        {
+            var employees = await context.Employees
+                    .ProjectTo<BasicEmployeeDto>(mapper.ConfigurationProvider)
                     .OrderBy(e => e.Surname)
                     .ThenBy(e => e.GivenName)
                     .ThenBy(e => e.MiddleName)
-                    .ToListAsync()
-            };
+                    .ToListAsync();
+
+            foreach (var employee in employees)
+                if (!string.IsNullOrEmpty(employee.ImageName))
+                    employee.ImageAddress = Path.Combine(request.PhotoPath, employee.ImageName);
+
+            return new EmployeesVm { Employees = employees };
+        }
     }
 }

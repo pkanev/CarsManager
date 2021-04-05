@@ -34,14 +34,16 @@ namespace CarsManager.Application.Employees.Queries.GetEmployee
                 .Employees
                 .Include(e => e.Town)
                 .Include(e => e.Vehicles)
+                .ThenInclude(v => v.Model)
+                .ThenInclude(m => m.Make)
                 .FirstOrDefaultAsync(e => e.Id == request.Id);
 
             if (entity == null)
                 throw new NotFoundException(nameof(Employee), request.Id);
 
             var employee = mapper.Map<EmployeeDto>(entity);
-            if (!string.IsNullOrEmpty(employee.ImageUrl))
-                employee.ImageUrl = Path.Combine(request.PhotoPath, employee.ImageUrl);
+            if (!string.IsNullOrEmpty(employee.ImageName))
+                employee.ImageAddress = Path.Combine(request.PhotoPath, employee.ImageName);
 
             return new EmployeeVm
             {
