@@ -1,5 +1,4 @@
 ﻿using CarsManager.Application.Common.Constants;
-using CarsManager.Application.Employees;
 using CarsManager.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -20,6 +19,12 @@ namespace CarsManager.Infrastructure.Persistence.Configurations
             builder.Property(e => e.Surname)
                 .HasMaxLength(EmployeeConstants.NAME_MAX_LENGTH)
                 .IsRequired();
+
+            builder.HasMany(e => e.RoadBookEntries)
+                .WithMany(rbe => rbe.Employees);
+
+            builder.HasMany(e => e.ActiveRecords)
+                .WithMany(ar => ar.ActiveUsers);
         }
     }
 }

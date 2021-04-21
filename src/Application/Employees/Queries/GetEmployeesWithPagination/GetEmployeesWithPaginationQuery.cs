@@ -33,6 +33,6 @@ namespace CarsManager.Application.Employees.Queries.GetEmployeesWithPagination
                 .OrderBy(e => e.Surname)
                 .ThenBy(e => e.GivenName)
                 .ProjectTo<EmployeeDto>(mapper.ConfigurationProvider)
-                .PaginatedListAsync(request.PageNumber, request.PageSize);
+                .ToPaginatedListAsync(request.PageNumber, request.PageSize);
     }
 }

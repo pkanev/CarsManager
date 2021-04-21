@@ -1,0 +1,60 @@
+﻿<local:ReportView
+    x:Class="Client.Wpf.Views.LiabilitiesView"
+    x:TypeArguments="bvm:LiabilityForReportModel"
+    xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:Client.Wpf.Views"
+    xmlns:bvm="clr-namespace:Client.Core.Models.Liabilities;assembly=Client.Core"
+    xmlns:converters="clr-namespace:Client.Wpf.Converters"
+    mc:Ignorable="d" 
+    d:DesignHeight="700" d:DesignWidth="1000">
+    <local:BaseView.Resources>
+        <converters:VehicleTypeToVehicleConverter x:Key="VehicleTypeToVehicleConverter" />
+        <converters:IssueLevelToBrushConverter x:Key="IssueLevelToBrushConverter" />
+    </local:BaseView.Resources>
+    <StackPanel Orientation="Vertical" x:Name="PageContent">
+        <StackPanel Orientation="Horizontal" Margin="15 0 0 0">
+            <Button Width="25" Height="25" FontSize="14" VerticalAlignment="Top" VerticalContentAlignment="Top" mvx:Bi.nd="Command GoHomeCommand">
+                <Image Source="{StaticResource Home}" />
+            </Button>
+            <TextBlock Text="{Binding Caption}" Style="{StaticResource ViewTitle}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="15 0 0 5">
+            <Button mvx:Bi.nd="Command ExportCommand, CommandParameter='Excel'" IsEnabled="{Binding CanExport}" Margin="5" ToolTip="Запазете като Excel">
+                <Image Source="{StaticResource Excel}" Width="32"/>
+            </Button>
+            <Button mvx:Bi.nd="Command ExportCommand, CommandParameter='Csv'" IsEnabled="{Binding CanExport}" Margin="5" ToolTip="Запазете като CSV">
+                <Image Source="{StaticResource Csv}" Width="32" />
+            </Button>
+            <Button Click="PrintPage" Margin="5" ToolTip="Разпечатване">
+                <Image Source="{StaticResource Printer}" Width="32"/>
+            </Button>
+        </StackPanel>
+        <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False" CanUserAddRows="False" Name="ReportDataGrid" IsSynchronizedWithCurrentItem="True" SelectionUnit="Cell" VerticalScrollBarVisibility="Hidden" CanUserSortColumns="False" Height="551">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Рег. номер" Binding="{Binding LicencePlate}" IsReadOnly="True" Width="100" />
+                <DataGridTextColumn Header="Марка и модел" Binding="{Binding MakeAndModel}" IsReadOnly="True" Width="200" />
+                <DataGridTextColumn Header="Вид" Binding="{Binding VehicleType, Converter={StaticResource VehicleTypeToVehicleConverter}}" IsReadOnly="True" Width="75" />
+                <DataGridTextColumn Header="Цвят" Binding="{Binding Color}" IsReadOnly="True" Width="100" />
+                <DataGridTextColumn Header="Дата на сключване" Binding="{Binding StartDate, StringFormat='{}{0:dd.MM.yyyy}'}" IsReadOnly="True" Width="150" />
+                <DataGridTextColumn Header="Дата на изтичане" Binding="{Binding EndDate, StringFormat='{}{0:dd.MM.yyyy}'}" IsReadOnly="True" Width="150" />
+                <DataGridTextColumn Header="Остатък" Binding="{Binding RemainingDays}" IsReadOnly="True" Width="100">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Foreground" Value="{Binding IssueLevel, Converter={StaticResource IssueLevelToBrushConverter}}"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 15 0 0">
+            <Button Content="&#171;" mvx:Bi.nd="Command GoToPreviousPageCommand" Padding="25 5" IsEnabled="{Binding PageData.HasPreviousPage}" />
+            <TextBlock mvx:Bi.nd="Text PageData.PageIndex" Margin="25 0" VerticalAlignment="Center"/>
+            <Button Content="&#187;" mvx:Bi.nd="Command GoToNextPageCommand" Padding="25 5" IsEnabled="{Binding PageData.HasNextPage}"/>
+        </StackPanel>
+    </StackPanel>
+</local:ReportView>

@@ -18,6 +18,7 @@ namespace CarsManager.Application.Common.Interfaces
         DbSet<Vignette> Vignettes { get; set; }
         DbSet<Employee> Employees { get; set; }
         DbSet<Town> Towns { get; set; }
+        DbSet<RoadBookEntry> RoadBookEntries { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Client.Core.Models;
+using Client.Core.Models.Liabilities;
 using Client.Core.Rest;
 using Client.Core.Utils;
 using MvvmCross.Navigation;

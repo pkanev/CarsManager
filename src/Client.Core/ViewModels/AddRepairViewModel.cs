@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Client.Core.Dtos;
 using Client.Core.Models;
+using Client.Core.Models.Repairs;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.Utils;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -14,6 +15,7 @@ namespace Client.Core.ViewModels
     public class AddRepairViewModel : SubPageViewModel
     {
         private decimal vatRate = Properties.Settings.Default.VAT / 100;
+        private readonly IVatService vatService;
 
         private ObservableCollection<RepairShopModel> repairShops;
         private RepairShopModel repairShop;
@@ -50,8 +52,12 @@ namespace Client.Core.ViewModels
             set
             {
                 SetProperty(ref vehicle, value);
+                if (vehicle != null && repair != null)
+                    repair.Mileage = Vehicle.Mileage;
+
                 RaisePropertyChanged(() => CanSave);
                 RaisePropertyChanged(() => IsVehicleLoaded);
+                RaisePropertyChanged(() => Repair);
             }
         }
 
@@ -73,9 +79,10 @@ namespace Client.Core.ViewModels
             }
         }
 
+        public string VatPercent => $"{Properties.Settings.Default.VAT}%";
         public decimal VatRate => vatRate;
-        public string BasePrice => (Price / (1 + vatRate)).ToString("#.##");
-        public string Vat => (Price - Price / (1 + vatRate)).ToString("#.##");
+        public string BasePrice => vatService.GetFormattedBasePrice(Price);
+        public string Vat => vatService.GetFormattedVat(Price);
 
         public bool CanSave => RepairShop != null && Vehicle != null && Price > 0;
         public bool IsVehicleLoaded => Vehicle != null;
@@ -83,13 +90,15 @@ namespace Client.Core.ViewModels
         public IMvxCommand AddRepairShopCommand { get; set; }
         public IMvxCommand EditRepairShopCommand { get; set; }
         public IMvxCommand DeleteRepairShopCommand { get; set; }
-        public IMvxCommand CopyMileageCommand { get; set; }
         public IMvxCommand SaveRepairCommand { get; set; }
         public IMvxCommand CancelCommand { get; set; }
+        public IMvxCommand<string> RepairCheckedCommand { get; set; }
 
-        public AddRepairViewModel(IApiService apiService, IMvxNavigationService navigationService)
+        public AddRepairViewModel(IVatService vatService, IApiService apiService, IMvxNavigationService navigationService)
             : base(apiService, navigationService)
         {
+            this.vatService = vatService;
+
             AddRepairShopCommand = new MvxCommand(() => NavigationService.Navigate<RepairShopViewModel, NavigationModel<RepairShopModel>>(new NavigationModel<RepairShopModel> { Data = new RepairShopModel(), Callback = GetRepairShops }));
             EditRepairShopCommand = new MvxCommand(() => NavigationService.Navigate<RepairShopViewModel, NavigationModel<RepairShopModel>>(
                 new NavigationModel<RepairShopModel>{
@@ -97,9 +106,9 @@ namespace Client.Core.ViewModels
                     Callback = GetRepairShops
                 }));
             DeleteRepairShopCommand = new MvxAsyncCommand(DeleteRepairShop);
-            CopyMileageCommand = new MvxCommand(CopyMileage);
             SaveRepairCommand = new MvxAsyncCommand(SaveRepair);
             CancelCommand = new MvxCommand(GoHome);
+            RepairCheckedCommand = new MvxCommand<string>(RepairChecked);
         }
 
         public override async Task Initialize()
@@ -150,12 +159,6 @@ namespace Client.Core.ViewModels
             });
         }
 
-        private void CopyMileage()
-        {
-            Repair.Mileage = Vehicle.Mileage;
-            RaisePropertyChanged(() => Repair);
-        }
-
         private async Task SaveRepair()
         {
             if (!CanSave)
@@ -163,7 +166,7 @@ namespace Client.Core.ViewModels
 
             Repair.VehicleId = Vehicle.Id;
             Repair.RepairShopId = RepairShop.Id;
-            Repair.InitialPrice = Math.Round(Price / (1 + vatRate), 2);
+            Repair.FinalPrice = Price;
 
             var response = await ApiService.PostAsync<int>($"repairs", Repair);
 
@@ -171,6 +174,16 @@ namespace Client.Core.ViewModels
                 GoHome();
             else
                 RaiseNotification(response.Error, "Грешка!!!");
+        }
+
+        private void RepairChecked(string propertyName)
+        {
+            var property = Repair.GetType().GetProperty(propertyName);
+            if (property == null)
+                return;
+
+            property.SetValue(Repair, !(bool)property.GetValue(Repair));
+            RaisePropertyChanged(() => Repair);
         }
     }
 }

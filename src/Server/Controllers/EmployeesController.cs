@@ -76,19 +76,21 @@ namespace CarsManager.Server.Controllers
         }
 
         [HttpPost("{id}/vehicle/{vehicleId}")]
-        public async Task<ActionResult> AssignVehicle(int id, int vehicleId)
+        public async Task<ActionResult<int>> AssignVehicle(int id, int vehicleId, AssignVehicleCommand command)
         {
-            await Mediator.Send(new AssignVehicleCommand { EmployeeId = id, VehicleId = vehicleId });
+            if (id != command.EmployeeId || vehicleId != command.VehicleId)
+                return BadRequest();
 
-            return NoContent();
+            return await Mediator.Send(command);
         }
 
         [HttpDelete("{id}/vehicle/{vehicleId}")]
-        public async Task<ActionResult> RemoveVehicle(int id, int vehicleId)
+        public async Task<ActionResult<int>> RemoveVehicle(int id, int vehicleId, RemoveVehicleCommand command)
         {
-            await Mediator.Send(new RemoveVehicleCommand { EmployeeId = id, VehicleId = vehicleId });
+            if (id != command.EmployeeId || vehicleId != command.VehicleId)
+                return BadRequest();
 
-            return NoContent();
+            return await Mediator.Send(command);
         }
     }
 }

@@ -15,6 +15,8 @@ namespace CarsManager.Domain.Entities
         public string Telephone { get; set; }
         public string Image { get; set; }
 
-        public ICollection<Vehicle> Vehicles { get; set; } = new HashSet<Vehicle>();
+        public ICollection<Vehicle> Vehicles { get; private set; } = new HashSet<Vehicle>();
+        public ICollection<RoadBookEntry> RoadBookEntries { get; private set; } = new HashSet<RoadBookEntry>();
+        public ICollection<RoadBookEntry> ActiveRecords { get; private set; } = new HashSet<RoadBookEntry>();
     }
 }

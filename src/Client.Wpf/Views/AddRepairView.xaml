@@ -10,6 +10,7 @@
                 d:DesignHeight="700" d:DesignWidth="1000">
     <local:BaseView.Resources>
         <converters:ImageValueConverter x:Key="ImageValueConverter"/>
+        <converters:PriceToDecimalsConverter x:Key="PriceToDecimalsConverter" />
     </local:BaseView.Resources>
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal" Margin="15 0 0 0">
@@ -20,7 +21,7 @@
         </StackPanel>
         <Grid Margin="15">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width=".55*"/>
+                <ColumnDefinition Width=".6*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -33,7 +34,7 @@
                 <Border Style="{StaticResource SectionBorder}" Height="175">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width=".7*" />
+                            <ColumnDefinition Width=".75*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -45,7 +46,7 @@
                         </Grid.RowDefinitions>
                         <local:RequiredLabel Grid.Row="0" Grid.Column="0" Label="Сервиз:" />
                         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                            <ComboBox ItemsSource="{Binding RepairShops}" SelectedItem="{Binding RepairShop}" IsSynchronizedWithCurrentItem="True" Margin="0 0 2 0" VerticalAlignment="Top" Width="125">
+                            <ComboBox ItemsSource="{Binding RepairShops}" SelectedItem="{Binding RepairShop}" IsSynchronizedWithCurrentItem="True" Margin="0 0 2 0" VerticalAlignment="Top" Width="135">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock mvx:Bi.nd="Text Name" />
@@ -64,13 +65,10 @@
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Настоящ пробег:" />
-                        <TextBlock Grid.Row="2" Grid.Column="1" mvx:Bi.nd="Text Vehicle.Mileage" />
-                        <local:RequiredLabel Grid.Row="3" Grid.Column="0" Label="Пробег:" />
-                        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
-                            <TextBox Grid.Row="3" Grid.Column="1" mvx:Bi.nd="Text Repair.Mileage" VerticalAlignment="Top" Width="110"/>
-                            <Button mvx:Bi.nd="Command CopyMileageCommand" IsEnabled="{Binding IsVehicleLoaded}" Content="Копирай" VerticalAlignment="Top" Padding="5 0" Margin="5 0 0 0"/>
-                        </StackPanel>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Предишен пробег:"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" mvx:Bi.nd="Text Vehicle.Mileage"/>
+                        <local:RequiredLabel Grid.Row="3" Grid.Column="0" Label="Настоящ пробег:" />
+                        <TextBox Grid.Row="3" Grid.Column="1" mvx:Bi.nd="Text Repair.Mileage" VerticalAlignment="Top" />
                         <local:RequiredLabel Grid.Row="4" Grid.Column="0" Label="Дата:" />
                         <DatePicker Grid.Row="4" Grid.Column="1" mvx:Bi.nd="SelectedDate Repair.Date" VerticalAlignment="Top" />
                     </Grid>
@@ -85,39 +83,57 @@
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
                             <CheckBox IsChecked="{Binding Repair.IsOilChanged}" VerticalAlignment="Bottom" />
-                            <TextBlock Margin="10 0 0 0" Text="Смяна на масло" />
+                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsOilChanged" TextDecorations="None" Foreground="Black">Смяна на масло</Hyperlink>
+                            </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox IsChecked="{Binding Repair.IsBeltChanged}" VerticalAlignment="Bottom" />
-                            <TextBlock Margin="10 0 0 0" Text="Смяна на ролки и ремъци" />
+                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsBeltChanged" TextDecorations="None" Foreground="Black">Смяна на ролки и ремъци</Hyperlink>
+                            </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox IsChecked="{Binding Repair.IsBatteryChanged}" VerticalAlignment="Bottom" />
-                            <TextBlock Margin="10 0 0 0" Text="Смяна на акумулатор" />
+                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsBatteryChanged" TextDecorations="None" Foreground="Black">Смяна на акумулатор</Hyperlink>
+                            </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox IsChecked="{Binding Repair.IsSparkPlugChanged}" VerticalAlignment="Bottom" />
-                            <TextBlock Margin="10 0 0 0" Text="Смяна на свещи" />
+                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsSparkPlugChanged" TextDecorations="None" Foreground="Black">Смяна на свещи</Hyperlink>
+                            </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox IsChecked="{Binding Repair.IsFuelFilterChanged}" VerticalAlignment="Bottom" />
-                            <TextBlock Margin="10 0 0 0" Text="Смяна на горивен филтър" />
+                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsFuelFilterChanged" TextDecorations="None" Foreground="Black">Смяна на горивен филтър</Hyperlink>
+                            </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox IsChecked="{Binding Repair.IsBrakeLiningsChanged}" VerticalAlignment="Bottom" />
-                            <TextBlock Margin="10 0 0 0" Text="Смяна на накладки" />
+                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsBrakeLiningsChanged" TextDecorations="None" Foreground="Black">Смяна на накладки</Hyperlink>
+                            </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox IsChecked="{Binding Repair.IsBrakeDisksChanged}" VerticalAlignment="Bottom" />
-                            <TextBlock Margin="10 0 0 0" Text="Смяна на спирачни дискове" />
+                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsBrakeDisksChanged" TextDecorations="None" Foreground="Black">Смяна на спирачни дискове</Hyperlink>
+                            </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox IsChecked="{Binding Repair.IsCoolantChanged}" VerticalAlignment="Bottom" />
-                            <TextBlock Margin="10 0 0 0" Text="Смяна на антифриз" />
+                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsCoolantChanged" TextDecorations="None" Foreground="Black">Смяна на антифриз</Hyperlink>
+                            </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox IsChecked="{Binding Repair.IsOtherWorkDone}" VerticalAlignment="Bottom" />
-                            <TextBlock Margin="10 0 0 0" Text="Друго" />
+                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsOtherWorkDone" TextDecorations="None" Foreground="Black">Друго</Hyperlink>
+                            </TextBlock>
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -135,9 +151,13 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <local:RequiredLabel Grid.Row="0" Grid.Column="0" Label="Цена:" />
-                        <TextBox Grid.Row="0" Grid.Column="1" mvx:Bi.nd="Text Price" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Price, Converter={StaticResource PriceToDecimalsConverter}}" PreviewTextInput="PriceValidationTextBox"/>
                         <TextBlock Grid.Row="0" Grid.Column="2" Text="лв." Margin="5 0 0 0" />
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="ДДС (20%):" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" >
+                            <TextBlock Text="ДДС (" />
+                            <TextBlock Text="{Binding VatPercent}" />
+                            <TextBlock Text="):" />
+                        </StackPanel>
                         <TextBlock Grid.Row="1" Grid.Column="1" mvx:Bi.nd="Text Vat" HorizontalAlignment="Right" />
                         <TextBlock Grid.Row="1" Grid.Column="2" Text="лв." Margin="5 0 0 0" />
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="Цена без ДДС:" />

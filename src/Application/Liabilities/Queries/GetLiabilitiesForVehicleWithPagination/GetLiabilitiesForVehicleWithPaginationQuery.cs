@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Constants;
+using CarsManager.Application.Common.Dtos;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Mappings;
@@ -12,7 +13,7 @@ using MediatR;
 
 namespace CarsManager.Application.Liabilities.Queries.GetLiabilitiesForVehicleWithPagination
 {
-    public class GetLiabilitiesForVehicleWithPaginationQuery : IRequest<PaginatedList<ListedLiabilityDto>>, IMapFrom<GetLiabilitiesForVehicleWithPaginationQueryDto>
+    public class GetLiabilitiesForVehicleWithPaginationQuery : IRequest<PaginatedList<ListedLiabilityDto>>, IMapFrom<PaginationDto>
     {
         public int VehicleId { get; set; }
         public int PageNumber { get; set; } = PageConstants.DEFAULT_PAGE_NUMBER;
@@ -40,25 +41,25 @@ namespace CarsManager.Application.Liabilities.Queries.GetLiabilitiesForVehicleWi
                     .Where(l => l.VehicleId == request.VehicleId)
                     .OrderByDescending(l => l.StartDate)
                     .ProjectTo<ListedLiabilityDto>(mapper.ConfigurationProvider)
-                    .PaginatedListAsync(request.PageNumber, request.PageSize),
+                    .ToPaginatedListAsync(request.PageNumber, request.PageSize),
 
                 LiabilityType.CivilLiability => await context.CivilLiabilities
                     .Where(l => l.VehicleId == request.VehicleId)
                     .OrderByDescending(l => l.StartDate)
                     .ProjectTo<ListedLiabilityDto>(mapper.ConfigurationProvider)
-                    .PaginatedListAsync(request.PageNumber, request.PageSize),
+                    .ToPaginatedListAsync(request.PageNumber, request.PageSize),
 
                 LiabilityType.CarInsurance => await context.CarInsurances
                     .Where(l => l.VehicleId == request.VehicleId)
                     .OrderByDescending(l => l.StartDate)
                     .ProjectTo<ListedLiabilityDto>(mapper.ConfigurationProvider)
-                    .PaginatedListAsync(request.PageNumber, request.PageSize),
+                    .ToPaginatedListAsync(request.PageNumber, request.PageSize),
 
                 LiabilityType.Vignette => await context.Vignettes
                     .Where(l => l.VehicleId == request.VehicleId)
                     .OrderByDescending(l => l.StartDate)
                     .ProjectTo<ListedLiabilityDto>(mapper.ConfigurationProvider)
-                    .PaginatedListAsync(request.PageNumber, request.PageSize),
+                    .ToPaginatedListAsync(request.PageNumber, request.PageSize),
 
                 _ => throw new InvalidLiabilityTypeException($"Invalid liability type: {request.Liability}")
             };

@@ -6,6 +6,6 @@ namespace CarsManager.Domain.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Repair> Repairs { get; set; } = new HashSet<Repair>();
+        public ICollection<Repair> Repairs { get; private set; } = new HashSet<Repair>();
     }
 }

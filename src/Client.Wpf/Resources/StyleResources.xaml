@@ -15,6 +15,9 @@
         <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="Padding" Value="5"/>
     </Style>
+    <Style TargetType="{x:Type DatePicker}">
+        <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
     <Style TargetType="{x:Type DatePickerTextBox}">
         <Setter Property="Text" Value="Дата:" />
     </Style>
@@ -26,5 +29,71 @@
         <Setter Property="Width" Value="20"/>
         <Setter Property="Height" Value="20"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
+    <Style TargetType="{x:Type CheckBox}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Cursor" Value="Hand"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="{x:Type Hyperlink}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Cursor" Value="Arrow"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="{x:Type DataGrid}">
+        <Setter Property="AlternatingRowBackground" Value="LightYellow" />
+        <Setter Property="RowHeight" Value="21" />
+        <Setter Property="GridLinesVisibility" Value="Horizontal" />
+        <Setter Property="HorizontalGridLinesBrush" Value="Brown" />
+        <Setter Property="Width" Value="950" />
+    </Style>
+    <Style TargetType="{x:Type DataGridCell}" x:Key="RedDataGridCellStyle">
+        <Setter Property="Foreground" Value="Red" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="{x:Type DataGridCell}"  x:Key="BlueDataGridCellStyle">
+        <Setter Property="Foreground" Value="Blue" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="{x:Type TextBlock}" x:Key="Issue">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="5 0" />
+    </Style>
+    <Style TargetType="{x:Type TextBlock}" x:Key="Warning" BasedOn="{StaticResource Issue}">
+        <Setter Property="Foreground" Value="Red"/>
+        <Setter Property="Background" Value="Yellow"/>
+        <Setter Property="Margin" Value="0 0 5 0" />
+    </Style>
+    <Style TargetType="{x:Type TextBlock}" x:Key="Alert" BasedOn="{StaticResource Issue}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="Red"/>
+    </Style>
+    <Style TargetType="{x:Type Button}" x:Key="ReportButton">
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Margin" Value="0 0 0 10" />
+        <Setter Property="MinHeight" Value="45" />
+    </Style>
+    <Style TargetType="{x:Type Border}" x:Key="Summary">
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Background" Value="LightYellow"/>
+        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="BorderThickness" Value="1"/>
     </Style>
 </ResourceDictionary>

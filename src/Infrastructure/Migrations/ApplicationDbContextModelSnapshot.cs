@@ -190,7 +190,7 @@ namespace CarsManager.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<decimal>("InitialPrice")
+                    b.Property<decimal>("FinalPrice")
                         .HasColumnType("numeric");
 
                     b.Property<bool>("IsBatteryChanged")
@@ -256,6 +256,38 @@ namespace CarsManager.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("RepairShops");
+                });
+
+            modelBuilder.Entity("CarsManager.Domain.Entities.RoadBookEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<DateTime?>("CheckedIn")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("CheckedOut")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Destination")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("NewMileage")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OldMileage")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("RoadBookEntries");
                 });
 
             modelBuilder.Entity("CarsManager.Domain.Entities.Town", b =>
@@ -422,6 +454,36 @@ namespace CarsManager.Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("EmployeeRoadBookEntry", b =>
+                {
+                    b.Property<int>("EmployeesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RoadBookEntriesId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("EmployeesId", "RoadBookEntriesId");
+
+                    b.HasIndex("RoadBookEntriesId");
+
+                    b.ToTable("EmployeeRoadBookEntry");
+                });
+
+            modelBuilder.Entity("EmployeeRoadBookEntry1", b =>
+                {
+                    b.Property<int>("ActiveRecordsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ActiveUsersId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ActiveRecordsId", "ActiveUsersId");
+
+                    b.HasIndex("ActiveUsersId");
+
+                    b.ToTable("EmployeeRoadBookEntry1");
                 });
 
             modelBuilder.Entity("EmployeeVehicle", b =>
@@ -750,6 +812,17 @@ namespace CarsManager.Infrastructure.Migrations
                     b.Navigation("Vehicle");
                 });
 
+            modelBuilder.Entity("CarsManager.Domain.Entities.RoadBookEntry", b =>
+                {
+                    b.HasOne("CarsManager.Domain.Entities.Vehicle", "Vehicle")
+                        .WithMany("RoadBookEntries")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Vehicle");
+                });
+
             modelBuilder.Entity("CarsManager.Domain.Entities.Vehicle", b =>
                 {
                     b.HasOne("CarsManager.Domain.Entities.Model", "Model")
@@ -770,6 +843,36 @@ namespace CarsManager.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Vehicle");
+                });
+
+            modelBuilder.Entity("EmployeeRoadBookEntry", b =>
+                {
+                    b.HasOne("CarsManager.Domain.Entities.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("EmployeesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarsManager.Domain.Entities.RoadBookEntry", null)
+                        .WithMany()
+                        .HasForeignKey("RoadBookEntriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EmployeeRoadBookEntry1", b =>
+                {
+                    b.HasOne("CarsManager.Domain.Entities.RoadBookEntry", null)
+                        .WithMany()
+                        .HasForeignKey("ActiveRecordsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarsManager.Domain.Entities.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("ActiveUsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EmployeeVehicle", b =>
@@ -857,6 +960,8 @@ namespace CarsManager.Infrastructure.Migrations
                     b.Navigation("MOTs");
 
                     b.Navigation("Repairs");
+
+                    b.Navigation("RoadBookEntries");
 
                     b.Navigation("Vignettes");
                 });

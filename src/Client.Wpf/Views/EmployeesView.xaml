@@ -101,9 +101,9 @@
                         <TextBlock Grid.Row="11" Grid.Column="0" Text="Модел:" />
                         <TextBlock Grid.Row="11" Grid.Column="1" mvx:Bi.nd="Text SelectedVehicleForNewEmployee.ModelName" />
                         <TextBlock Grid.Row="12" Grid.Column="0" Text="Цвят:" />
-                        <Rectangle Grid.Row="12" Grid.Column="1" Fill="{Binding SelectedVehicleForNewEmployeeColor.Name}" Height="20" Width="225" />
+                        <TextBlock Grid.Row="12" Grid.Column="1" Text="{Binding SelectedVehicleForNewEmployeeColor}" Height="20" />
                         <TextBlock Grid.Row="13" Grid.Column="0" Text="Пробег:" />
-                        <TextBlock Grid.Row="13" Grid.Column="1" mvx:Bi.nd="Text SelectedVehicleForNewEmployee.Mileage" />
+                        <TextBlock Grid.Row="13" Grid.Column="1" Text="{Binding SelectedVehicleForNewEmployee.Mileage, StringFormat=0;;#}" />
                         <Border Grid.Row="9" Grid.Column="2" Grid.RowSpan="6" Grid.ColumnSpan="2" Style="{StaticResource SectionBorder}" Margin="5">
                             <Image Source="{Binding SelectedVehicleForNewEmployee.ImageAddress, Converter={StaticResource ImageValueConverter}, FallbackValue={StaticResource Van}}" Height="175"/>
                         </Border>
@@ -128,8 +128,7 @@
                                                 <TextBlock Width="85" FontSize="16" Text="{Binding LicencePlate}" />
                                                 <TextBlock Width="100" FontSize="16" Text="{Binding MakeName}" />
                                                 <TextBlock Width="100" FontSize="16" Text="{Binding ModelName}" />
-                                                <TextBlock FontSize="16" Text=" " />
-                                                <Rectangle Fill="{Binding Color}" Height="20" Width="50" />
+                                                <TextBlock Width="100" FontSize="16" Text="{Binding Color}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
@@ -244,8 +243,7 @@
                                                 <TextBlock Width="85" FontSize="16" Text="{Binding LicencePlate}" />
                                                 <TextBlock Width="100" FontSize="16" Text="{Binding Make}" />
                                                 <TextBlock Width="100" FontSize="16" Text="{Binding Model}" />
-                                                <TextBlock FontSize="16" Text=" " />
-                                                <Rectangle Fill="{Binding Color}" Height="20" Width="100" />
+                                                <TextBlock Width="100" FontSize="16" Text="{Binding Color}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
@@ -267,7 +265,7 @@
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="35"/>
                                 </Grid.RowDefinitions>
-                                <ListView Grid.Row="0" Grid.Column="0" Grid.RowSpan="6" ItemsSource="{Binding AvailableVehiclesForSelectedEmployee}" SelectedItem="{Binding SelectedAvailableVehiclesForSelectedEmployee}" IsSynchronizedWithCurrentItem="True" Margin="0 0 5 0">
+                                <ListView Grid.Row="0" Grid.Column="0" Grid.RowSpan="6" ItemsSource="{Binding AvailableVehiclesForSelectedEmployee}" SelectedItem="{Binding SelectedAvailableVehicleForSelectedEmployee}" IsSynchronizedWithCurrentItem="True" Margin="0 0 5 0" Height="300">
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding LicencePlate}" />
@@ -276,25 +274,25 @@
                                 </ListView>
                                 <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
                                     <TextBlock Width="70" Text="Марка:" />
-                                    <TextBlock Text="{Binding SelectedAvailableVehiclesForSelectedEmployee.MakeName}" />
+                                    <TextBlock Text="{Binding SelectedAvailableVehicleForSelectedEmployee.MakeName}" />
                                 </StackPanel>
                                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
                                     <TextBlock Width="70" Text="Модел:" />
-                                    <TextBlock Text="{Binding SelectedAvailableVehiclesForSelectedEmployee.ModelName}" />
+                                    <TextBlock Text="{Binding SelectedAvailableVehicleForSelectedEmployee.ModelName}" />
                                 </StackPanel>
                                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
                                     <TextBlock Width="70" Text="Цвят:" />
-                                    <Rectangle Fill="{Binding SelectedAvailableVehiclesForSelectedEmployee.Color}" Height="20" Width="50" />
+                                    <TextBlock Text="{Binding SelectedAvailableVehicleForSelectedEmployee.Color}" />
                                 </StackPanel>
                                 <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
                                     <TextBlock Width="70" Text="Пробег:" />
-                                    <TextBlock Text="{Binding SelectedAvailableVehiclesForSelectedEmployee.Mileage}" />
+                                    <TextBlock Text="{Binding SelectedAvailableVehicleForSelectedEmployee.Mileage}" />
                                 </StackPanel>
                                 <Border Grid.Row="4" Grid.Column="1"  Style="{StaticResource SectionBorder}">
-                                    <Image Height="150" Margin="0 20 0 0" Source="{Binding SelectedAvailableVehiclesForSelectedEmployee.ImageAddress, Converter={StaticResource ImageValueConverter}, FallbackValue={StaticResource Van}}" />
+                                    <Image Height="150" Margin="0 20 0 0" Source="{Binding SelectedAvailableVehicleForSelectedEmployee.ImageAddress, Converter={StaticResource ImageValueConverter}, FallbackValue={StaticResource Van}}" />
                                 </Border>
                                 <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Button Padding="15 5" mvx:Bi.nd="Command AddVehicleForSelectedEmployeeCommand" IsEnabled="{Binding CanAddSelectedAvailableVehiclesForSelectedEmployee}" Content="Добави" />
+                                    <Button Padding="15 5" mvx:Bi.nd="Command AddVehicleForSelectedEmployeeCommand" IsEnabled="{Binding CanAddSelectedAvailableVehicleForSelectedEmployee}" Content="Добави" />
                                 </StackPanel>
                             </Grid>
                         </Border>

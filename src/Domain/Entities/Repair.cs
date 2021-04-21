@@ -21,6 +21,6 @@ namespace CarsManager.Domain.Entities
         public bool IsCoolantChanged { get; set; }
         public bool IsOtherWorkDone { get; set; }
         public string Description { get; set; }
-        public decimal InitialPrice { get; set; }
+        public decimal FinalPrice { get; set; }
     }
 }

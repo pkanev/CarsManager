@@ -7,19 +7,20 @@ using CarsManager.Application.Common.Constants;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Mappings;
 using CarsManager.Application.Common.Models;
+using CarsManager.Application.Repairs.Queries.Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Repairs.Queries.GetRepairsForVehicleWithPagination
 {
-    public class GetRepairsForVehicleWithPaginationQuery : IRequest<PaginatedList<ListedRepairForVehicleDto>>, IMapFrom<GetRepairsForVehicleWithPaginationQueryDto>
+    public class GetRepairsForVehicleWithPaginationQuery : IRequest<PaginatedList<BasicRepairForVehicleDto>>, IMapFrom<GetRepairsForVehicleWithPaginationQueryDto>
     {
         public int VehicleId { get; set; }
         public int PageNumber { get; set; } = PageConstants.DEFAULT_PAGE_NUMBER;
         public int PageSize { get; set; } = PageConstants.DEFAULT_PAGE_SIZE;
     }
 
-    public class GetRepairsForVehicleWithPaginationQueryHandler : IRequestHandler<GetRepairsForVehicleWithPaginationQuery, PaginatedList<ListedRepairForVehicleDto>>
+    public class GetRepairsForVehicleWithPaginationQueryHandler : IRequestHandler<GetRepairsForVehicleWithPaginationQuery, PaginatedList<BasicRepairForVehicleDto>>
     {
         private readonly IApplicationDbContext context;
         private readonly IMapper mapper;
@@ -30,13 +31,13 @@ namespace CarsManager.Application.Repairs.Queries.GetRepairsForVehicleWithPagina
             this.mapper = mapper;
         }
 
-        public async Task<PaginatedList<ListedRepairForVehicleDto>> Handle(
+        public async Task<PaginatedList<BasicRepairForVehicleDto>> Handle(
             GetRepairsForVehicleWithPaginationQuery request,
             CancellationToken cancellationToken) => await context.Repairs
                 .Include(r => r.RepairShop)
                 .Where(r => r.VehicleId == request.VehicleId)
                 .OrderByDescending(r => r.Date)
-                .ProjectTo<ListedRepairForVehicleDto>(mapper.ConfigurationProvider)
-                .PaginatedListAsync(request.PageNumber, request.PageSize);
+                .ProjectTo<BasicRepairForVehicleDto>(mapper.ConfigurationProvider)
+                .ToPaginatedListAsync(request.PageNumber, request.PageSize);
     }
 }

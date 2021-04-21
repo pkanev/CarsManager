@@ -10,6 +10,8 @@
              d:DesignHeight="750" d:DesignWidth="1000">
     <local:BaseView.Resources>
         <converters:ImageValueConverter x:Key="ImageValueConverter"/>
+        <converters:PriceToDecimalsConverter x:Key="PriceToDecimalsConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:BaseView.Resources>
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal" Margin="15 0 0 0">
@@ -86,13 +88,7 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                             <TextBlock Grid.Column="0" Grid.Row="3" Text="Цвят:" />
-                            <ComboBox Grid.Column="1" Grid.Row="3" ItemsSource="{Binding Colors}" SelectedItem="{Binding Color}" IsSynchronizedWithCurrentItem="True">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Rectangle Fill="{Binding Name}" Height="20" Width="250" />
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
+                            <ComboBox Grid.Column="1" Grid.Row="3" ItemsSource="{Binding Colors}" SelectedItem="{Binding Color}" IsSynchronizedWithCurrentItem="True"/>
                             <TextBlock Grid.Column="0" Grid.Row="4" Text="Рег. Номер:" />
                             <TextBox Grid.Column="1" Grid.Row="4" mvx:Bi.nd="Text LicencePlate" />
                             <TextBlock Grid.Column="0" Grid.Row="5" Text="Обем на двигателя (cm3):" />
@@ -113,7 +109,7 @@
                             <DatePicker Grid.Column="1" Grid.Row="9" mvx:Bi.nd="SelectedDate Vehicle.FirstRegistration"/>
                         </Grid>
                     </Border>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Пробег преди следваща смяна" Style="{StaticResource SectionHeader}" />
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Пробег при смяна" Style="{StaticResource SectionHeader}" />
                     <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource SectionBorder}">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -217,6 +213,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
                                 <RowDefinition />
+                                <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="Дата на сключване:" />
                             <TextBlock Grid.Row="0" Grid.Column="1" Text="Крайна дата:" />
@@ -251,7 +248,10 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                        </ScrollViewer>
+                            </ScrollViewer>
+                            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button mvx:Bi.nd="Command CreateLiabilityCommand, CommandParameter=MOT" Content="Добави" Padding="15 5"/>
+                            </StackPanel>
                         </Grid>
                     </Border>
                     <TextBlock Grid.Row="0" Grid.Column="1" Text="Застраховки &quot;ГО&quot;" Style="{StaticResource SectionHeader}" />
@@ -264,6 +264,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
                                 <RowDefinition />
+                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="Дата на сключване:" />
                             <TextBlock Grid.Row="0" Grid.Column="1" Text="Крайна дата:" />
@@ -298,7 +299,10 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                        </ScrollViewer>
+                            </ScrollViewer>
+                            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button mvx:Bi.nd="Command CreateLiabilityCommand, CommandParameter=CivilLiability" Content="Добави" Padding="15 5"/>
+                            </StackPanel>
                         </Grid>
                     </Border>
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Застраховки &quot;КАСКО&quot;" Style="{StaticResource SectionHeader}" />
@@ -311,6 +315,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
                                 <RowDefinition />
+                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="Дата на сключване:" />
                             <TextBlock Grid.Row="0" Grid.Column="1" Text="Крайна дата:" />
@@ -346,6 +351,9 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                             </ScrollViewer>
+                            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button mvx:Bi.nd="Command CreateLiabilityCommand, CommandParameter=CarInsurance" Content="Добави" Padding="15 5"/>
+                            </StackPanel>
                         </Grid>
                     </Border>
                     <TextBlock Grid.Row="2" Grid.Column="1" Text="Винетки;" Style="{StaticResource SectionHeader}" />
@@ -358,6 +366,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
                                 <RowDefinition />
+                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="Дата на сключване:" />
                             <TextBlock Grid.Row="0" Grid.Column="1" Text="Крайна дата:" />
@@ -393,6 +402,9 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                             </ScrollViewer>
+                            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button mvx:Bi.nd="Command CreateLiabilityCommand, CommandParameter=Vignette" Content="Добави" Padding="15 5"/>
+                            </StackPanel>
                         </Grid>
                     </Border>
                 </Grid>
@@ -414,6 +426,147 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
+                    <StackPanel Grid.Column="1" Orientation="Vertical" Visibility="{Binding HasSelectedRepair, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Grid Margin="15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width=".8*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+                                <TextBlock Style="{StaticResource SectionHeader}" Text="Основна информация"/>
+                                <Border Style="{StaticResource SectionBorder}" Height="175">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width=".45*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <local:RequiredLabel Grid.Row="0" Grid.Column="0" Label="Сервиз:" />
+                                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                            <ComboBox ItemsSource="{Binding RepairShops}" SelectedItem="{Binding SelectedRepairShop}" IsSynchronizedWithCurrentItem="True" Margin="0 0 2 0" VerticalAlignment="Top" Width="135">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock mvx:Bi.nd="Text Name" />
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                            <Button mvx:Bi.nd="Command AddRepairShopCommand" Style="{StaticResource SmallButton}" Content="&#10133;" />
+                                            <Button mvx:Bi.nd="Command EditRepairShopCommand" Style="{StaticResource SmallButton}" Content="&#128393;" />
+                                            <Button mvx:Bi.nd="Command DeleteRepairShopCommand" Style="{StaticResource SmallButton}" Content="&#10134;" />
+                                        </StackPanel>
+                                        <local:RequiredLabel Grid.Row="1" Grid.Column="0" Label="Пробег на ремонт:" />
+                                        <TextBox Grid.Row="1" Grid.Column="1" mvx:Bi.nd="Text SelectedRepair.Mileage" VerticalAlignment="Top" />
+                                        <local:RequiredLabel Grid.Row="4" Grid.Column="0" Label="Дата:" />
+                                        <DatePicker Grid.Row="2" Grid.Column="1" mvx:Bi.nd="SelectedDate SelectedRepair.Date" VerticalAlignment="Top" />
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical" Margin="5 0 0 0" VerticalAlignment="Top">
+                                <TextBlock Text="Описание на извършения ремонт:" Style="{StaticResource SectionHeader}"/>
+                                <Border Style="{StaticResource SectionBorder}">
+                                    <TextBox mvx:Bi.nd="Text SelectedRepair.Description" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Height="450" />
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Orientation="Vertical">
+                                <TextBlock Text="Извършени ремонти (общо):" Style="{StaticResource SectionHeader}" Margin="0 25 0 0"/>
+                                <Border Style="{StaticResource SectionBorder}">
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding SelectedRepair.IsOilChanged}" VerticalAlignment="Bottom" />
+                                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsOilChanged" TextDecorations="None" Foreground="Black">Смяна на масло</Hyperlink>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding SelectedRepair.IsBeltChanged}" VerticalAlignment="Bottom" />
+                                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsBeltChanged" TextDecorations="None" Foreground="Black">Смяна на ролки и ремъци</Hyperlink>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding SelectedRepair.IsBatteryChanged}" VerticalAlignment="Bottom" />
+                                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsBatteryChanged" TextDecorations="None" Foreground="Black">Смяна на акумулатор</Hyperlink>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding SelectedRepair.IsSparkPlugChanged}" VerticalAlignment="Bottom" />
+                                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsSparkPlugChanged" TextDecorations="None" Foreground="Black">Смяна на свещи</Hyperlink>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding SelectedRepair.IsFuelFilterChanged}" VerticalAlignment="Bottom" />
+                                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsFuelFilterChanged" TextDecorations="None" Foreground="Black">Смяна на горивен филтър</Hyperlink>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding SelectedRepair.IsBrakeLiningsChanged}" VerticalAlignment="Bottom" />
+                                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsBrakeLiningsChanged" TextDecorations="None" Foreground="Black">Смяна на накладки</Hyperlink>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding SelectedRepair.IsBrakeDisksChanged}" VerticalAlignment="Bottom" />
+                                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsBrakeDisksChanged" TextDecorations="None" Foreground="Black">Смяна на спирачни дискове</Hyperlink>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding SelectedRepair.IsCoolantChanged}" VerticalAlignment="Bottom" />
+                                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsCoolantChanged" TextDecorations="None" Foreground="Black">Смяна на антифриз</Hyperlink>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding SelectedRepair.IsOtherWorkDone}" VerticalAlignment="Bottom" />
+                                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink Command="{Binding RepairCheckedCommand}" CommandParameter="IsOtherWorkDone" TextDecorations="None" Foreground="Black">Друго</Hyperlink>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                                <TextBlock Text="Стойност:" Style="{StaticResource SectionHeader}" Margin="0 25 0 0"/>
+                                <Border Style="{StaticResource SectionBorder}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width=".8*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width=".2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <local:RequiredLabel Grid.Row="0" Grid.Column="0" Label="Цена:" />
+                                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding RepairPrice, Converter={StaticResource PriceToDecimalsConverter}}" PreviewTextInput="PriceValidationTextBox"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="2" Text="лв." Margin="5 0 0 0" />
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="ДДС (20%):" />
+                                        <TextBlock Grid.Row="1" Grid.Column="1" mvx:Bi.nd="Text Vat" HorizontalAlignment="Right" />
+                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="лв." Margin="5 0 0 0" />
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Цена без ДДС:" />
+                                        <TextBlock Grid.Row="2" Grid.Column="1" mvx:Bi.nd="Text BasePrice" HorizontalAlignment="Right" />
+                                        <TextBlock Grid.Row="2" Grid.Column="2" Text="лв." Margin="5 0 0 0" />
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button mvx:Bi.nd="Command DeleteRepairCommand" Content="Изтрий" Padding="15 5" Margin="0 0 15 0"/>
+                                <Button mvx:Bi.nd="Command SaveRepairCommand" Content="Запиши" IsEnabled="{Binding CanSaveRepair}" Padding="15 5"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
                 </Grid>
             </TabItem>
             <TabItem Header="Служители" IsEnabled="{Binding IsVehicleLoaded}">

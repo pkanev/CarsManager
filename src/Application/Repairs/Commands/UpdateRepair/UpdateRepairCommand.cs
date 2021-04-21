@@ -25,7 +25,7 @@ namespace CarsManager.Application.Repairs.Commands.UpdateRepair
         public bool IsCoolantChanged { get; set; }
         public bool IsOtherWorkDone { get; set; }
         public string Description { get; set; }
-        public decimal InitialPrice { get; set; }
+        public decimal FinalPrice { get; set; }
     }
 
     public class UpdateRepairCommandHandler : IRequestHandler<UpdateRepairCommand>
@@ -66,7 +66,7 @@ namespace CarsManager.Application.Repairs.Commands.UpdateRepair
             entity.IsCoolantChanged = request.IsCoolantChanged;
             entity.IsOtherWorkDone = request.IsOtherWorkDone;
             entity.Description = request.Description;
-            entity.InitialPrice = request.InitialPrice;
+            entity.FinalPrice = request.FinalPrice;
 
             await context.SaveChangesAsync(cancellationToken);
             return Unit.Value;

@@ -7,4 +7,9 @@
     <BitmapImage x:Key="Bus" UriSource="/Images/bus.jpg" />
     <BitmapImage x:Key="Van" UriSource="/Images/van.png" />
     <BitmapImage x:Key="Profile" UriSource="/Images/profile.png" />
+    <BitmapImage x:Key="Excel" UriSource="/Images/excel.png" />
+    <BitmapImage x:Key="Csv" UriSource="/Images/csv.png" />
+    <BitmapImage x:Key="Printer" UriSource="/Images/printer.png" />
+    <BitmapImage x:Key="Refresh" UriSource="/Images/refresh.png" />
+    <BitmapImage x:Key="Close" UriSource="/Images/close.png" />
 </ResourceDictionary>

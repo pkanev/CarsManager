@@ -34,6 +34,9 @@ namespace CarsManager.Application.Employees.Queries.GetEmployee
                 .Employees
                 .Include(e => e.Town)
                 .Include(e => e.Vehicles)
+                .ThenInclude(v => v.RoadBookEntries)
+                .ThenInclude(e => e.ActiveUsers)
+                .Include(e => e.Vehicles)
                 .ThenInclude(v => v.Model)
                 .ThenInclude(m => m.Make)
                 .FirstOrDefaultAsync(e => e.Id == request.Id);

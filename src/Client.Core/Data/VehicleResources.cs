@@ -1,24 +1,21 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 using Client.Core.Models;
 
 namespace Client.Core.Data
 {
     public static class VehicleResources
     {
-        public static List<Color> Colors = new List<Color>
+        public static List<string> Colors = new List<string>
         {
-            Color.White,
-            Color.Gray,
-            Color.Black,
-            Color.Tan,
-            Color.Brown,
-            Color.Red,
-            Color.Orange,
-            Color.Yellow,
-            Color.Green,
-            Color.Blue,
-            Color.Purple,
+            "Бял",
+            "Жълт",
+            "Зелен",
+            "Кафяв",
+            "Оранжев",
+            "Сив",
+            "Син",
+            "Червен",
+            "Черен",
         };
 
         public static List<FuelTypeModel> FuelTypes = new List<FuelTypeModel>
@@ -37,5 +34,10 @@ namespace Client.Core.Data
             new VehicleTypeModel{Id = 2, Name = "Камион"},
             new VehicleTypeModel{Id = 3, Name = "Автобус"},
         };
+
+        public static string GetVehicleType(int id)
+            => VehicleTypes.Count > id
+                ? VehicleTypes[id].Name
+                : string.Empty;
     }
 }

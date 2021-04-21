@@ -1,13 +1,14 @@
-﻿<local:BaseView x:Class="Client.Wpf.Views.DeleteVehicleView"
-             xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:converters="clr-namespace:Client.Wpf.Converters"
-             xmlns:local="clr-namespace:Client.Wpf.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="750" d:DesignWidth="1000">
+﻿<local:BaseView
+    x:Class="Client.Wpf.Views.DeleteVehicleView"
+    xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:converters="clr-namespace:Client.Wpf.Converters"
+    xmlns:local="clr-namespace:Client.Wpf.Views"
+    mc:Ignorable="d" 
+    d:DesignHeight="750" d:DesignWidth="1000">
     <local:BaseView.Resources>
         <converters:ImageValueConverter x:Key="ImageValueConverter"/>
         <converters:FuelTypeToFuelConverter x:Key="FuelTypeToFuelConverter" />

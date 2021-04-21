@@ -31,6 +31,7 @@ namespace CarsManager.Infrastructure.Persistence
         public DbSet<Vignette> Vignettes { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Town> Towns { get; set; }
+        public DbSet<RoadBookEntry> RoadBookEntries { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

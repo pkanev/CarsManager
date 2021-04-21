@@ -14,8 +14,8 @@ namespace Client.Core.Rest
     {
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IMvxLog mvxLog;
-        private string baseUrl = Properties.Settings.Default.apiAddress;
-        private string uploadsEndPoint = Properties.Settings.Default.uploadsEndPoint;
+        private string baseUrl => Properties.Settings.Default.ApiAddress;
+        private string uploadsEndPoint => Properties.Settings.Default.UploadsEndPoint;
 
         public ApiService(IHttpClientFactory httpClientFactory, IMvxLog mvxLog)
         {
@@ -31,6 +31,9 @@ namespace Client.Core.Rest
 
         public async Task<ApiServiceResponse<TResult>> PutAsync<TResult>(string url, object data = null)
             => await MakeApiCall<TResult>(url, HttpMethod.Put, data);
+        
+        public async Task<ApiServiceResponse<TResult>> PatchAsync<TResult>(string url, object data = null)
+            => await MakeApiCall<TResult>(url, HttpMethod.Patch, data);
 
         public async Task<ApiServiceResponse<TResult>> DeleteAsync<TResult>(string url, object data = null)
             => await MakeApiCall<TResult>(url, HttpMethod.Delete, data);

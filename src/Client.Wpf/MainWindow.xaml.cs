@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-using System.Globalization;
-using MvvmCross.Platforms.Wpf.Views;
+﻿using MvvmCross.Platforms.Wpf.Views;
 
 namespace Client.Wpf
 {

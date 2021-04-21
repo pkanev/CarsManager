@@ -308,13 +308,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <local:RequiredLabel Label="Цвят:" Grid.Row="0" Grid.Column="0" />
-                        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Colors}" SelectedItem="{Binding Color}" IsSynchronizedWithCurrentItem="True">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Rectangle Fill="{Binding Name}" Height="20" Width="225" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
+                        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Colors}" SelectedItem="{Binding Color}" IsSynchronizedWithCurrentItem="True"/>
                         <Grid Grid.Row="1" Grid.ColumnSpan="2">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="175" />

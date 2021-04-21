@@ -30,5 +30,6 @@ namespace CarsManager.Domain.Entities
         public ICollection<CivilLiability> CivilLiabilities { get; private set; } = new HashSet<CivilLiability>();
         public ICollection<CarInsurance> CarInsurances { get; private set; } = new HashSet<CarInsurance>();
         public ICollection<Vignette> Vignettes { get; private set; } = new HashSet<Vignette>();
+        public ICollection<RoadBookEntry> RoadBookEntries { get; private set; } = new HashSet<RoadBookEntry>();
     }
 }

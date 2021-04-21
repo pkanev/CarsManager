@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using Client.Core.Models;
 using Client.Core.ViewModels;
 using MvvmCross.Base;
@@ -58,6 +61,16 @@ namespace Client.Wpf.Views
             MessageBox.Show(message, caption);
             if (callback != null)
                 callback();
+        }
+
+        public void PriceValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            var textbox = (TextBox)sender;
+            var text = textbox.Text;
+            text = text.Remove(textbox.SelectionStart, textbox.SelectionLength);
+            text = text.Insert(textbox.SelectionStart, e.Text);
+            Regex regex = new Regex("^[0-9]*[,]{0,1}[0-9]{0,2}$");
+            e.Handled = !regex.IsMatch(text);
         }
     }
 }

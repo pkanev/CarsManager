@@ -39,7 +39,6 @@ namespace Client.Wpf.Views
             e.Handled = regex.IsMatch(e.Text);
         }
 
-
         private void OnGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             var textBox = sender as System.Windows.Controls.TextBox;

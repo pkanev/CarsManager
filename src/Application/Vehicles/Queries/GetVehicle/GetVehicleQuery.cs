@@ -32,7 +32,9 @@ namespace CarsManager.Application.Vehicles.Queries.GetVehicle
         {
             var entity = await context.Vehicles
                 .Include(v => v.Model)
-                .Include(v => v.Model.Make)
+                .ThenInclude(m => m.Make)
+                .Include(v => v.RoadBookEntries)
+                .ThenInclude(e => e.ActiveUsers)
                 .FirstOrDefaultAsync(v => v.Id == request.Id);
 
             if (entity == null)
@@ -42,7 +44,7 @@ namespace CarsManager.Application.Vehicles.Queries.GetVehicle
 
             if (!string.IsNullOrEmpty(vehicle.ImageName))
                 vehicle.ImageAddress = urlHelper.UrlCombine(request.Path, vehicle.ImageName);
-            
+
             return new VehicleVm
             {
                 Vehicle = vehicle,

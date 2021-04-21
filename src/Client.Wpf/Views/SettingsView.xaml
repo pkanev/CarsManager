@@ -1,0 +1,136 @@
+﻿<local:BaseView 
+    x:Class="Client.Wpf.Views.SettingsView"
+    xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:Client.Wpf.Views"
+    xmlns:converters="clr-namespace:Client.Wpf.Converters"
+    mc:Ignorable="d" 
+    d:DesignHeight="750" d:DesignWidth="1000">
+    <local:BaseView.Resources>
+        <converters:PriceToDecimalsConverter x:Key="PriceToDecimalsConverter" />
+    </local:BaseView.Resources>
+    <StackPanel Orientation="Vertical" Margin="15">
+        <StackPanel Orientation="Horizontal">
+            <Button Width="25" Height="25" FontSize="14" VerticalAlignment="Top" VerticalContentAlignment="Top" mvx:Bi.nd="Command GoHomeCommand">
+                <Image Source="{StaticResource Home}" />
+            </Button>
+            <TextBlock Text="Премахване на автомобил от базата" Style="{StaticResource ViewTitle}" />
+        </StackPanel>
+        <Border Style="{StaticResource SectionBorder}" HorizontalAlignment="Left" Margin="0 0 0 10">
+            <Grid Width="350" HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="ДДС (%):" Grid.Column="0"/>
+                <TextBox Text="{Binding Vat, Converter={StaticResource PriceToDecimalsConverter}}" PreviewTextInput="PriceValidationTextBox" Grid.Column="1" Width="40" HorizontalAlignment="Left"/>
+                <TextBlock Text="Сървър:" Grid.Column="0" Grid.Row="1"/>
+                <TextBox Text="{Binding ServerAddress}" Grid.Row="1" Grid.Column="1"/>
+            </Grid>
+        </Border>
+
+        <Border Style="{StaticResource SectionBorder}" HorizontalAlignment="Left" Margin="0 0 0 10">
+            <Grid Width="525" HorizontalAlignment="Left" Margin="0 15 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.2*" />
+                    <ColumnDefinition Width=".3*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width=".9*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Вкл." Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"/>
+                <TextBlock Text="Предупреждение (дни преди изтичане)" Grid.Row="0" Grid.Column="2" TextWrapping="Wrap"/>
+                <TextBlock Text="Опасност (дни преди изтичане)" Grid.Row="0" Grid.Column="3" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Технически преглед:" Grid.Row="1" Grid.Column="0"/>
+                <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding EnableMotNotifications}" HorizontalAlignment="Center"/>
+                <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding MotWarningLimit}" IsEnabled="{Binding EnableMotNotifications}"/>
+                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding MotAlertLimit}" IsEnabled="{Binding EnableMotNotifications}"/>
+
+                <TextBlock Text="Гражданска отговорност:" Grid.Row="2" Grid.Column="0"/>
+                <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding EnableCivilLiabilityNotifications}" HorizontalAlignment="Center"/>
+                <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding CivilLiabilityWarningLimit}" IsEnabled="{Binding EnableCivilLiabilityNotifications}"/>
+                <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding CivilLiabilityAlertLimit}" IsEnabled="{Binding EnableCivilLiabilityNotifications}"/>
+
+                <TextBlock Text="КАСКО:" Grid.Row="3" Grid.Column="0"/>
+                <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding EnableCarInsuranceNotifications}" HorizontalAlignment="Center"/>
+                <TextBox Grid.Row="3" Grid.Column="2" Text="{Binding CarInsuranceWarningLimit}" IsEnabled="{Binding EnableCarInsuranceNotifications}"/>
+                <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding CarInsuranceAlertLimit}" IsEnabled="{Binding EnableCarInsuranceNotifications}"/>
+
+                <TextBlock Text="Винетки:" Grid.Row="4" Grid.Column="0"/>
+                <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding EnableVignetteNotifications}" HorizontalAlignment="Center"/>
+                <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding VignetteWarningLimit}" IsEnabled="{Binding EnableVignetteNotifications}"/>
+                <TextBox Grid.Row="4" Grid.Column="3" Text="{Binding VignetteAlertLimit}" IsEnabled="{Binding EnableVignetteNotifications}"/>
+            </Grid>
+        </Border>
+
+        <Border Style="{StaticResource SectionBorder}" HorizontalAlignment="Left" Margin="0 0 0 10">
+            <Grid Width="600" HorizontalAlignment="Left" Margin="0 15 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width=".3*" />
+                    <ColumnDefinition Width=".6*" />
+                    <ColumnDefinition Width=".8*" />
+                    <ColumnDefinition Width=".6*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Вкл." Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"/>
+                <TextBlock Text="Пробег след ремонт (км)" Grid.Row="0" Grid.Column="2" TextWrapping="Wrap"/>
+                <TextBlock Text="Предупреждение (км до смяна)" Grid.Row="0" Grid.Column="3" TextWrapping="Wrap"/>
+                <TextBlock Text="Опасност (км до смяна)" Grid.Row="0" Grid.Column="4" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Масло:" Grid.Row="1" Grid.Column="0"/>
+                <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding EnableOilNotifications}" HorizontalAlignment="Center"/>
+                <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding OilChangeMileage}" IsEnabled="{Binding EnableOilNotifications}"/>
+                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding OilMileageWarningLimit}" IsEnabled="{Binding EnableOilNotifications}"/>
+                <TextBox Grid.Row="1" Grid.Column="4" Text="{Binding OilMileageAlertLimit}" IsEnabled="{Binding EnableOilNotifications}"/>
+
+                <TextBlock Text="Ролки и ремъци:" Grid.Row="2" Grid.Column="0"/>
+                <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding EnableBeltNotifications}" HorizontalAlignment="Center"/>
+                <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding BeltChangeMileage}" IsEnabled="{Binding EnableBeltNotifications}"/>
+                <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding BeltMileageWarningLimit}" IsEnabled="{Binding EnableBeltNotifications}"/>
+                <TextBox Grid.Row="2" Grid.Column="4" Text="{Binding BeltMileageAlertLimit}" IsEnabled="{Binding EnableBeltNotifications}"/>
+
+                <TextBlock Text="Накладки:" Grid.Row="3" Grid.Column="0"/>
+                <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding EnableBrakeLiningsNotifications}" HorizontalAlignment="Center"/>
+                <TextBox Grid.Row="3" Grid.Column="2" Text="{Binding BrakeLiningsChangeMileage}" IsEnabled="{Binding EnableBrakeLiningsNotifications}"/>
+                <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding BrakeLiningsMileageWarningLimit}" IsEnabled="{Binding EnableBrakeLiningsNotifications}"/>
+                <TextBox Grid.Row="3" Grid.Column="4" Text="{Binding BrakeLiningsMileageAlertLimit}" IsEnabled="{Binding EnableBrakeLiningsNotifications}"/>
+
+                <TextBlock Text="Спирачни дискове:" Grid.Row="4" Grid.Column="0"/>
+                <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding EnableBrakeDisksNotifications}" HorizontalAlignment="Center"/>
+                <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding BrakeDisksChangeMileage}" IsEnabled="{Binding EnableBrakeDisksNotifications}"/>
+                <TextBox Grid.Row="4" Grid.Column="3" Text="{Binding BrakeDisksMileageWarningLimit}" IsEnabled="{Binding EnableBrakeDisksNotifications}"/>
+                <TextBox Grid.Row="4" Grid.Column="4" Text="{Binding BrakeDisksMileageAlertLimit}" IsEnabled="{Binding EnableBrakeDisksNotifications}"/>
+
+                <TextBlock Text="Антифриз:" Grid.Row="5" Grid.Column="0"/>
+                <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding EnableCoolantNotifications}" HorizontalAlignment="Center"/>
+                <TextBox Grid.Row="5" Grid.Column="2" Text="{Binding CoolantChangeMileage}" IsEnabled="{Binding EnableCoolantNotifications}"/>
+                <TextBox Grid.Row="5" Grid.Column="3" Text="{Binding CoolantMileageWarningLimit}" IsEnabled="{Binding EnableCoolantNotifications}"/>
+                <TextBox Grid.Row="5" Grid.Column="4" Text="{Binding CoolantMileageAlertLimit}" IsEnabled="{Binding EnableCoolantNotifications}"/>
+            </Grid>
+        </Border>
+    </StackPanel>
+</local:BaseView>

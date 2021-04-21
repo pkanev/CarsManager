@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Client.Core.Data;
 using Client.Core.Dtos;
 using Client.Core.Models;
+using Client.Core.Models.Liabilities;
 using Client.Core.Rest;
 using Client.Core.Utils;
 using MvvmCross.Commands;
@@ -31,7 +31,7 @@ namespace Client.Core.ViewModels
         private ValidityPeriod carInsurancePeriod = ValidityPeriods.CarInsurancePeriodValidityPeriods.First();
         private ValidityPeriod vignettePeriod = ValidityPeriods.VignetteValidityPeriods.First();
 
-        private Color color;
+        private string color;
         private string imageFile;
 
         public VehicleType SelectedVehicleType
@@ -40,7 +40,7 @@ namespace Client.Core.ViewModels
             set
             {
                 SetProperty(ref selectedVehicleType, value);
-                GetModels();
+                Task.Run(async()=> await GetModels());
             }
         }
 
@@ -222,7 +222,7 @@ namespace Client.Core.ViewModels
             }
         }
 
-        public Color Color
+        public string Color
         {
             get => color;
             set => SetProperty(ref color, value);
@@ -254,7 +254,7 @@ namespace Client.Core.ViewModels
                 RaisePropertyChanged(() => CanDeleteMake);
                 RaisePropertyChanged(() => CanAddModel);
                 RaisePropertyChanged(() => CanRefreshModels);
-                GetModels();
+                Task.Run(async()=> await GetModels());
             }
         }
 
@@ -323,7 +323,7 @@ namespace Client.Core.ViewModels
         public List<ValidityPeriod> CivilLiabilityValidityPeriods => ValidityPeriods.CivilLiabilityValidityPeriods;
         public List<ValidityPeriod> CarInsurancePeriodValidityPeriods => ValidityPeriods.CarInsurancePeriodValidityPeriods;
         public List<ValidityPeriod> VignetteValidityPeriods => ValidityPeriods.VignetteValidityPeriods;
-        public List<Color> Colors => VehicleResources.Colors;
+        public List<string> Colors => VehicleResources.Colors;
         public List<FuelTypeModel> FuelTypes => VehicleResources.FuelTypes;
 
         public IMvxCommand<VehicleType> ChooseVehicleTypeCommand { get; set; }
@@ -401,7 +401,7 @@ namespace Client.Core.ViewModels
         private void InitializeForm()
         {
             ImageFile = string.Empty;
-            Color = Color.Black;
+            Color = VehicleResources.Colors.FirstOrDefault();
             Vehicle = new CreateVehicleDto();
             Vehicle.MOT.EndDate = vehicle.MOT.StartDate.AddValidityPeriod(motPeriod);
             Vehicle.CivilLiability.EndDate = vehicle.MOT.StartDate.AddValidityPeriod(civilLiabilityPeriod);
@@ -453,7 +453,7 @@ namespace Client.Core.ViewModels
                 };
 
             vehicle.Fuel = FuelType.Id;
-            vehicle.Color = Color.Name;
+            vehicle.Color = Color;
             var result = await ApiService.PostAsync<int>("vehicles", vehicle);
 
             if (result.IsSuccessStatusCode)
