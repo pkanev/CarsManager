@@ -15,7 +15,7 @@
             <Button Width="25" Height="25" FontSize="14" VerticalAlignment="Top" VerticalContentAlignment="Top" mvx:Bi.nd="Command GoHomeCommand">
                 <Image Source="{StaticResource Home}" />
             </Button>
-            <TextBlock Text="Списък на всички автомобили" Style="{StaticResource ViewTitle}" />
+            <TextBlock x:Name="ViewTitle" Text="Списък на всички автомобили" Style="{StaticResource ViewTitle}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="15 0 0 5">
             <Button mvx:Bi.nd="Command ExportCommand, CommandParameter='Excel'" IsEnabled="{Binding CanExport}" Margin="5" ToolTip="Запазете като Excel">

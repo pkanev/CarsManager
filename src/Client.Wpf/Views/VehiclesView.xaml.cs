@@ -24,10 +24,10 @@ namespace Client.Wpf.Views
             switch (model.ExportType)
             {
                 case Core.Data.ExportType.Csv:
-                    Exporter.ExportToCsv(headers, model.Items, model.Properties);
+                    Exporter.ExportToCsv(headers, model.Items, model.Properties, ViewTitle.Text);
                     return;
                 case Core.Data.ExportType.Excel:
-                    Exporter.ExportToExcel(headers, model.Items, model.Properties, "Пробези");
+                    Exporter.ExportToExcel(headers, model.Items, model.Properties, ViewTitle.Text);
                     return;
                 default:
                     break;
