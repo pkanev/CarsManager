@@ -12,9 +12,10 @@ namespace Client.Wpf.Utils
     {
         private const string separator = "\t";
 
-        public static void ExportToCsv<TItem>(IList<string> headers, IList<TItem> items, IList<string> properties, Dictionary<string, string> metaData = null)
+        public static void ExportToCsv<TItem>(IList<string> headers, IList<TItem> items, IList<string> properties, string title, Dictionary<string, string> metaData = null)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = SanitizeFileName(title);
             saveFileDialog.Filter = "CSV file (*.csv)|*.csv";
 
             if (saveFileDialog.ShowDialog().GetValueOrDefault())
@@ -34,9 +35,10 @@ namespace Client.Wpf.Utils
             }
         }
 
-        public static void ExportToExcel<TItem>(IList<string> headers, IList<TItem> items, IList<string> properties, string title)
+        public static void ExportToExcel<TItem>(IList<string> headers, IList<TItem> items, IList<string> properties, string title, Dictionary<string, string> metaData = null)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = SanitizeFileName(title);
             saveFileDialog.Filter = "Excel |*.xlsx";
 
             if (saveFileDialog.ShowDialog() == true)
@@ -48,18 +50,33 @@ namespace Client.Wpf.Utils
 
                 ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add(title);
 
+                int row = 1;
+                if (metaData != null)
+                    foreach(var data in metaData)
+                    {
+                        worksheet.Cells[row, 1].Value = data.Key;
+                        worksheet.Cells[row, 1].Style.Font.Bold = true;
+                        worksheet.Cells[row, 2].Value = data.Value;
+                        row++;
+                    }
+
                 for (int i = 0; i < headers.Count; i++)
                 {
-                    worksheet.Cells[1, i + 1].Value = headers[i];
-                    worksheet.Cells[1, i + 1].Style.Font.Bold = true;
-                    worksheet.Cells[1, i + 1].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thick;
+                    worksheet.Cells[row, i + 1].Value = headers[i];
+                    worksheet.Cells[row, i + 1].Style.Font.Bold = true;
+                    worksheet.Cells[row, i + 1].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thick;
                 }
+
+                row++;
 
                 for (int i = 0; i < items.Count; i++)
                 {
                     var item = items[i];
                     for (int j = 0; j < properties.Count; j++)
-                        worksheet.Cells[i + 2, j + 1].Value = typeof(TItem).GetProperty(properties[j]).GetValue(item);
+                        worksheet.Cells[row, j + 1].Value = GetValueAsString(
+                            typeof(TItem).GetProperty(properties[j]).GetValue(item));
+
+                    row++;
                 }
 
                 worksheet.Cells.AutoFitColumns();
@@ -74,96 +91,27 @@ namespace Client.Wpf.Utils
             var values = properties.Select(h => typeof(TItem).GetProperty(h).GetValue(item)).ToArray();
             IList<string> stringedValues = new List<string>();
             foreach (var value in values)
-            {
-                if (value is DateTime)
-                    stringedValues.Add(((DateTime)value).ToShortDateString());
-                else if (value is bool)
-                    stringedValues.Add(((bool)value) ? "Да" : "Не");
-                else
-                    stringedValues.Add(value?.ToString());
-            }
+                stringedValues.Add(GetValueAsString(value));
 
             return string.Join(separator, stringedValues);
         }
+
+        private static string GetValueAsString(object value)
+        {
+            if (value is DateTime)
+                return ((DateTime)value).ToShortDateString();
+            else if (value is bool)
+                return ((bool)value) ? "Да" : "Не";
+            else
+                return value?.ToString();
+        }
+
+        private static string SanitizeFileName(string title)
+        {
+            var result = title.Replace(",", string.Empty);
+            result = result.Replace("\"", string.Empty);
+            result = result.Replace("\'", string.Empty);
+            return result;
+        }
     }
 }
-
-//private void ExportToExcel(object sender, RoutedEventArgs e)
-//{
-//    Task.Run(async () => await mileagesViewModel.GetAllVehiclesCommand.ExecuteAsync());
-
-//    SaveFileDialog saveFileDialog = new SaveFileDialog();
-//    saveFileDialog.Filter = "Excel |*.xlsx";
-
-//    if (saveFileDialog.ShowDialog() == true)
-//    {
-//        using (ExcelPackage excelPackage = new ExcelPackage())
-//        {
-//            //Set some properties of the Excel document
-//            excelPackage.Workbook.Properties.Author = "Car Manager";
-//            excelPackage.Workbook.Properties.Title = "Пробези";
-//            //excelPackage.Workbook.Properties.Subject = "EPPlus demo export data";
-//            excelPackage.Workbook.Properties.Created = DateTime.Now;
-
-//            //Create the WorkSheet
-//            ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Пробези");
-
-//            for (int i = 0; i < MileageGrid.Columns.Count; i++)
-//            {
-//                worksheet.Cells[1, i + 1].Value = MileageGrid.Columns[i].Header;
-//                worksheet.Cells[1, i + 1].Style.Font.Bold = true;
-//                worksheet.Cells[1, i + 1].Style.Font.Color.SetColor(Color.White);
-//                worksheet.Cells[1, i + 1].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thick;
-//                worksheet.Cells[1, i + 1].Style.Border.Bottom.Color.SetColor(Color.Brown);
-//                worksheet.Cells[1, i + 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-//                worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(0, 42, 96, 153);
-//                worksheet.Column(i + 1).Width = 16;
-//            }
-
-//            //for (int i = 0; i < mileagesViewModel.Vehicles.Count; i++)
-//            for (int i = 0; i < mileagesViewModel.AllVehicles.Count; i++)
-//            {
-//                var vehicle = mileagesViewModel.AllVehicles[i];
-//                //var vehicle = mileagesViewModel.Vehicles[i];
-//                worksheet.Cells[i + 2, 1].Value = vehicle.LicencePlate;
-//                worksheet.Cells[i + 2, 2].Value = vehicle.Make;
-//                worksheet.Cells[i + 2, 3].Value = vehicle.Model;
-//                worksheet.Cells[i + 2, 4].Value = vehicle.Color;
-//                worksheet.Cells[i + 2, 5].Value = vehicle.Mileage;
-//                worksheet.Cells[i + 2, 5].Style.Font.Bold = true;
-//                worksheet.Cells[i + 2, 5].Style.Font.Color.SetColor(0, 255, 0, 0);
-
-//                if (i % 2 != 0)
-//                {
-//                    worksheet.Cells[i + 2, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-//                    worksheet.Cells[i + 2, 1].Style.Fill.BackgroundColor.SetColor(0, 255, 233, 148);
-//                    worksheet.Cells[i + 2, 1].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-//                    worksheet.Cells[i + 2, 1].Style.Border.Bottom.Color.SetColor(Color.Brown);
-
-//                    worksheet.Cells[i + 2, 2].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-//                    worksheet.Cells[i + 2, 2].Style.Fill.BackgroundColor.SetColor(0, 255, 233, 148);
-//                    worksheet.Cells[i + 2, 2].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-//                    worksheet.Cells[i + 2, 2].Style.Border.Bottom.Color.SetColor(Color.Brown);
-
-//                    worksheet.Cells[i + 2, 3].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-//                    worksheet.Cells[i + 2, 3].Style.Fill.BackgroundColor.SetColor(0, 255, 233, 148);
-//                    worksheet.Cells[i + 2, 3].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-//                    worksheet.Cells[i + 2, 3].Style.Border.Bottom.Color.SetColor(Color.Brown);
-
-//                    worksheet.Cells[i + 2, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-//                    worksheet.Cells[i + 2, 4].Style.Fill.BackgroundColor.SetColor(0, 255, 233, 148);
-//                    worksheet.Cells[i + 2, 4].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-//                    worksheet.Cells[i + 2, 4].Style.Border.Bottom.Color.SetColor(Color.Brown);
-
-//                    worksheet.Cells[i + 2, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-//                    worksheet.Cells[i + 2, 5].Style.Fill.BackgroundColor.SetColor(0, 255, 233, 148);
-//                    worksheet.Cells[i + 2, 5].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-//                    worksheet.Cells[i + 2, 5].Style.Border.Bottom.Color.SetColor(Color.Brown);
-//                }
-//            }
-
-//            FileInfo fi = new FileInfo(saveFileDialog.FileName);
-//            excelPackage.SaveAs(fi);
-//        }
-//    }
-//}
