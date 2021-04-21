@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -8,7 +7,11 @@ using Client.Core.Data;
 using Client.Core.Dtos;
 using Client.Core.Models;
 using Client.Core.Models.Employees;
+using Client.Core.Models.Liabilities;
+using Client.Core.Models.Repairs;
+using Client.Core.Models.RoadBook;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.Utils;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -18,6 +21,8 @@ namespace Client.Core.ViewModels
 {
     public class EditVehicleViewModel : SubPageViewModel
     {
+        private decimal vatRate = Properties.Settings.Default.VAT / 100;
+
         private ObservableCollection<VehicleDto> vehicles;
         private VehicleDto vehicle;
         private VehicleRecentLiabilitiesDto recentLiabilities;
@@ -28,7 +33,7 @@ namespace Client.Core.ViewModels
         private FuelTypeModel fuelType;
         private VehicleTypeModel vehicleType;
         private string licencePlate;
-        private Color color = Color.Black;
+        private string color;
         private string image;
         private bool isImageUpdated;
         private int selectedTab;
@@ -39,10 +44,13 @@ namespace Client.Core.ViewModels
         private ObservableCollection<LiabilityExtendedModel> vignettes;
         private ObservableCollection<RepairModel> repairs;
         private RepairModel selectedRepair;
+        private ObservableCollection<RepairShopModel> repairShops;
+        private RepairShopModel selectedRepairShop;
         private ObservableCollection<BasicEmployeeModel> employeesForVehicle;
         private BasicEmployeeModel assignedEmployee;
         private ObservableCollection<BasicEmployeeModel> allEmployees;
         private BasicEmployeeModel nonAssignedEmployee;
+        private readonly IVatService vatService;
 
         public ObservableCollection<VehicleDto> Vehicles
         {
@@ -65,20 +73,16 @@ namespace Client.Core.ViewModels
 
                 VehicleType = VehicleTypes[vehicle.VehicleType];
                 FuelType = FuelTypes[vehicle.Fuel];
-                Color = Color.FromName(Vehicle.Color);
+                Color = Vehicle.Color;
                 ImageAddress = vehicle.ImageAddress;
                 LicencePlate = vehicle.LicencePlate;
 
                 if (Makes != null && Make?.Id != vehicle.MakeId)
                     Make = Makes.FirstOrDefault(m => m.Id == vehicle.MakeId);
 
-                if (SelectedTab == 1)
-                    Task.Run(GetLiabilities);
+                Task.Run(GetLiabilities);
+                Task.Run(GetRepairs);
 
-                if (SelectedTab == 2)
-                    Task.Run(GetRepairs);
-
-                RaisePropertyChanged(() => IsVehicleLoaded);
                 RaisePropertyChanged(() => IsValid);
             }
         }
@@ -124,11 +128,12 @@ namespace Client.Core.ViewModels
             set
             {
                 SetProperty(ref model, value);
+                RaisePropertyChanged(() => IsVehicleLoaded);
                 RaisePropertyChanged(() => IsValid);
             }
         }
 
-        public Color Color
+        public string Color
         {
             get => color;
             set => SetProperty(ref color, value);
@@ -168,6 +173,8 @@ namespace Client.Core.ViewModels
 
         public bool IsVehicleLoaded => Vehicle != null;
         public bool CanSelectModel => Models?.Count > 0;
+        public bool HasSelectedRepair => SelectedRepair != null;
+        public bool CanSaveRepair => SelectedRepairShop != null && Vehicle != null && SelectedRepair != null && RepairPrice > 0;
 
         public bool IsValid => Model != null
             && Regex.IsMatch(LicencePlate.ToUpper(), @"^[ETYOPAHKXCBMВЕРТОАСХКНМ]{1,2}[0-9]{4}[ETYOPAHKXCBMВЕРТОАСХКНМ]{1,2}$");
@@ -207,8 +214,54 @@ namespace Client.Core.ViewModels
         public RepairModel SelectedRepair
         {
             get => selectedRepair;
-            set => SetProperty(ref selectedRepair, value);
+            set
+            {
+                SetProperty(ref selectedRepair, value);
+                RaisePropertyChanged(() => HasSelectedRepair);
+
+                if (selectedRepair == null)
+                    return;
+
+                SelectedRepairShop = RepairShops.FirstOrDefault(r => r.Id == selectedRepair.RepairShopId);
+                RaisePropertyChanged(() => SelectedRepairShop);
+                RaisePropertyChanged(() => RepairPrice);
+                RaisePropertyChanged(() => BasePrice);
+                RaisePropertyChanged(() => Vat);
+                RaisePropertyChanged(() => CanSaveRepair);
+            }
         }
+
+        public ObservableCollection<RepairShopModel> RepairShops
+        {
+            get => repairShops;
+            set => SetProperty(ref repairShops, value);
+        }
+
+        public RepairShopModel SelectedRepairShop
+        {
+            get => selectedRepairShop;
+            set => SetProperty(ref selectedRepairShop, value);
+        }
+
+        public decimal RepairPrice
+        {
+            get => SelectedRepair?.FinalPrice ?? 0M;
+            set
+            {
+                if (SelectedRepair == null)
+                    return;
+
+                SelectedRepair.FinalPrice = value;
+                RaisePropertyChanged(() => RepairPrice);
+                RaisePropertyChanged(() => BasePrice);
+                RaisePropertyChanged(() => Vat);
+                RaisePropertyChanged(() => CanSaveRepair);
+            }
+        }
+
+        public decimal VatRate => vatRate;
+        public string BasePrice => vatService.GetFormattedBasePrice(RepairPrice);
+        public string Vat => vatService.GetFormattedVat(RepairPrice);
 
         public ObservableCollection<BasicEmployeeModel> EmployeesForVehicle
         {
@@ -255,7 +308,7 @@ namespace Client.Core.ViewModels
                     Vehicle.ModelId = Model.Id;
                     Vehicle.ModelName = Model.Name;
                     Vehicle.Fuel = FuelType.Id;
-                    Vehicle.Color = Color.Name;
+                    Vehicle.Color = Color;
                     Vehicle.LicencePlate = LicencePlate;
                     Vehicle.ImageAddress = ImageAddress;
                 }
@@ -266,7 +319,7 @@ namespace Client.Core.ViewModels
 
         public ObservableCollection<FuelTypeModel> FuelTypes => VehicleResources.FuelTypes.ToObservableCollection();
         public ObservableCollection<VehicleTypeModel> VehicleTypes => VehicleResources.VehicleTypes.ToObservableCollection();
-        public ObservableCollection<Color> Colors => VehicleResources.Colors.ToObservableCollection();
+        public ObservableCollection<string> Colors => VehicleResources.Colors.ToObservableCollection();
 
         public IMvxCommand SelectImageCommand { get; set; }
         public IMvxCommand RemoveImageCommand { get; set; }
@@ -275,14 +328,19 @@ namespace Client.Core.ViewModels
         public IMvxCommand<LiabilityType> CreateLiabilityCommand { get; set; }
         public IMvxCommand<LiabilityExtendedModel> EditLiabilityCommand { get; set; }
         public IMvxCommand<LiabilityExtendedModel> DeleteLiabilityCommand { get; set; }
+        public IMvxCommand<string> RepairCheckedCommand { get; set; }
+        public IMvxCommand SaveRepairCommand { get; set; }
+        public IMvxCommand DeleteRepairCommand { get; set; }
         public IMvxCommand AddVehicleForEmployeeCommand { get; set; }
         public IMvxCommand RemoveVehicleForEmployeeCommand { get; set; }
 
         public IMvxInteraction<UploadInteractionHandler> UploadInteraction => uploadInteraction;
 
-        public EditVehicleViewModel(IApiService apiService, IMvxNavigationService navigationService)
+        public EditVehicleViewModel(IApiService apiService, IMvxNavigationService navigationService, IVatService vatService)
             : base(apiService, navigationService)
         {
+            this.vatService = vatService;
+
             SelectImageCommand = new MvxCommand(SelectImage);
             RemoveImageCommand = new MvxCommand(RemoveImage);
             SaveCommand = new MvxAsyncCommand(SaveVehicle);
@@ -300,8 +358,12 @@ namespace Client.Core.ViewModels
                     {
                         Data = liability,
                         Callback = GetLiabilities
-                    })); ;
+                    }));
+
             DeleteLiabilityCommand = new MvxAsyncCommand<LiabilityExtendedModel>(DeleteLiability);
+            RepairCheckedCommand = new MvxCommand<string>(RepairChecked);
+            SaveRepairCommand = new MvxAsyncCommand(SaveRepair);
+            DeleteRepairCommand = new MvxAsyncCommand(DeleteRepair);
             AddVehicleForEmployeeCommand = new MvxAsyncCommand(AddVehicleForEmployee);
             RemoveVehicleForEmployeeCommand = new MvxAsyncCommand(RemoveVehicleForEmployee);
         }
@@ -322,21 +384,23 @@ namespace Client.Core.ViewModels
                 VehicleType = VehicleTypes[Vehicle.VehicleType];
                 Make = Makes.FirstOrDefault(m => m.Id == Vehicle.MakeId);
                 FuelType = FuelTypes[Vehicle.Fuel];
-                Color = Color.FromName(Vehicle.Color);
+                Color = Vehicle.Color;
                 ImageAddress = Vehicle.ImageAddress;
                 LicencePlate = Vehicle.LicencePlate;
                 await GetVehicleExtended();
             }
-            else if (SelectedTab == 1)
-                await GetLiabilities();
-            else if (SelectedTab == 2)
-                await GetRepairs();
-            else if (SelectedTab == 3)
-                await GetAllEmployees();
+
+            await GetLiabilities();
+            await GetRepairShops();
+            await GetRepairs();
+            await GetAllEmployees();
         }
 
         private async Task GetLiabilities()
         {
+            if (SelectedTab != 1)
+                return;
+
             await GetMots();
             await GetCivilLiabilities();
             await GetCarInsurances();
@@ -399,13 +463,14 @@ namespace Client.Core.ViewModels
 
         private async Task GetVehicleExtended()
         {
-            var response = await ApiService.GetAsync<VehicleExtendedModel>($"vehicles/extended/{Vehicle.Id}");
+            var response = await ApiService.GetAsync<VehicleExtendedModel>($"vehicles/{Vehicle.Id}/extended");
 
             if (response.IsSuccessStatusCode)
             {
                 RecentLiabilities = response.Content.RecentLiabilities;
                 EmployeesForVehicle = response.Content.Employees.ToObservableCollection();
                 AssignedEmployee = EmployeesForVehicle.FirstOrDefault();
+                await GetLiabilities();
             }
             else
                 RaiseNotification(response.Error, "Грешка!!!");
@@ -439,8 +504,10 @@ namespace Client.Core.ViewModels
 
         private async Task GetRepairs()
         {
-            var response = await ApiService.GetAsync<GetRepairsDto>($"repairs/vehicle/{Vehicle.Id}");
+            if (SelectedTab != 2)
+                return;
 
+            var response = await ApiService.GetAsync<GetRepairsDto>($"repairs/vehicle/{Vehicle.Id}");
             if (response.IsSuccessStatusCode)
             {
                 Repairs = response.Content.Repairs.ToObservableCollection();
@@ -450,8 +517,23 @@ namespace Client.Core.ViewModels
                 RaiseNotification(response.Error, "Грешка!!!");
         }
 
+        private async Task GetRepairShops()
+        {
+            if (SelectedTab != 2)
+                return;
+
+            var response = await ApiService.GetAsync<GetRepairShopsDto>($"repairshops");
+            if (response.IsSuccessStatusCode)
+                RepairShops = response.Content.RepairShops.ToObservableCollection();
+            else
+                RaiseNotification(response.Error, "Грешка!!!");
+        }
+
         private async Task GetAllEmployees()
         {
+            if (SelectedTab != 3)
+                return;
+
             var response = await ApiService.GetAsync<GetEmployeesDto>("employees");
 
             if (response.IsSuccessStatusCode)
@@ -496,7 +578,7 @@ namespace Client.Core.ViewModels
             Vehicle.ModelId = Model.Id;
             Vehicle.ModelName = Model.Name;
             Vehicle.Fuel = FuelType.Id;
-            Vehicle.Color = Color.Name;
+            Vehicle.Color = Color;
             Vehicle.VehicleType = VehicleType.Id;
             Vehicle.LicencePlate = LicencePlate.ToUpper();
 
@@ -507,7 +589,7 @@ namespace Client.Core.ViewModels
                 await RaisePropertyChanged(() => Vehicles);
                 await RaisePropertyChanged(() => Vehicle);
                 await RaisePropertyChanged(() => IsValid);
-                RaiseNotification("Записът бе успешен.", "Редактиране на данни");
+                RaiseNotification("Успешен запис", "Редактиране на данни");
                 return;
             }
 
@@ -547,8 +629,8 @@ namespace Client.Core.ViewModels
 
         private async Task DeleteLiability(LiabilityExtendedModel model)
         => await ShowMessage(
-                $"Сигурни ли сте, че желаете да изтриете {LiabilityResources.GetTranslatedLIability(model.LiabilityType)} с начална дата {model.StartDate.ToShortDateString()} от базата?",
-                $"Изтриване на {LiabilityResources.GetTranslatedLIability(model.LiabilityType)}",
+                $"Сигурни ли сте, че желаете да изтриете {LiabilityResources.GetTranslatedLiability(model.LiabilityType)} с начална дата {model.StartDate.ToShortDateString()} от базата?",
+                $"Изтриване на {LiabilityResources.GetTranslatedLiability(model.LiabilityType)}",
                 () => OnDeleteConfirm(model));
 
         private async Task OnDeleteConfirm(LiabilityExtendedModel model)
@@ -577,31 +659,97 @@ namespace Client.Core.ViewModels
                 RaiseNotification(result.Error, "Грешка!!!");
         }
 
-
-        private async Task AddVehicleForEmployee()
+        private void RepairChecked(string propertyName)
         {
-            var response = await ApiService.PostAsync<string>($"employees/{nonAssignedEmployee.Id}/vehicle/{Vehicle.Id}");
+            var property = SelectedRepair.GetType().GetProperty(propertyName);
+            if (property == null)
+                return;
+
+            property.SetValue(SelectedRepair, !(bool)property.GetValue(SelectedRepair));
+            RaisePropertyChanged(() => SelectedRepair);
+        }
+
+        private async Task SaveRepair()
+        {
+            if (!CanSaveRepair)
+                return;
+
+            SelectedRepair.RepairShopId = SelectedRepairShop.Id;
+            SelectedRepair.RepairShopName = SelectedRepairShop.Name;
+            SelectedRepair.FinalPrice = RepairPrice;
+            int id = SelectedRepair.Id;
+
+            var response = await ApiService.PutAsync<string>($"repairs?id={SelectedRepair.Id}", SelectedRepair);
+
+            if (response.IsSuccessStatusCode)
+            {
+                await GetRepairs();
+                SelectedRepair = Repairs.FirstOrDefault(r => r.Id == id);
+            }
+            else
+                RaiseNotification(response.Error, "Грешка!!!");
+        }
+
+        private async Task DeleteRepair()
+        => await ShowMessage(
+                $"Сигурни ли сте, че желаете да изтриете ремонт от сервиз {SelectedRepair.RepairShopName} от {SelectedRepair.Date.ToShortDateString()} от базата?",
+                $"Изтриване на ремонт",
+                () => OnDeleteRepairConfirm());
+
+        private async Task OnDeleteRepairConfirm()
+        {
+            var result = await ApiService.DeleteAsync<string>($"repairs/{SelectedRepair.Id}");
+
+            if (result.IsSuccessStatusCode)
+                await GetRepairs();
+            else
+                RaiseNotification(result.Error, "Грешка!!!");
+        }
+
+        private async Task AddVehicleForEmployee() 
+            => await NavigationService.Navigate<RoadBookEntryAddViewModel, RoadBookNavigationModel>(new RoadBookNavigationModel
+            {
+                Callback = CompleteAddVehicleForEmployee,
+                Id = Vehicle.ActiveRecordEntryId,
+            });
+
+        private async Task CompleteAddVehicleForEmployee(RoadBookBasicEntryModel entry)
+        {
+            entry.EmployeeId = nonAssignedEmployee.Id;
+            entry.VehicleId = Vehicle.Id;
+            var response = await ApiService.PostAsync<int>($"employees/{nonAssignedEmployee.Id}/vehicle/{Vehicle.Id}", entry);
 
             if (response.IsSuccessStatusCode)
             {
                 EmployeesForVehicle.Add(NonAssignedEmployee);
                 await RaisePropertyChanged(() => CanAssignEmployee);
+                Vehicle.ActiveRecordEntryId = response.Content;
             }
             else
                 RaiseNotification(response.Error, "Грешка!!!");
         }
 
         private async Task RemoveVehicleForEmployee()
-        {
-            var response = await ApiService.DeleteAsync<string>($"employees/{assignedEmployee.Id}/vehicle/{Vehicle.Id}");
-
-            if (response.IsSuccessStatusCode)
+            => await NavigationService.Navigate<RoadBookEntryReturnViewModel, RoadBookNavigationModel>(new RoadBookNavigationModel
             {
-                EmployeesForVehicle.Remove(AssignedEmployee);
-                await RaisePropertyChanged(() => CanAssignEmployee);
-            }
-            else
+                Callback = CompleteRemoveVehicleForEmployee,
+                Id = Vehicle.ActiveRecordEntryId,
+            });
+
+        private async Task CompleteRemoveVehicleForEmployee(RoadBookBasicEntryModel entry)
+        {
+            entry.EmployeeId = AssignedEmployee.Id;
+            var response = await ApiService.DeleteAsync<int>($"employees/{AssignedEmployee.Id}/vehicle/{Vehicle.Id}", entry);
+
+            if (!response.IsSuccessStatusCode)
+            {
                 RaiseNotification(response.Error, "Грешка!!!");
+                return;
+            }
+            
+            EmployeesForVehicle.Remove(AssignedEmployee);
+            await RaisePropertyChanged(() => CanAssignEmployee);
+            Vehicle.ActiveRecordEntryId = response.Content;
         }
     }
 }

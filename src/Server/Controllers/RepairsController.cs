@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using CarsManager.Application.Common.Models;
 using CarsManager.Application.Repairs.Commands.CreateRepair;
 using CarsManager.Application.Repairs.Commands.DeleteRepair;
 using CarsManager.Application.Repairs.Commands.UpdateRepair;
+using CarsManager.Application.Repairs.Queries.Dtos;
+using CarsManager.Application.Repairs.Queries.GetBasicRepairs;
 using CarsManager.Application.Repairs.Queries.GetRepair;
 using CarsManager.Application.Repairs.Queries.GetRepairs;
 using CarsManager.Application.Repairs.Queries.GetRepairsForVehicleWithPagination;
@@ -28,8 +31,12 @@ namespace CarsManager.Server.Controllers
         public async Task<ActionResult<RepairsVm>> GetRepairsForVehicle(int id)
             => await Mediator.Send(new GetRepairsQuery { VehicleId = id });
 
+        [HttpGet("vehicle/{id}/basic")]
+        public async Task<IList<BasicRepairForVehicleDto>> GetBasicRepairsForVehicle(int id)
+            => await Mediator.Send(new GetBasicRepairsQuery { VehicleId = id });
+
         [HttpGet("vehicle/{id}/pages")]
-        public async Task<ActionResult<PaginatedList<ListedRepairForVehicleDto>>> GetPaginatedRepairsForVehicle(
+        public async Task<ActionResult<PaginatedList<BasicRepairForVehicleDto>>> GetPaginatedRepairsForVehicle(
             int id,
             [FromQuery] GetRepairsForVehicleWithPaginationQueryDto dto)
         {

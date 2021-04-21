@@ -9,7 +9,7 @@ namespace CarsManager.Application.Repairs.Commands.CreateRepair
         {
             RuleFor(r => r.Mileage)
                 .GreaterThanOrEqualTo(RepairConstants.MIN_MILEAGE);
-            RuleFor(r => r.InitialPrice)
+            RuleFor(r => r.FinalPrice)
                 .GreaterThanOrEqualTo(RepairConstants.MIN_INITIAL_PRICE);
         }
     }

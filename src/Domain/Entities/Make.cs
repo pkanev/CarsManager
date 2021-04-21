@@ -7,6 +7,6 @@ namespace CarsManager.Domain.Entities
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<Model> Models { get; set; } = new HashSet<Model>();
+        public ICollection<Model> Models { get; private set; } = new HashSet<Model>();
     }
 }

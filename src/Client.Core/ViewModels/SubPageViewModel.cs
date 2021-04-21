@@ -19,4 +19,20 @@ namespace Client.Core.ViewModels
             NavigationService.Navigate<HomeViewModel>();
         }
     }
+
+    public abstract class SubPageViewModel<T> : BaseViewModel<T>
+    {
+        public IMvxCommand GoHomeCommand { get; set; }
+
+        protected SubPageViewModel(IApiService apiService, IMvxNavigationService navigationService)
+            : base(apiService, navigationService)
+        {
+            GoHomeCommand = new MvxCommand(GoHome);
+        }
+
+        protected void GoHome()
+        {
+            NavigationService.Navigate<HomeViewModel>();
+        }
+    }
 }

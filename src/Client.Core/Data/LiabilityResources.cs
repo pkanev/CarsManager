@@ -1,4 +1,4 @@
-﻿using Client.Core.Models;
+﻿using Client.Core.Models.Liabilities;
 
 namespace Client.Core.Data
 {
@@ -13,7 +13,7 @@ namespace Client.Core.Data
             _ => ""
         };
 
-        public static string GetTranslatedLIability(LiabilityType liabilityType) => liabilityType switch
+        public static string GetTranslatedLiability(LiabilityType liabilityType) => liabilityType switch
         {
             LiabilityType.MOT => "технически преглед",
             LiabilityType.CivilLiability => "застраховка \"ГО\"",

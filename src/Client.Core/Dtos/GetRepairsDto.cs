@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Client.Core.Models;
+using Client.Core.Models.Repairs;
 
 namespace Client.Core.Dtos
 {

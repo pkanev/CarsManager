@@ -24,7 +24,7 @@ namespace CarsManager.Application.Repairs.Commands.CreateRepair
         public bool IsCoolantChanged { get; set; }
         public bool IsOtherWorkDone { get; set; }
         public string Description { get; set; }
-        public decimal InitialPrice { get; set; }
+        public decimal FinalPrice { get; set; }
     }
 
     public class CreateRepairCommandHandler : IRequestHandler<CreateRepairCommand, int>
@@ -62,8 +62,24 @@ namespace CarsManager.Application.Repairs.Commands.CreateRepair
                 IsCoolantChanged = request.IsCoolantChanged,
                 IsOtherWorkDone = request.IsOtherWorkDone,
                 Description = request.Description,
-                InitialPrice = request.InitialPrice,
+                FinalPrice = request.FinalPrice,
             };
+
+            vehicle.Mileage = entity.Mileage;
+            if (entity.IsBeltChanged)
+                vehicle.BeltMileage = vehicle.Mileage;
+
+            if (entity.IsBrakeDisksChanged)
+                vehicle.BrakeDisksMileage = vehicle.Mileage;
+
+            if (entity.IsBrakeLiningsChanged)
+                vehicle.BrakeLiningsMileage = vehicle.Mileage;
+
+            if (entity.IsCoolantChanged)
+                vehicle.CoolantMileage = vehicle.Mileage;
+
+            if (entity.IsOilChanged)
+                vehicle.OilMileage = vehicle.Mileage;
 
             await context.Repairs.AddAsync(entity);
             await context.SaveChangesAsync(cancellationToken);

@@ -8,6 +8,7 @@ using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Mappings;
 using CarsManager.Application.Common.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Vehicles.Queries.GetVehiclesWithPagination
 {
@@ -30,9 +31,12 @@ namespace CarsManager.Application.Vehicles.Queries.GetVehiclesWithPagination
 
         public async Task<PaginatedList<ListedVehicleDto>> Handle(
             GetVehiclesWithPaginationQuery request,
-            CancellationToken cancellationToken) => await context.Vehicles
+            CancellationToken cancellationToken)
+            => await context.Vehicles
+                .Include(v => v.Model)
+                .ThenInclude(m => m.Make)
                 .OrderBy(v => v.LicencePlate)
                 .ProjectTo<ListedVehicleDto>(mapper.ConfigurationProvider)
-                .PaginatedListAsync(request.PageNumber, request.PageSize);
+                .ToPaginatedListAsync(request.PageNumber, request.PageSize);
     }
 }

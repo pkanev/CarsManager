@@ -33,6 +33,7 @@ namespace CarsManager.Application.Vehicles.Queries.GetVehiclesQuery
             var vehicles = await context.Vehicles
                 .Include(v => v.Model)
                 .Include(v => v.Model.Make)
+                .Include(v => v.RoadBookEntries)
                 .OrderBy(v => v.LicencePlate)
                 .ProjectTo<VehicleDto>(mapper.ConfigurationProvider)
                 .ToListAsync();

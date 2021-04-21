@@ -1,5 +1,4 @@
-﻿using System;
-using Client.Core.Models;
+﻿using Client.Core.Models.Liabilities;
 
 namespace Client.Core.Dtos
 {

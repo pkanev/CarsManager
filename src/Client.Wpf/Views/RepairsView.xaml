@@ -1,0 +1,59 @@
+﻿<local:ReportView
+    x:Class="Client.Wpf.Views.RepairsView"
+    x:TypeArguments="model:BasicRepairModel"
+    xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:Client.Wpf.Views"
+    xmlns:model="clr-namespace:Client.Core.Models.Repairs;assembly=Client.Core"
+    mc:Ignorable="d" 
+    d:DesignHeight="700" d:DesignWidth="1000">
+    <StackPanel Orientation="Vertical" x:Name="PageContent">
+        <StackPanel Orientation="Horizontal" Margin="15 0 0 0">
+            <Button Width="25" Height="25" FontSize="14" VerticalAlignment="Top" VerticalContentAlignment="Top" mvx:Bi.nd="Command GoHomeCommand">
+                <Image Source="{StaticResource Home}" />
+            </Button>
+            <TextBlock Text="Списък на извършени ремонти" Style="{StaticResource ViewTitle}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="15 0 0 5">
+            <Button mvx:Bi.nd="Command ExportCommand, CommandParameter='Excel'" IsEnabled="{Binding CanExport}" Margin="5" ToolTip="Запазете като Excel">
+                <Image Source="{StaticResource Excel}" Width="32"/>
+            </Button>
+            <Button mvx:Bi.nd="Command ExportCommand, CommandParameter='Csv'" IsEnabled="{Binding CanExport}" Margin="5" ToolTip="Запазете като CSV">
+                <Image Source="{StaticResource Csv}" Width="32" />
+            </Button>
+            <Button Click="PrintPage" Margin="5" ToolTip="Разпечатване">
+                <Image Source="{StaticResource Printer}" Width="32"/>
+            </Button>
+            <TextBlock x:Name="VehicleLabel" Text="Aвтомобил" TextWrapping="Wrap" Margin="15 0 5 0" FontWeight="Bold" VerticalAlignment="Center"/>
+            <ComboBox x:Name="VehiclesCombo" ItemsSource="{Binding Vehicles}" SelectedItem="{Binding SelectedVehicle}" IsSynchronizedWithCurrentItem="True" Width="125" VerticalAlignment="Center">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock mvx:Bi.nd="Text LicencePlate" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+        <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False" CanUserAddRows="False" Name="ReportDataGrid" IsSynchronizedWithCurrentItem="True" SelectionUnit="Cell" VerticalScrollBarVisibility="Hidden" CanUserSortColumns="False" Height="551">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Дата" Binding="{Binding Date, StringFormat='{}{0:dd.MM.yyyy}'}" IsReadOnly="True" Width="100" />
+                <DataGridTemplateColumn Header="Описание на извършения ремонт" IsReadOnly="True" Width="450">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock mvx:Bi.nd="Text Description" ToolTip="{Binding Description}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Пробег" Binding="{Binding Mileage}" IsReadOnly="True" Width="125" CellStyle="{StaticResource BlueDataGridCellStyle}"/>
+                <DataGridTextColumn Header="Сервиз" Binding="{Binding RepairShopName}" IsReadOnly="True" Width="225"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 15 0 0">
+            <Button Content="&#171;" mvx:Bi.nd="Command GoToPreviousPageCommand" Padding="25 5" IsEnabled="{Binding PageData.HasPreviousPage}" />
+            <TextBlock mvx:Bi.nd="Text PageData.PageIndex" Margin="25 0" VerticalAlignment="Center"/>
+            <Button Content="&#187;" mvx:Bi.nd="Command GoToNextPageCommand" Padding="25 5" IsEnabled="{Binding PageData.HasNextPage}"/>
+        </StackPanel>
+    </StackPanel>
+</local:ReportView>

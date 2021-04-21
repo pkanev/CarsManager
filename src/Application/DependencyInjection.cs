@@ -3,6 +3,8 @@ using AutoMapper;
 using CarsManager.Application.Common.Behaviours;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Utils;
+using CarsManager.Application.Issues;
+using CarsManager.Application.Issues.Queries.GetAllIssues;
 using CarsManager.Application.Liabilities;
 using FluentValidation;
 using MediatR;
@@ -24,6 +26,9 @@ namespace CarsManager.Application
             services.AddSingleton<IImageManager, ImageManager>();
             services.AddSingleton<ILiabilityUtils, LiabilityUtils>();
             services.AddSingleton<IUrlHelper, UrlHelper>();
+            services.AddSingleton<IIssuesHelper, IssuesHelper>();
+            services.AddTransient<IRepairIssuesGetter, RepairIssuesGetter>();
+            services.AddTransient<ILiabilityIssuesGetter, LiabilityIssuesGetter>();
 
             return services;
         }

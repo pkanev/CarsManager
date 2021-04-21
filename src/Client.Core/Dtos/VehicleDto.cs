@@ -15,7 +15,7 @@ namespace Client.Core.Dtos
         public int EngineDisplacement { get; set; }
         public int Mileage { get; set; }
         public string LicencePlate { get; set; } = string.Empty;
-        public string Color { get; set; } = "White";
+        public string Color { get; set; }
         public DateTime FirstRegistration { get; set; } = DateTime.Today;
         public int BeltMileage { get; set; }
         public int BrakeLiningsMileage { get; set; }
@@ -25,5 +25,6 @@ namespace Client.Core.Dtos
         public int OilMileage { get; set; }
         public string ImageName { get; set; }
         public string ImageAddress { get; set; }
+        public int ActiveRecordEntryId { get; set; }
     }
 }

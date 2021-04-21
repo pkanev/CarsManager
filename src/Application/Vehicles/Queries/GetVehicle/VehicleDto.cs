@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using CarsManager.Application.Common.Mappings;
 using CarsManager.Domain.Entities;
@@ -28,6 +29,7 @@ namespace CarsManager.Application.Vehicles.Queries.GetVehicle
         public int OilMileage { get; set; }
         public string ImageName { get; set; }
         public string ImageAddress { get; set; }
+        public int ActiveRecordEntryId { get; set; }
 
         public void Mapping(Profile profile)
         {
@@ -38,7 +40,10 @@ namespace CarsManager.Application.Vehicles.Queries.GetVehicle
                 .ForMember(d => d.MakeId, opt => opt.MapFrom(s => s.Model.Make.Id))
                 .ForMember(d => d.Fuel, opt => opt.MapFrom(s => (int)s.Fuel))
                 .ForMember(d => d.VehicleType, opt => opt.MapFrom(s => (int)s.Model.VehicleType))
-                .ForMember(d => d.ImageName, opt => opt.MapFrom(s => s.Image));
+                .ForMember(d => d.ImageName, opt => opt.MapFrom(s => s.Image))
+                .ForMember(d => d.ActiveRecordEntryId, opt => opt.MapFrom(s => s.RoadBookEntries
+                    .Where(e => e.ActiveUsers.Count > 0)
+                    .Select(e => e.Id).FirstOrDefault()));
         }
     }
 }

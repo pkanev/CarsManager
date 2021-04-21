@@ -8,6 +8,7 @@ namespace Client.Core.Data
         public static List<ValidityPeriod> MotValidityPeriods = new List<ValidityPeriod>
         {
             new ValidityPeriod { Label = "1 година", Years = 1 },
+            new ValidityPeriod { Label = "3 години", Years = 3 },
             new ValidityPeriod { Label = "6 месеца", Months = 6 },
         };
 

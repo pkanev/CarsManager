@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Client.Core.Dtos;
 using Client.Core.Rest;
@@ -39,17 +40,17 @@ namespace Client.Core.ViewModels
             DeleteVehicleCommand = new MvxAsyncCommand(DeleteVehicle);
         }
 
-        public override Task Initialize()
-        {
-            GetVehicles();
-            return base.Initialize();
-        }
+        public async override Task Initialize()
+            => await GetVehicles();
 
         private async Task GetVehicles()
         {
             var response = await ApiService.GetAsync<GetVehiclesDto>("vehicles");
             if (response.IsSuccessStatusCode)
+            {
                 Vehicles = response.Content.Vehicles.ToObservableCollection();
+                Vehicle = Vehicles.FirstOrDefault();
+            }
             else
                 RaiseNotification(response.Error, "Грешка!!!");
         }

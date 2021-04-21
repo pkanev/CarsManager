@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Client.Core.Dtos;
 using Client.Core.Models;
 using Client.Core.Models.Employees;
+using Client.Core.Models.RoadBook;
 using Client.Core.Models.Vehicles;
 using Client.Core.Rest;
 using Client.Core.Utils;
@@ -26,12 +25,11 @@ namespace Client.Core.ViewModels
         private ObservableCollection<TownModel> towns;
         private TownModel selectedTown;
         private string imageFile;
-        private IList<VehicleDto> allVehicles = new List<VehicleDto>();
         private ObservableCollection<VehicleDto> availableVehiclesForNewEmployee;
         private ObservableCollection<VehicleDto> vehiclesForNewEmployee = new ObservableCollection<VehicleDto>();
         private VehicleDto selectedVehicleForNewEmployee = new VehicleDto();
-        private MvxInteraction<UploadInteractionHandler> uploadInteraction = new MvxInteraction<UploadInteractionHandler>();
         private VehicleDto nullVehicle = new VehicleDto();
+        private MvxInteraction<UploadInteractionHandler> uploadInteraction = new MvxInteraction<UploadInteractionHandler>();
 
         private ObservableCollection<BasicEmployeeModel> employees;
         private BasicEmployeeModel selectedEmployee;
@@ -42,7 +40,7 @@ namespace Client.Core.ViewModels
         private bool isImageUpdatedForSelectedEmployee;
         private ObservableCollection<BasicVehicleModel> selectedEmployeeVehicles;
         private ObservableCollection<VehicleDto> availableVehiclesForSelectedEmployee = new ObservableCollection<VehicleDto>();
-        private VehicleDto selectedAvailableVehiclesForSelectedEmployee;
+        private VehicleDto selectedAvailableVehicleForSelectedEmployee;
 
         public int SelectedTab
         {
@@ -151,9 +149,9 @@ namespace Client.Core.ViewModels
             }
         }
 
-        public Color SelectedVehicleForNewEmployeeColor
+        public string SelectedVehicleForNewEmployeeColor
         {
-            get => Color.FromName(SelectedVehicleForNewEmployee?.Color ?? "White");
+            get => SelectedVehicleForNewEmployee?.Color ?? string.Empty;
         }
 
         public ObservableCollection<VehicleDto> VehiclesForNewEmployee
@@ -200,7 +198,7 @@ namespace Client.Core.ViewModels
                 RaisePropertyChanged(() => SelectedEmployeeSurname);
                 RaisePropertyChanged(() => SelectedEmployeeTelephone);
                 RaisePropertyChanged(() => IsValidSelectedEmployee);
-                RaisePropertyChanged(() => CanAddSelectedAvailableVehiclesForSelectedEmployee);
+                RaisePropertyChanged(() => CanAddSelectedAvailableVehicleForSelectedEmployee);
             }
         }
 
@@ -267,7 +265,7 @@ namespace Client.Core.ViewModels
             set
             {
                 SetProperty(ref selectedEmployeeVehicles, value);
-                RaisePropertyChanged(() => CanAddSelectedAvailableVehiclesForSelectedEmployee);
+                RaisePropertyChanged(() => CanAddSelectedAvailableVehicleForSelectedEmployee);
             }
         }
 
@@ -277,20 +275,20 @@ namespace Client.Core.ViewModels
             set => SetProperty(ref availableVehiclesForSelectedEmployee, value);
         }
 
-        public VehicleDto SelectedAvailableVehiclesForSelectedEmployee
+        public VehicleDto SelectedAvailableVehicleForSelectedEmployee
         {
-            get => selectedAvailableVehiclesForSelectedEmployee;
+            get => selectedAvailableVehicleForSelectedEmployee;
             set
             {
-                SetProperty(ref selectedAvailableVehiclesForSelectedEmployee, value);
-                RaisePropertyChanged(() => CanAddSelectedAvailableVehiclesForSelectedEmployee);
+                SetProperty(ref selectedAvailableVehicleForSelectedEmployee, value);
+                RaisePropertyChanged(() => CanAddSelectedAvailableVehicleForSelectedEmployee);
             }
         }
 
-        public bool CanAddSelectedAvailableVehiclesForSelectedEmployee =>
-            SelectedAvailableVehiclesForSelectedEmployee != null
+        public bool CanAddSelectedAvailableVehicleForSelectedEmployee =>
+            SelectedAvailableVehicleForSelectedEmployee != null
             && SelectedEmployeeVehicles != null
-            && !SelectedEmployeeVehicles.Any(v => v.Id == SelectedAvailableVehiclesForSelectedEmployee.Id);
+            && !SelectedEmployeeVehicles.Any(v => v.Id == SelectedAvailableVehicleForSelectedEmployee.Id);
 
         public bool IsSelectedEmployee => SelectedEmployee != null;
         public bool IsValidSelectedEmployee => EmployeeInfo?.Employee != null
@@ -320,11 +318,11 @@ namespace Client.Core.ViewModels
         {
             SelectImageCommand = new MvxCommand<bool>(SelectImage);
             RemoveImageCommand = new MvxCommand<bool>(RemoveImage);
-            AddVehicleForNewEmployeeCommand = new MvxCommand(AddVehicleForNewEmployee);
+            AddVehicleForNewEmployeeCommand = new MvxAsyncCommand(AddVehicleForNewEmployee);
             RemoveVehicleForNewEmployeeCommand = new MvxCommand<VehicleDto>(RemoveVehicleForNewEmployee);
             SaveNewEmployeeCommand = new MvxAsyncCommand(SaveNewEmployee);
             GoHomeCommand = new MvxCommand(GoHome);
-            ClearNewEmployeeCommand = new MvxCommand(ClearForm);
+            ClearNewEmployeeCommand = new MvxAsyncCommand(ClearForm);
             SaveSelectedEmployeeCommand = new MvxAsyncCommand(SaveSelectedEmployee);
             DeleteSelectedEmployeeCommand = new MvxAsyncCommand(DeleteSelectedEmployee);
             AddVehicleForSelectedEmployeeCommand = new MvxAsyncCommand(AddVehicleForSelectedEmployee);
@@ -366,7 +364,6 @@ namespace Client.Core.ViewModels
 
             if (response.IsSuccessStatusCode)
             {
-                allVehicles = response.Content.Vehicles;
                 AvailableVehiclesForNewEmployee = response.Content.Vehicles.ToObservableCollection();
                 AvailableVehiclesForSelectedEmployee = response.Content.Vehicles.ToObservableCollection();
                 SelectedVehicleForNewEmployee = AvailableVehiclesForNewEmployee.FirstOrDefault();
@@ -432,20 +429,35 @@ namespace Client.Core.ViewModels
             }
         }
 
-        private void AddVehicleForNewEmployee()
+        private async Task AddVehicleForNewEmployee()
         {
             if (VehiclesForNewEmployee.Contains(SelectedVehicleForNewEmployee) || SelectedVehicleForNewEmployee == nullVehicle)
                 return;
 
+            await NavigationService.Navigate<RoadBookEntryAddViewModel, RoadBookNavigationModel>(new RoadBookNavigationModel
+            {
+                Callback = CompleteAddVehicleForNewEmployee,
+                Id = SelectedVehicleForNewEmployee.ActiveRecordEntryId,
+            });
+        }
+
+        private Task CompleteAddVehicleForNewEmployee(RoadBookBasicEntryModel entry)
+        {
             VehiclesForNewEmployee.Add(SelectedVehicleForNewEmployee);
+            entry.VehicleId = SelectedVehicleForNewEmployee.Id;
+            NewEmployee.RoadBookEntries.Add(entry);
             AvailableVehiclesForNewEmployee.Remove(SelectedVehicleForNewEmployee);
             SelectedVehicleForNewEmployee = nullVehicle;
+            return Task.CompletedTask;
         }
 
         private void RemoveVehicleForNewEmployee(VehicleDto vehicle)
         {
             VehiclesForNewEmployee.Remove(vehicle);
             AvailableVehiclesForNewEmployee.Add(vehicle);
+            var roadBookEntry = NewEmployee.RoadBookEntries.FirstOrDefault(e => e.VehicleId == vehicle.Id);
+            if (roadBookEntry != null)
+                NewEmployee.RoadBookEntries.Remove(roadBookEntry);
         }
 
         private async Task SaveNewEmployee()
@@ -466,7 +478,7 @@ namespace Client.Core.ViewModels
             if (result.IsSuccessStatusCode)
             {
                 var employeeId = result.Content;
-                ClearForm();
+                await ClearForm();
                 return;
             }
 
@@ -486,13 +498,14 @@ namespace Client.Core.ViewModels
                 NewEmployee.ImageName = result.Content;
         }
 
-        private void ClearForm()
+        private async Task ClearForm()
         {
             NewEmployee = new CreateEmployeeModel();
             ImageFile = null;
             VehiclesForNewEmployee = new ObservableCollection<VehicleDto>();
             SelectedTown = Towns.FirstOrDefault();
             SelectedVehicleForNewEmployee = nullVehicle;
+            await GetVehicles();
         }
 
         private async Task SaveSelectedEmployee()
@@ -508,7 +521,7 @@ namespace Client.Core.ViewModels
 
             if (response.IsSuccessStatusCode)
             {
-                RaiseNotification("Записът бе успешен.", "Редактиране на данни");
+                RaiseNotification("Успешен запис", "Редактиране на данни");
                 return;
             }
 
@@ -540,25 +553,38 @@ namespace Client.Core.ViewModels
         private async Task AddVehicleForSelectedEmployee()
         {
             if (SelectedEmployee == null
-                || SelectedAvailableVehiclesForSelectedEmployee == null
-                || !CanAddSelectedAvailableVehiclesForSelectedEmployee)
+                || SelectedAvailableVehicleForSelectedEmployee == null
+                || !CanAddSelectedAvailableVehicleForSelectedEmployee)
                 return;
 
-            var response = await ApiService.PostAsync<string>($"employees/{SelectedEmployee.Id}/vehicle/{SelectedAvailableVehiclesForSelectedEmployee.Id}");
+            await NavigationService.Navigate<RoadBookEntryAddViewModel, RoadBookNavigationModel>(new RoadBookNavigationModel
+               {
+                   Callback = CompleteAddVehicleForEmployee,
+                   Id = SelectedAvailableVehicleForSelectedEmployee.ActiveRecordEntryId,
+               });
+        }
+
+        private async Task CompleteAddVehicleForEmployee(RoadBookBasicEntryModel entry)
+        {
+            entry.EmployeeId = SelectedEmployee.Id;
+            entry.VehicleId = SelectedAvailableVehicleForSelectedEmployee.Id;
+            var response = await ApiService.PostAsync<int>($"employees/{SelectedEmployee.Id}/vehicle/{SelectedAvailableVehicleForSelectedEmployee.Id}", entry);
 
             if (response.IsSuccessStatusCode)
             {
                 SelectedEmployeeVehicles.Add(new BasicVehicleModel
                 {
-                    Id = SelectedAvailableVehiclesForSelectedEmployee.Id,
-                    LicencePlate = SelectedAvailableVehiclesForSelectedEmployee.LicencePlate,
-                    Color = SelectedAvailableVehiclesForSelectedEmployee.Color,
-                    Make = SelectedAvailableVehiclesForSelectedEmployee.MakeName,
-                    Model = SelectedAvailableVehiclesForSelectedEmployee.ModelName,
-                    Mileage = SelectedAvailableVehiclesForSelectedEmployee.Mileage
+                    Id = SelectedAvailableVehicleForSelectedEmployee.Id,
+                    LicencePlate = SelectedAvailableVehicleForSelectedEmployee.LicencePlate,
+                    Color = SelectedAvailableVehicleForSelectedEmployee.Color,
+                    Make = SelectedAvailableVehicleForSelectedEmployee.MakeName,
+                    Model = SelectedAvailableVehicleForSelectedEmployee.ModelName,
+                    Mileage = SelectedAvailableVehicleForSelectedEmployee.Mileage,
+                    ActiveRecordEntryId = response.Content
                 });
 
-                await RaisePropertyChanged(() => CanAddSelectedAvailableVehiclesForSelectedEmployee);
+                SelectedAvailableVehicleForSelectedEmployee.ActiveRecordEntryId = response.Content;
+                await RaisePropertyChanged(() => CanAddSelectedAvailableVehicleForSelectedEmployee);
             }
 
             else
@@ -566,21 +592,47 @@ namespace Client.Core.ViewModels
         }
 
         private async Task RemoveVehicleForSelectedEmployee(BasicVehicleModel vehicle)
-            => await ShowMessage($"Сигурни ли сте, че желаете да премахнете автомобил с рег. номер {vehicle.LicencePlate} от списъка със зачислени автомобили на {selectedEmployee.GivenName } {selectedEmployee.Surname}?", "Премахване на зачислен автомобил", async () =>
+        {
+            if (SelectedEmployee == null || vehicle == null)
+                return;
+
+            await NavigationService.Navigate<RoadBookEntryReturnViewModel, RoadBookNavigationModel>(new RoadBookNavigationModel
             {
-                if (SelectedEmployee == null || vehicle == null)
-                    return;
-
-                var response = await ApiService.DeleteAsync<string>($"employees/{SelectedEmployee.Id}/vehicle/{vehicle.Id}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    SelectedEmployeeVehicles.Remove(vehicle);
-                    await RaisePropertyChanged(() => CanAddSelectedAvailableVehiclesForSelectedEmployee);
-                }
-                else
-                    RaiseNotification(response.Error, "Грешка!!!");
+                Callback = CompleteRemoveVehicleForEmployee,
+                Id = vehicle.ActiveRecordEntryId,
             });
+        }
+
+        private async Task CompleteRemoveVehicleForEmployee(RoadBookBasicEntryModel entry)
+        {
+            var vehicle = SelectedEmployeeVehicles.FirstOrDefault(v => v.Id == entry.VehicleId);
+            if (vehicle == null)
+            {
+                RaiseNotification("Има грешка. Опитайте да презаредите страницата.", "Грешка!!!");
+                return;
+            }
+
+            entry.EmployeeId = SelectedEmployee.Id;
+            var response = await ApiService.DeleteAsync<int>($"employees/{SelectedEmployee.Id}/vehicle/{entry.VehicleId}", entry);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                RaiseNotification(response.Error, "Грешка!!!");
+                return;
+            }
+
+            vehicle.ActiveRecordEntryId = response.Content;
+            SelectedEmployeeVehicles.Remove(vehicle);
+            var vehicleInList = AvailableVehiclesForSelectedEmployee.FirstOrDefault(v => v.Id == vehicle.Id);
+            if (vehicleInList == null)
+            {
+                RaiseNotification("Има грешка. Опитайте да презаредите страницата.", "Грешка!!!");
+                return;
+            }
+
+            vehicleInList.ActiveRecordEntryId = response.Content;
+            await RaisePropertyChanged(() => CanAddSelectedAvailableVehicleForSelectedEmployee);
+        }
 
         private async Task<bool> StoreImageForSelectedEmployee()
         {
