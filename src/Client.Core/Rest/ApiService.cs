@@ -12,10 +12,10 @@ namespace Client.Core.Rest
 {
     public class ApiService : IApiService
     {
+        private const string uploadsEndPoint = "uploads";
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IMvxLog mvxLog;
         private string baseUrl => Properties.Settings.Default.ApiAddress;
-        private string uploadsEndPoint => Properties.Settings.Default.UploadsEndPoint;
 
         public ApiService(IHttpClientFactory httpClientFactory, IMvxLog mvxLog)
         {
