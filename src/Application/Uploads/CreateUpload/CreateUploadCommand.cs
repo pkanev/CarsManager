@@ -1,11 +1,13 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
 namespace CarsManager.Application.Uploadds.CreateUpload
 {
+    [Authorise]
     public class CreateUploadCommand : IRequest<string>
     {
         public IFormFile File { get; set; }

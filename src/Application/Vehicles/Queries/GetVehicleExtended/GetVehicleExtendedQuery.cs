@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Employees.Queries.GetEmployees;
 using CarsManager.Domain.Entities;
 using MediatR;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Vehicles.Queries.GetVehicleExtended
 {
+    [Authorise]
     public class GetVehicleExtendedQuery : IRequest<VehicleExtendedVm>
     {
         public int Id { get; set; }

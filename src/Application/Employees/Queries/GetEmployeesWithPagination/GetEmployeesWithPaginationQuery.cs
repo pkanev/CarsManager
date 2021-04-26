@@ -7,10 +7,12 @@ using CarsManager.Application.Common.Constants;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Mappings;
 using CarsManager.Application.Common.Models;
+using CarsManager.Application.Common.Security;
 using MediatR;
 
 namespace CarsManager.Application.Employees.Queries.GetEmployeesWithPagination
 {
+    [Authorise]
     public class GetEmployeesWithPaginationQuery : IRequest<PaginatedList<EmployeeDto>>
     {
         public int PageNumber { get; set; } = PageConstants.DEFAULT_PAGE_NUMBER;

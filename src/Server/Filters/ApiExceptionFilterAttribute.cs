@@ -28,6 +28,7 @@ namespace CarsManager.Server.Filters
                 { typeof(VehicleAlreadyRegisteredException), HandleVehicleAlreadyRegisteredException},
                 { typeof(InvalidLiabilityTypeException), HandleInvalidLiabilityTypeException},
                 { typeof(InvalidRoadEntryDataException), HandleInvalidRoadEntryDataException},
+                { typeof(IdentityException), HandleIdentityException},
             };
         }
 
@@ -233,5 +234,18 @@ namespace CarsManager.Server.Filters
             context.ExceptionHandled = true;
         }
 
+        private void HandleIdentityException(ExceptionContext context)
+        {
+            var exception = context.Exception as IdentityException;
+            var details = new ValidationProblemDetails(context.ModelState)
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Detail = exception.Message,
+            };
+
+            context.Result = new BadRequestObjectResult(details);
+
+            context.ExceptionHandled = true;
+        }
     }
 }

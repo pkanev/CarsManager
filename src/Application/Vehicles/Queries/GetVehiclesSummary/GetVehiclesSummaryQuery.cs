@@ -2,10 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using MediatR;
 
 namespace CarsManager.Application.Vehicles.Queries.GetVehiclesSummary
 {
+    [Authorise]
     public class GetVehiclesSummaryQuery : IRequest<VehiclesSummaryDto>
     {
     }

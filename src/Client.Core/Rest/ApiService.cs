@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Client.Core.Services;
 using MvvmCross.Logging;
 using Newtonsoft.Json;
 
@@ -14,12 +15,17 @@ namespace Client.Core.Rest
     {
         private const string uploadsEndPoint = "uploads";
         private readonly IHttpClientFactory httpClientFactory;
+        private readonly ICurrentUserService currentUserService;
         private readonly IMvxLog mvxLog;
         private string baseUrl => Properties.Settings.Default.ApiAddress;
 
-        public ApiService(IHttpClientFactory httpClientFactory, IMvxLog mvxLog)
+        public Action OnCallStart { get; set; }
+        public Action OnCallEnd { get; set; }
+
+        public ApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUserService, IMvxLog mvxLog)
         {
             this.httpClientFactory = httpClientFactory;
+            this.currentUserService = currentUserService;
             this.mvxLog = mvxLog;
         }
 
@@ -52,10 +58,15 @@ namespace Client.Core.Rest
                         request.Content = new StringContent(json, Encoding.UTF8, "application/json");
                     }
 
+                    if (currentUserService.CurrentUser != null)
+                        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", currentUserService.CurrentUser.Token);
+
                     var result = new ApiServiceResponse<TResult>();
                     try
                     {
+                        OnCallStart?.Invoke();
                         var response = await httpClient.SendAsync(request).ConfigureAwait(false);
+                        OnCallEnd?.Invoke();
                         result.StatusCode = response.StatusCode;
                         result.IsSuccessStatusCode = response.IsSuccessStatusCode;
 
@@ -132,13 +143,12 @@ namespace Client.Core.Rest
         public async Task<ApiServiceResponse<string>> DeleteFileAsync(string filename)
             => await this.DeleteAsync<string>(uploadsEndPoint, new {FileName = filename});
 
-        //TODO: NEEDS BETTER HANDLING
         private string GetStatusCodeErrorMessage(HttpStatusCode statusCode)
             => statusCode switch
             {
-                HttpStatusCode.Unauthorized => "Unauthorized access, please log in to the system.",
-                HttpStatusCode.NotFound => "Could not find the specified resource",
-                HttpStatusCode.InternalServerError => "Sorry, something went wrong",
+                HttpStatusCode.Unauthorized => "Неразрешен достъп. Моля влезнете отново в системата.",
+                HttpStatusCode.NotFound => "Търсеният ресурс не може да бъде открит.",
+                HttpStatusCode.InternalServerError => "Грешка 500. Моля, свържете се с Вашия системен администратор.",
                 _ => statusCode.ToString()
             };
     }

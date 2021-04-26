@@ -3,12 +3,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Towns.Queries.Dtos;
 using CarsManager.Domain.Entities;
 using MediatR;
 
 namespace CarsManager.Application.Towns.Queries.GetTown
 {
+    [Authorise]
     public class GetTownQuery : IRequest<TownDto>
     {
         public int Id { get; set; }

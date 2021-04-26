@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Repairs.Queries.Dtos;
 using CarsManager.Application.RepairShops.Queries.Dtos;
 using CarsManager.Domain.Entities;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.RepairShops.Queries.GetRepairShop
 {
+    [Authorise]
     public class GetRepairShopQuery : IRequest<RepairShopVm>
     {
         public int Id { get; set; }

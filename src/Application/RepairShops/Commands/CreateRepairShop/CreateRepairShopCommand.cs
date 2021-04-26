@@ -1,11 +1,13 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Domain.Entities;
 using MediatR;
 
 namespace CarsManager.Application.RepairShops.Commands.CreateRepairShop
 {
+    [Authorise]
     public class CreateRepairShopCommand : IRequest<int>
     {
         public string Name { get; set; }

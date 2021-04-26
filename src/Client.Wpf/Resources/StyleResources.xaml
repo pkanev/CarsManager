@@ -96,4 +96,16 @@
         <Setter Property="BorderBrush" Value="DarkBlue"/>
         <Setter Property="BorderThickness" Value="1"/>
     </Style>
+    <Style TargetType="{x:Type Hyperlink}" x:Key="InGrid">
+        <Setter Property="Foreground" Value="Red" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <Style TargetType="{x:Type DataGridCell}">
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="#CCDAFF" />
+                <Setter Property="Foreground" Value="Brown" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

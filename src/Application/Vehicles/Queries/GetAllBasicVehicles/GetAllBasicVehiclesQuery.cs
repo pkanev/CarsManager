@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Vehicles.Queries.GetVehiclesWithPagination;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Vehicles.Queries.GetAllBasicVehicles
 {
+    [Authorise]
     public class GetAllBasicVehiclesQuery : IRequest<IList<ListedVehicleDto>>
     {
     }

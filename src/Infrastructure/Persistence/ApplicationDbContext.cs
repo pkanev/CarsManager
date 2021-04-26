@@ -3,20 +3,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Domain.Entities;
-using CarsManager.Infrastructure.Identity;
-using IdentityServer4.EntityFramework.Options;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace CarsManager.Infrastructure.Persistence
 {
-    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         public ApplicationDbContext(
-            DbContextOptions options,
-            IOptions<OperationalStoreOptions> operationalStoreOptions)
-            : base(options, operationalStoreOptions)
+            DbContextOptions options)
+            : base(options)
         {
         }
 
@@ -32,6 +27,8 @@ namespace CarsManager.Infrastructure.Persistence
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Town> Towns { get; set; }
         public DbSet<RoadBookEntry> RoadBookEntries { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

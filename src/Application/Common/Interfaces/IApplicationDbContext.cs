@@ -19,6 +19,8 @@ namespace CarsManager.Application.Common.Interfaces
         DbSet<Employee> Employees { get; set; }
         DbSet<Town> Towns { get; set; }
         DbSet<RoadBookEntry> RoadBookEntries { get; set; }
+        DbSet<User> Users { get; set; }
+        DbSet<UserRole> UserRoles { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

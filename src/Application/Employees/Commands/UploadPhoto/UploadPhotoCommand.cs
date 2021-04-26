@@ -3,11 +3,13 @@ using System.Threading.Tasks;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Mappings;
+using CarsManager.Application.Common.Security;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
 namespace CarsManager.Application.Employees.Commands.UploadPhoto
 {
+    [Authorise]
     public class UploadPhotoCommand : IRequest, IMapFrom<UploadPhotoDto>
     {
         public int EmployeeId { get; set; }

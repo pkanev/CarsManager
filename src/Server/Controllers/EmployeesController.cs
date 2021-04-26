@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using CarsManager.Application.Employees.Commands.AssignVehicle;
@@ -19,25 +18,22 @@ namespace CarsManager.Server.Controllers
 {
     public class EmployeesController : ApiControllerBase
     {
-        private readonly IConfiguration configuration;
         private readonly IMapper mapper;
 
-        private string path => Path.Combine(Startup.wwwRootFolder, configuration.GetValue<string>("Images:Path"));
-        private string imagesFolder => configuration.GetValue<string>("Images:Path");
+        private string path => Path.Combine(Startup.wwwRootFolder, Constants.IMAGES_FOLDER);
 
-        public EmployeesController(IConfiguration configuration, IMapper mapper)
+        public EmployeesController(IMapper mapper)
         {
-            this.configuration = configuration;
             this.mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult<EmployeesVm>> Get()
-            => await Mediator.Send(new GetEmployeesQuery { PhotoPath = HttpContext.Request.GetAbsoluteUri(imagesFolder) });
+            => await Mediator.Send(new GetEmployeesQuery { PhotoPath = HttpContext.Request.GetAbsoluteUri(Constants.IMAGES_FOLDER) });
 
         [HttpGet("{id}")]
         public async Task<ActionResult<EmployeeVm>> Get(int id)
-            => await Mediator.Send(new GetEmployeeQuery { Id = id, PhotoPath = HttpContext.Request.GetAbsoluteUri(imagesFolder) });
+            => await Mediator.Send(new GetEmployeeQuery { Id = id, PhotoPath = HttpContext.Request.GetAbsoluteUri(Constants.IMAGES_FOLDER) });
 
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateEmployeeCommand command)

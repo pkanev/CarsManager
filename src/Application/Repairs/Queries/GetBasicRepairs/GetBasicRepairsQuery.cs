@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Repairs.Queries.Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Repairs.Queries.GetBasicRepairs
 {
+    [Authorise]
     public class GetBasicRepairsQuery : IRequest<IList<BasicRepairForVehicleDto>>
     {
         public int VehicleId { get; set; }

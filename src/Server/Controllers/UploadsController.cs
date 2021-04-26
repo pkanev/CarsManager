@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using CarsManager.Application.Uploadds.CreateUpload;
 using CarsManager.Application.Uploadds.DeleteUpload;
 using CarsManager.Application.Uploads.DeleteUpload;
+using CarsManager.Server.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -12,13 +13,7 @@ namespace CarsManager.Server.Controllers
 {
     public class UploadsController : ApiControllerBase
     {
-        private readonly IConfiguration configuration;
-        private string path => Path.Combine(Startup.wwwRootFolder, configuration.GetValue<string>("Images:Path"));
-
-        public UploadsController(IConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
+        private string path => Path.Combine(Startup.wwwRootFolder, Constants.IMAGES_FOLDER);
 
         [HttpPost]
         public async Task<ActionResult<string>> Upload(IFormFile file)

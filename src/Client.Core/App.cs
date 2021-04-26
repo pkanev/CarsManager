@@ -1,6 +1,5 @@
 ﻿using System;
-using Client.Core.Utils;
-using Client.Core.ViewModels;
+using Client.Core.ViewModels.Account;
 using Microsoft.Extensions.DependencyInjection;
 using MvvmCross;
 using MvvmCross.Base;

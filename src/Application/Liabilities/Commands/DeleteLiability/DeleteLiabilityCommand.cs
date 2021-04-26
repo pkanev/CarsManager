@@ -2,11 +2,13 @@
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Domain.Entities;
 using MediatR;
 
 namespace CarsManager.Application.Liabilities.Commands.DeleteLiability
 {
+    [Authorise]
     public class DeleteLiabilityCommand : IRequest
     {
         public int Id { get; set; }

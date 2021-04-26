@@ -7,12 +7,14 @@ using CarsManager.Application.Common.Constants;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Mappings;
 using CarsManager.Application.Common.Models;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Repairs.Queries.Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Repairs.Queries.GetRepairsForVehicleWithPagination
 {
+    [Authorise]
     public class GetRepairsForVehicleWithPaginationQuery : IRequest<PaginatedList<BasicRepairForVehicleDto>>, IMapFrom<GetRepairsForVehicleWithPaginationQueryDto>
     {
         public int VehicleId { get; set; }

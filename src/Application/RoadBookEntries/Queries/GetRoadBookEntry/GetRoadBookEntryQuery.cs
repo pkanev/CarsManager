@@ -3,11 +3,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Domain.Entities;
 using MediatR;
 
 namespace CarsManager.Application.RoadBookEntries.Queries.GetRoadBookEntry
 {
+    [Authorise]
     public class GetRoadBookEntryQuery : IRequest<RoadBookBasicEntryDto>
     {
         public int Id { get; set; }

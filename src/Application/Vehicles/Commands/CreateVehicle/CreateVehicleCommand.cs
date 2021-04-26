@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Mappings;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Vehicles.Commands.Dtos;
 using CarsManager.Domain.Entities;
 using CarsManager.Domain.Enums;
@@ -12,6 +12,7 @@ using MediatR;
 
 namespace CarsManager.Application.Vehicles.Commands.CreateVehicle
 {
+    [Authorise]
     public class CreateVehicleCommand : IRequest<int>, IMapFrom<CreateVehicleDto>
     {
         public int ModelId { get; set; }

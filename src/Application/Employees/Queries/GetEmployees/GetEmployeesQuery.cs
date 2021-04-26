@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Employees.Queries.GetEmployees
 {
+    [Authorise]
     public class GetEmployeesQuery : IRequest<EmployeesVm>
     {
         public string PhotoPath { get; set; }

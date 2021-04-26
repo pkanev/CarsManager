@@ -5,6 +5,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Models.Queries.Dtos;
 using CarsManager.Domain.Entities;
 using MediatR;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Models.Queries.GetModel
 {
+    [Authorise]
     public class GetModelQuery : IRequest<ModelVm>
     {
         public int Id { get; set; }

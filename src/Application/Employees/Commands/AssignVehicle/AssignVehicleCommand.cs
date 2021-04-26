@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Vehicles.Exceptions;
 using CarsManager.Domain.Entities;
 using MediatR;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Employees.Commands.AssignVehicle
 {
+    [Authorise]
     public class AssignVehicleCommand : IRequest<int>
     {
         public int Id { get; set; }

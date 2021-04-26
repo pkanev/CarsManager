@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Makes.Queries.Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Makes.Queries.GetMakes
 {
+    [Authorise]
     public class GetMakesQuery : IRequest<MakesVm>
     {
     }

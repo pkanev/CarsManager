@@ -1,10 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using MediatR;
 
 namespace CarsManager.Application.Issues.Queries.GetAllIssues
 {
+    [Authorise]
     public class GetAllIssuesQuery : IRequest<IssuesDto>
     {
         public int BeltMileageWarningLimit { get; set; }

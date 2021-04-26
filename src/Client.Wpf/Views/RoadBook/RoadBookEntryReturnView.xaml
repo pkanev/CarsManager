@@ -1,0 +1,41 @@
+﻿<common:BaseWindow
+    x:Class="Client.Wpf.Views.RoadBook.RoadBookEntryReturnView"
+    xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:common="clr-namespace:Client.Wpf.Views.Common"
+    xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+    mc:Ignorable="d" 
+    Height="250" Width="350" WindowStartupLocation="CenterScreen"
+    Title="Връщане на автомобил">
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".6*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Взета:" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Model.CheckedOut}" VerticalAlignment="Center"/>
+        <common:RequiredLabel Label="Върната:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+        <xceed:DateTimePicker Grid.Row="1" Grid.Column="1" mvx:Bi.nd="Value CheckedIn" Padding="2"/>
+        <common:RequiredLabel Grid.Row="2" Grid.Column="0" Label="Дестинация:" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="2" Grid.Column="1" mvx:Bi.nd="Text Destination" Padding="2"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Стар пробег:" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="3" Grid.Column="1" mvx:Bi.nd="Text Model.OldMileage" VerticalAlignment="Center"/>
+        <common:RequiredLabel Grid.Row="4" Grid.Column="0" Label="Нов пробег:" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="4" Grid.Column="1" mvx:Bi.nd="Text NewMileage" Padding="2"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0 15 0 0">
+            <Button mvx:Bi.nd="Command CancelCommand" Content="Откажи" Margin="0 0 15 0" Padding="15 5"/>
+            <Button mvx:Bi.nd="Command CompleteCommand" Content="Потвърди" Padding="15 5" IsEnabled="{Binding CanComplete}"/>
+        </StackPanel>
+    </Grid>
+</common:BaseWindow>

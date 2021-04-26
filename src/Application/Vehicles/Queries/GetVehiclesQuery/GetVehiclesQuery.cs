@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Vehicles.Queries.GetVehicle;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Vehicles.Queries.GetVehiclesQuery
 {
+    [Authorise]
     public class GetVehiclesQuery : IRequest<VehiclesVm>
     {
         public string Path { get; set; }

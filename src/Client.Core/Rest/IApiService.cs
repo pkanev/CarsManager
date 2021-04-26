@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Client.Core.Rest
 {
-    class ResultStruct<T> where T : struct { }
-    class RequireClass<T> where T : class { }
     public interface IApiService
     {
+        Action OnCallStart { get; set; }
+        Action OnCallEnd { get; set; }
         Task<ApiServiceResponse<TResult>> GetAsync<TResult>(string url);
         Task<ApiServiceResponse<TResult>> PostAsync<TResult>(string url, object data = null);
         Task<ApiServiceResponse<TResult>> PutAsync<TResult>(string url, object data = null);

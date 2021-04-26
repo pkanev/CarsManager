@@ -3,12 +3,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Domain.Entities;
 using CarsManager.Domain.Enums;
 using MediatR;
 
 namespace CarsManager.Application.Vehicles.Commands.UpdateVehicle
 {
+    [Authorise]
     public class UpdateVehicleCommand : IRequest
     {
         public int Id { get; set; }

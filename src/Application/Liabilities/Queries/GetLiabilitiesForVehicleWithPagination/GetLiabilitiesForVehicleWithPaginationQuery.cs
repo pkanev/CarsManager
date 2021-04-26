@@ -9,10 +9,12 @@ using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Mappings;
 using CarsManager.Application.Common.Models;
+using CarsManager.Application.Common.Security;
 using MediatR;
 
 namespace CarsManager.Application.Liabilities.Queries.GetLiabilitiesForVehicleWithPagination
 {
+    [Authorise]
     public class GetLiabilitiesForVehicleWithPaginationQuery : IRequest<PaginatedList<ListedLiabilityDto>>, IMapFrom<PaginationDto>
     {
         public int VehicleId { get; set; }

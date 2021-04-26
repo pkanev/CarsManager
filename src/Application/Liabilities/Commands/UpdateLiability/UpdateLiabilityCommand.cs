@@ -4,11 +4,13 @@ using System.Threading.Tasks;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Mappings;
+using CarsManager.Application.Common.Security;
 using CarsManager.Domain.Entities;
 using MediatR;
 
 namespace CarsManager.Application.Liabilities.Commands.UpdateLiability
 {
+    [Authorise]
     public class UpdateLiabilityCommand : IRequest, IMapFrom<UpdateLiabilityCommandDto>
     {
         public int Id { get; set; }
