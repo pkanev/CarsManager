@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.RepairShops.Queries.Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.RepairShops.Queries.GetRepairShops
 {
+    [Authorise]
     public class GetRepairShopsQuery : IRequest<RepairShopsVm>
     {
     }

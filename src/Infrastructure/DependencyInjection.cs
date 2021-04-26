@@ -1,13 +1,14 @@
-﻿using System;
+﻿using System.Text;
+using System.Threading.Tasks;
 using CarsManager.Application.Common.Interfaces;
-using CarsManager.Infrastructure.Identity;
+using CarsManager.Infrastructure.Helpers;
 using CarsManager.Infrastructure.Persistence;
 using CarsManager.Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CarsManager.Infrastructure
 {
@@ -34,24 +35,48 @@ namespace CarsManager.Infrastructure
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
-            services
-                .AddDefaultIdentity<ApplicationUser>()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            // configure strongly typed settings objects
+            var appSettingsSection = configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
 
-            services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
-            services.AddTransient<IDateTime, DateTimeService>();
-            services.AddTransient<IIdentityService, IdentityService>();
-
-            services.AddAuthentication()
-                .AddIdentityServerJwt();
-
-            services.AddAuthorization(options =>
+            // configure jwt authentication
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(x =>
             {
-                options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                        var userId = context.Principal.Identity.Name;
+                        var user = Task.Run(async() => await userService.GetByIdAsync(userId)).Result;
+                        if (user == null)
+                        {
+                            // return unauthorized if user no longer exists
+                            context.Fail("Unauthorized");
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
             });
+
+            // configure DI for application services
+            services.AddTransient<IDateTime, DateTimeService>();
 
             return services;
         }

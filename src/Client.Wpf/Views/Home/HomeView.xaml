@@ -1,0 +1,273 @@
+﻿<common:BaseView
+    x:Class="Client.Wpf.Views.Home.HomeView"
+    xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:common="clr-namespace:Client.Wpf.Views.Common"
+    xmlns:converters="clr-namespace:Client.Wpf.Converters"
+    mc:Ignorable="d" 
+    d:DesignHeight="900" d:DesignWidth="1000">
+    <common:BaseView.Resources>
+        <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
+    </common:BaseView.Resources>
+    <StackPanel Orientation="Vertical">
+        <Menu Name="Open" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <MenuItem Header="Автомобил">
+                <MenuItem Header="Добавяне на автомобил" mvx:Bi.nd="Command GoToAddVehicleCommand" InputGestureText="F2" />
+                <MenuItem Header="Редактиране на автомобил" mvx:Bi.nd="Command GoToEditVehicleCommand" />
+                <MenuItem Header="Премахване на автомобил" mvx:Bi.nd="Command GoToDeleteVehicleCommand" />
+                <Separator />
+                <MenuItem Header="Въвеждане на пробег" mvx:Bi.nd="Command GoToAddRepairCommand" InputGestureText="F3" />
+                <MenuItem Header="Нов ремонт" mvx:Bi.nd="Command GoToAddRepairCommand" InputGestureText="F4" />
+                <MenuItem Header="Списък и данни на шофьорите" mvx:Bi.nd="Command GoToEmployeesCommand" InputGestureText="F5" />
+                <Separator />
+                <MenuItem Header="Изход" mvx:Bi.nd="Command CloseAppCommand" InputGestureText="Alt+F4" />
+            </MenuItem>
+            <MenuItem Header="Инструменти">
+                <MenuItem Header="Гражданска отговорност" mvx:Bi.nd="Command GoToCivilLiabilitiesCommand" InputGestureText="Ctrl+I" />
+                <MenuItem Header="Технически преглед" mvx:Bi.nd="Command GoToMotsCommand" InputGestureText="Ctrl+T" />
+                <MenuItem Header="КАСКО" mvx:Bi.nd="Command GoToCarInsurancesCommand" InputGestureText="Ctrl+К" />
+                <MenuItem Header="Винетки" mvx:Bi.nd="Command GoToVignettesCommand" InputGestureText="Ctrl+J" />
+                <Separator />
+                <MenuItem Header="Състояние на масло" mvx:Bi.nd="Command GoToOilIssuesCommand" />
+                <MenuItem Header="Състояние на ролки и ремъци" mvx:Bi.nd="Command GoToBeltIssuesCommand" />
+                <MenuItem Header="Състояние на спирачни дискове" mvx:Bi.nd="Command GoToBrakeDisksIssuesCommand" />
+                <MenuItem Header="Състояние на спирачни накладки" mvx:Bi.nd="Command GoToBrakeLiningIssuesCommand" />
+                <MenuItem Header="Състояние на антифриз" mvx:Bi.nd="Command GoToCoolantIssuesCommand" />
+                <Separator />
+                <MenuItem Header="Списък на всички автомобили" mvx:Bi.nd="Command GoToVehiclesCommand" InputGestureText="F6" />
+                <MenuItem Header="Списък на извършени ремонти" mvx:Bi.nd="Command GoToRepairsCommand" InputGestureText="F7" />
+                <Separator />
+                <MenuItem Header="График на автомобнли" mvx:Bi.nd="Command GoToRoadBookCommand" InputGestureText="F8" />
+            </MenuItem>
+            <MenuItem Header="Настройки">
+                <MenuItem Header="Настройки на приложението" mvx:Bi.nd="Command GoToSettingsCommand"/>
+            </MenuItem>
+            <MenuItem Header="Профили">
+                <MenuItem Header="Редакция на профил" mvx:Bi.nd="Command GoToUserProfileCommand"/>
+                <MenuItem Header="Смяна на парола" mvx:Bi.nd="Command GoToChangePasswordCommand"/>
+                <Separator />
+                <MenuItem Header="Списък на всички потребители" mvx:Bi.nd="Command GoToUsersCommand" IsEnabled="{Binding IsAdmin}"/>
+                <Separator/>
+                <MenuItem Header="Излез от профила" mvx:Bi.nd="Command LogoutCommand"/>
+            </MenuItem>
+        </Menu>
+        <StackPanel Orientation="Horizontal" Margin="20">
+            <StackPanel Orientation="Vertical" Width="275">
+                <Button mvx:Bi.nd="Command GoToMotsCommand" Style="{StaticResource ReportButton}">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="175" />
+                                <ColumnDefinition Width="50" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Годишен преглед"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Text="{Binding MotWarnings}" Visibility="{Binding MotWarnings, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Warning}"/>
+                                <TextBlock Text="{Binding MotAlerts}" Visibility="{Binding MotAlerts, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Alert}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button mvx:Bi.nd="Command GoToCivilLiabilitiesCommand" Style="{StaticResource ReportButton}">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="175" />
+                                <ColumnDefinition Width="50" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Застраховка &quot;ГО&quot;"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Text="{Binding CivilLiabilityWarnings}" Visibility="{Binding CivilLiabilityWarnings, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Warning}"/>
+                                <TextBlock Text="{Binding CivilLiabilityAlerts}" Visibility="{Binding CivilLiabilityAlerts, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Alert}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button mvx:Bi.nd="Command GoToCarInsurancesCommand" Style="{StaticResource ReportButton}">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="175" />
+                                <ColumnDefinition Width="50" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Застраховка &quot;КАСКО&quot;"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Text="{Binding CarInsuranceWarnings}" Visibility="{Binding CarInsuranceWarnings, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Warning}"/>
+                                <TextBlock Text="{Binding CarInsuranceAlerts}" Visibility="{Binding CarInsuranceAlerts, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Alert}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button mvx:Bi.nd="Command GoToVignettesCommand" Style="{StaticResource ReportButton}">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="175" />
+                                <ColumnDefinition Width="50" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Винетки"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Text="{Binding VignetteWarnings}" Visibility="{Binding VignetteWarnings, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Warning}"/>
+                                <TextBlock Text="{Binding VignetteAlerts}" Visibility="{Binding VignetteAlerts, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Alert}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button mvx:Bi.nd="Command GoToOilIssuesCommand" Style="{StaticResource ReportButton}">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="175" />
+                                <ColumnDefinition Width="50" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Масло и филтри"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Text="{Binding OilMileageWarnings}" Visibility="{Binding OilMileageWarnings, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Warning}"/>
+                                <TextBlock Text="{Binding OilMileageAlerts}" Visibility="{Binding OilMileageAlerts, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Alert}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button mvx:Bi.nd="Command GoToBeltIssuesCommand" Style="{StaticResource ReportButton}">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="175" />
+                                <ColumnDefinition Width="50" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Ролки и ремъци"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Text="{Binding BeltMileageWarnings}" Visibility="{Binding BeltMileageWarnings, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Warning}"/>
+                                <TextBlock Text="{Binding BeltMileageAlerts}" Visibility="{Binding BeltMileageAlerts, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Alert}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button mvx:Bi.nd="Command GoToBrakeLiningIssuesCommand" Style="{StaticResource ReportButton}">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="175" />
+                                <ColumnDefinition Width="50" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Накладки"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Text="{Binding BrakeLiningsMileageWarnings}" Visibility="{Binding BrakeLiningsMileageWarnings, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Warning}"/>
+                                <TextBlock Text="{Binding BrakeLiningsMileageAlerts}" Visibility="{Binding BrakeLiningsMileageAlerts, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Alert}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button mvx:Bi.nd="Command GoToBrakeDisksIssuesCommand" Style="{StaticResource ReportButton}">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="175" />
+                                <ColumnDefinition Width="50" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Спирачни дискове"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Text="{Binding BrakeDisksMileageWarnings}" Visibility="{Binding BrakeDisksMileageWarnings, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Warning}"/>
+                                <TextBlock Text="{Binding BrakeDisksMileageAlerts}" Visibility="{Binding BrakeDisksMileageAlerts, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Alert}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button mvx:Bi.nd="Command GoToCoolantIssuesCommand" Style="{StaticResource ReportButton}">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="175" />
+                                <ColumnDefinition Width="50" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Антифриз"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Text="{Binding CoolantMileageWarnings}" Visibility="{Binding CoolantMileageWarnings, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Warning}"/>
+                                <TextBlock Text="{Binding CoolantMileageAlerts}" Visibility="{Binding CoolantMileageAlerts, Converter={StaticResource ZeroToVisibilityConverter}}" Style="{StaticResource Alert}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+            <Border BorderBrush="Black" BorderThickness="2" Margin="50 0 0 0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="200"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="175"/>
+                        <RowDefinition Height="175"/>
+                        <RowDefinition Height="175"/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Column="0" Grid.Row="0" Margin="5" mvx:Bi.nd="Command GoToAddVehicleCommand">
+                        <TextBlock Text="Добавяне на нов автомобил" TextWrapping="Wrap" />
+                    </Button>
+                    <Button Grid.Column="1" Grid.Row="0" Margin="5" mvx:Bi.nd="Command GoToDeleteVehicleCommand">
+                        <TextBlock Text="Премахване на автомобил от базата" TextWrapping="Wrap" />
+                    </Button>
+                    <Button Grid.Column="2" Grid.Row="0" Margin="5" mvx:Bi.nd="Command GoToEditVehicleCommand">
+                        <TextBlock Text="Редактиране на  автомобилни данни" TextWrapping="Wrap" />
+                    </Button>
+                    <Button Grid.Column="0" Grid.Row="1" Margin="5" mvx:Bi.nd="Command GoToMileageReportCommand">
+                        <TextBlock Text="Въвеждане на пробег" TextWrapping="Wrap" />
+                    </Button>
+                    <Button Grid.Column="1" Grid.Row="1" Margin="5" mvx:Bi.nd="Command GoToAddRepairCommand">
+                        <TextBlock Text="Въвеждане на ремонт" TextWrapping="Wrap" />
+                    </Button>
+                    <Button Grid.Column="2" Grid.Row="1" Margin="5" mvx:Bi.nd="Command GoToEmployeesCommand">
+                        <TextBlock Text="Служители" TextWrapping="Wrap" />
+                    </Button>
+                    <Button Grid.Column="0" Grid.Row="2" Margin="5" mvx:Bi.nd="Command GoToRoadBookCommand">
+                        <TextBlock Text="График на автомобил" TextWrapping="Wrap" />
+                    </Button>
+                    <Button Grid.Column="1" Grid.Row="2" Margin="5" mvx:Bi.nd="Command GoToRepairsCommand">
+                        <TextBlock Text="Списък на извършени ремонти" TextWrapping="Wrap"/>
+                    </Button>
+                    <Button Grid.Column="2" Grid.Row="2" Margin="5" mvx:Bi.nd="Command GoToVehiclesCommand">
+                        <TextBlock Text="Списък на всички автомобили" TextWrapping="Wrap"/>
+                    </Button>
+                </Grid>
+            </Border>
+        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+                <Border Style="{StaticResource Summary}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Напомняния: "/>
+                        <TextBlock mvx:Bi.nd="Text Total" d:Text="25" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Summary}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Ангажирани автомобили: "/>
+                        <TextBlock mvx:Bi.nd="Text VehicleSummary.InUse" d:Text="5" />
+                        <TextBlock Text="/"/>
+                        <TextBlock mvx:Bi.nd="Text VehicleSummary.Total" d:Text="25" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Summary}">
+                    <TextBlock x:Name="Date" d:Text="31/12/2025"/>
+                </Border>
+                <Border Style="{StaticResource Summary}">
+                    <TextBlock x:Name="Day" d:Text="Понеделник" />
+                </Border>
+                <Border Style="{StaticResource Summary}">
+                    <common:Timer />
+                </Border>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</common:BaseView>

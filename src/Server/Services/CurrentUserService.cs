@@ -13,6 +13,6 @@ namespace CarsManager.Server.Services
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public string UserId => httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        public string UserId => httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Name);
     }
 }

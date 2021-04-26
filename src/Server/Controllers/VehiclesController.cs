@@ -22,22 +22,18 @@ namespace CarsManager.Server.Controllers
 {
     public class VehiclesController : ApiControllerBase
     {
-        private readonly IConfiguration configuration;
         private readonly IMapper mapper;
 
-        private string imagesFolder => configuration.GetValue<string>("Images:Path");
-        private string imagesPath => Path.Combine(Startup.wwwRootFolder, imagesFolder);
+        private string imagesPath => Path.Combine(Startup.wwwRootFolder, Constants.IMAGES_FOLDER);
 
-
-        public VehiclesController(IConfiguration configuration, IMapper mapper)
+        public VehiclesController(IMapper mapper)
         {
-            this.configuration = configuration;
             this.mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult<VehiclesVm>> GetVehicles()
-            => await Mediator.Send(new GetVehiclesQuery { Path = HttpContext.Request.GetAbsoluteUri(imagesFolder) });
+            => await Mediator.Send(new GetVehiclesQuery { Path = HttpContext.Request.GetAbsoluteUri(Constants.IMAGES_FOLDER) });
 
         [HttpGet("pages")]
         public async Task<ActionResult<PaginatedList<ListedVehicleDto>>> GetVehiclesWithPagination([FromQuery] GetVehiclesWithPaginationQuery query)
@@ -49,11 +45,11 @@ namespace CarsManager.Server.Controllers
 
         [HttpGet("{id}")]
         public async Task<ActionResult<VehicleVm>> Get(int id)
-            => await Mediator.Send(new GetVehicleQuery { Id = id, Path = HttpContext.Request.GetAbsoluteUri(imagesFolder) });
+            => await Mediator.Send(new GetVehicleQuery { Id = id, Path = HttpContext.Request.GetAbsoluteUri(Constants.IMAGES_FOLDER) });
 
         [HttpGet("{id}/extended")]
         public async Task<ActionResult<VehicleExtendedVm>> GetExtended(int id)
-            => await Mediator.Send(new GetVehicleExtendedQuery { Id = id, PhotoPath = HttpContext.Request.GetAbsoluteUri(imagesFolder) });
+            => await Mediator.Send(new GetVehicleExtendedQuery { Id = id, PhotoPath = HttpContext.Request.GetAbsoluteUri(Constants.IMAGES_FOLDER) });
 
         [HttpGet("summary")]
         public async Task<ActionResult<VehiclesSummaryDto>> GetSummary()

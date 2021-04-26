@@ -13,14 +13,14 @@ namespace CarsManager.Application.Common.Behaviours
     public class AuthorisationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly ICurrentUserService currentUserService;
-        private readonly IIdentityService identityService;
+        private readonly IUserService userService;
 
         public AuthorisationBehaviour(
             ICurrentUserService currentUserService,
-            IIdentityService identityService)
+            IUserService userService)
         {
             this.currentUserService = currentUserService;
-            this.identityService = identityService;
+            this.userService = userService;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
@@ -31,9 +31,7 @@ namespace CarsManager.Application.Common.Behaviours
             {
                 // Must be authenticated user
                 if (currentUserService.UserId == null)
-                {
                     throw new UnauthorizedAccessException();
-                }
 
                 // Role-based authorization
                 var authoriseAttributesWithRoles = authoriseAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
@@ -45,7 +43,7 @@ namespace CarsManager.Application.Common.Behaviours
                         var isAuthorised = false;
                         foreach (var role in roles)
                         {
-                            var isInRole = await identityService.IsInRoleAsync(currentUserService.UserId, role.Trim());
+                            var isInRole = await userService.IsInRoleAsync(currentUserService.UserId, role.Trim());
                             if (isInRole)
                             {
                                 isAuthorised = true;
@@ -55,24 +53,7 @@ namespace CarsManager.Application.Common.Behaviours
 
                         // Must be a member of at least one role in roles
                         if (!isAuthorised)
-                        {
                             throw new ForbiddenAccessException();
-                        }
-                    }
-                }
-
-                // Policy-based authorisation
-                var authoriseAttributesWithPolicies = authoriseAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
-                if (authoriseAttributesWithPolicies.Any())
-                {
-                    foreach(var policy in authoriseAttributesWithPolicies.Select(a => a.Policy))
-                    {
-                        var isAuthorised = await identityService.AuthoriseAsync(currentUserService.UserId, policy);
-
-                        if (!isAuthorised)
-                        {
-                            throw new ForbiddenAccessException();
-                        }
                     }
                 }
             }

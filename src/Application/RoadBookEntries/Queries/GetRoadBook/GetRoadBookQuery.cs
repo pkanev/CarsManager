@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.RoadBookEntries.Queries.GetRoadBook
 {
+    [Authorise]
     public class GetRoadBookQuery : IRequest<IList<RoadBookFullEntryDto>>
     {
         public int VehicleId { get; set; }

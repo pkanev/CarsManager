@@ -1,12 +1,11 @@
 ﻿using System.IO;
-using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Documents.Serialization;
 using System.Windows.Xps;
 using System.Windows.Xps.Packaging;
-using Client.Wpf.Views;
+using Client.Wpf.Views.Print;
 
 namespace Client.Wpf.Utils
 {

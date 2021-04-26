@@ -4,10 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using MediatR;
 
 namespace CarsManager.Application.Liabilities.Queries.GetLiabilitiesForReport
 {
+    [Authorise]
     public class GetLiabilitiesForReportQuery : IRequest<IList<LiabilityForReportDto>>
     {
         public LiabilityType Liability { get; set; }

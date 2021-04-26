@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Makes.Queries.Dtos;
 using CarsManager.Application.Models.Queries.Dtos;
 using CarsManager.Domain.Entities;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Makes.Queries.GetMake
 {
+    [Authorise]
     public class GetMakeQuery : IRequest<MakeVm>
     {
         public int Id { get; set; }

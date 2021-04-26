@@ -1,10 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using MediatR;
 
 namespace CarsManager.Application.Uploadds.DeleteUpload
 {
+    [Authorise]
     public class DeleteUploadCommand : IRequest
     {
         public string FileName { get; set; }

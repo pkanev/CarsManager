@@ -8,11 +8,13 @@ using CarsManager.Application.Common.Dtos;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Mappings;
 using CarsManager.Application.Common.Models;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Liabilities.Queries.GetLiabilitiesForReport;
 using MediatR;
 
 namespace CarsManager.Application.Liabilities.Queries.GetLiabilitiesForReportWithPagination
 {
+    [Authorise]
     public class GetLiabilitiesForReportWithPaginationQuery : IRequest<PaginatedList<LiabilityForReportDto>>, IMapFrom<PaginationDto>
     {
         public int PageNumber { get; set; } = PageConstants.DEFAULT_PAGE_NUMBER;

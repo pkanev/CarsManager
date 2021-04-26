@@ -14,18 +14,18 @@ namespace CarsManager.Application.Common.Behaviours
         private readonly Stopwatch timer;
         private readonly ILogger<TRequest> logger;
         private readonly ICurrentUserService currentUserService;
-        private readonly IIdentityService identityService;
+        private readonly IUserService userService;
 
         public PerformanceBehaviour(
             ILogger<TRequest> logger,
             ICurrentUserService currentUserService,
-            IIdentityService identityService)
+            IUserService userService)
         {
             timer = new Stopwatch();
 
             this.logger = logger;
             this.currentUserService = currentUserService;
-            this.identityService = identityService;
+            this.userService = userService;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
@@ -45,9 +45,7 @@ namespace CarsManager.Application.Common.Behaviours
                 var userName = string.Empty;
 
                 if (!string.IsNullOrEmpty(userId))
-                {
-                    userName = await identityService.GetUserNameAsync(userId);
-                }
+                    userName = await userService.GetUserNameAsync(userId);
 
                 logger.LogWarning("CarsManager Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",
                     requestName, elapsedMilliseconds, userId, userName, request);

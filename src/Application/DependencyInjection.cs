@@ -29,6 +29,7 @@ namespace CarsManager.Application
             services.AddSingleton<IIssuesHelper, IssuesHelper>();
             services.AddTransient<IRepairIssuesGetter, RepairIssuesGetter>();
             services.AddTransient<ILiabilityIssuesGetter, LiabilityIssuesGetter>();
+            services.AddScoped<IUserService, UserService>();
 
             return services;
         }

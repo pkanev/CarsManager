@@ -6,12 +6,14 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Liabilities.Queries.GetLiability;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Liabilities.Queries.GetLiabilitiesForVehicle
 {
+    [Authorise]
     public class GetLiabilitiesForVehicleQuery : IRequest<LiabilitiesVm>
     {
         public int VehicleId { get; set; }

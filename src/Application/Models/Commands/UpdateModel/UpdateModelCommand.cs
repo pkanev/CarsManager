@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Models.Exceptions;
 using CarsManager.Domain.Entities;
 using CarsManager.Domain.Enums;
@@ -9,6 +10,7 @@ using MediatR;
 
 namespace CarsManager.Application.Models.Commands.UpdateModel
 {
+    [Authorise]
     public class UpdateModelCommand : IRequest
     {
         public int Id { get; set; }

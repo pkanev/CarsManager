@@ -3,12 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Makes.Commands.DeleteMake
 {
+    [Authorise]
     public class DeleteMakeCommand : IRequest
     {
         public int Id { get; set; }

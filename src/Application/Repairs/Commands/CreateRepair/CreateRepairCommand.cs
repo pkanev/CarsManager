@@ -3,11 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Domain.Entities;
 using MediatR;
 
 namespace CarsManager.Application.Repairs.Commands.CreateRepair
 {
+    [Authorise]
     public class CreateRepairCommand : IRequest<int>
     {
         public int VehicleId { get; set; }

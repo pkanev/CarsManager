@@ -10,13 +10,13 @@ namespace CarsManager.Application.Common.Behaviours
     {
         private readonly ILogger logger;
         private readonly ICurrentUserService currentUserService;
-        private readonly IIdentityService identityService;
+        private readonly IUserService userService;
 
-        public LoggingBehaviour(ILogger<TRequest> logger, ICurrentUserService currentUserService, IIdentityService identityService)
+        public LoggingBehaviour(ILogger<TRequest> logger, ICurrentUserService currentUserService, IUserService userService)
         {
             this.logger = logger;
             this.currentUserService = currentUserService;
-            this.identityService = identityService;
+            this.userService = userService;
         }
 
         public async Task Process(TRequest request, CancellationToken cancellationToken)
@@ -27,7 +27,7 @@ namespace CarsManager.Application.Common.Behaviours
 
             if (!string.IsNullOrEmpty(userId))
             {
-                userName = await identityService.GetUserNameAsync(userId);
+                userName = await userService.GetUserNameAsync(userId);
             }
 
             logger.LogInformation("CarsManager Request: {Name} {@UserId} {@UserName} {@Request}",

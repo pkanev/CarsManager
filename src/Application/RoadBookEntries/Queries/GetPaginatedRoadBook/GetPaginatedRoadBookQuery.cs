@@ -8,11 +8,13 @@ using CarsManager.Application.Common.Constants;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Mappings;
 using CarsManager.Application.Common.Models;
+using CarsManager.Application.Common.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.RoadBookEntries.Queries.GetPaginatedRoadBook
 {
+    [Authorise]
     public class GetPaginatedRoadBookQuery : IRequest<PaginatedList<RoadBookFullEntryDto>>
     {
         public int PageNumber { get; set; } = PageConstants.DEFAULT_PAGE_NUMBER;

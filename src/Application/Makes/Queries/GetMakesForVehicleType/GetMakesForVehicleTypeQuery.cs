@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Application.Makes.Queries.Dtos;
 using CarsManager.Application.Makes.Queries.GetMakes;
 using CarsManager.Domain.Enums;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Makes.Queries.GetMakesForVehicleType
 {
+    [Authorise]
     public class GetMakesForVehicleTypeQuery : IRequest<MakesVm>
     {
         public VehicleType VehicleType { get; set; }

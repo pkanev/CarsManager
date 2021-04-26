@@ -1,0 +1,41 @@
+﻿<common:BaseView
+    x:Class="Client.Wpf.Views.Account.ProfileView"
+    xmlns:mvx="clr-namespace:MvvmCross.Platforms.Wpf.Binding;assembly=MvvmCross.Platforms.Wpf"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:Client.Wpf.Views.Account"
+    xmlns:common="clr-namespace:Client.Wpf.Views.Common"
+    mc:Ignorable="d" 
+    d:DesignHeight="750" d:DesignWidth="1000">
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal" Margin="15 0 0 0">
+            <Button Width="25" Height="25" FontSize="14" VerticalAlignment="Top" VerticalContentAlignment="Top" mvx:Bi.nd="Command GoHomeCommand">
+                <Image Source="{StaticResource Home}" />
+            </Button>
+            <TextBlock Text="Редакция на профил" Style="{StaticResource ViewTitle}" />
+        </StackPanel>
+        <Border Style="{StaticResource SectionBorder}" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="150" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Потребител:" Grid.Row="0" Grid.Column="0" />
+                <TextBlock Grid.Row="0" Grid.Column="1" mvx:Bi.nd="Text Username" />
+                <common:RequiredLabel Label="Име:" Grid.Row="1" Grid.Column="0" />
+                <TextBox Grid.Row="1" Grid.Column="1" mvx:Bi.nd="Text FirstName"  KeyDown="OnKeyDownHandler"/>
+                <common:RequiredLabel Label="Фамилия:" Grid.Row="2" Grid.Column="0" />
+                <TextBox Grid.Row="2" Grid.Column="1" mvx:Bi.nd="Text LastName" KeyDown="OnKeyDownHandler"/>
+                <Button x:Name="SubmitButton" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" mvx:Bi.nd="Command UpdateUserCommand" HorizontalAlignment="Center" Padding="15 5" Margin="5" IsEnabled="{Binding CanUpdateUser}">Промени</Button>
+            </Grid>
+        </Border>
+    </StackPanel>
+</common:BaseView>

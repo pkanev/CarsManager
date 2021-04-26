@@ -3,12 +3,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
+using CarsManager.Application.Common.Security;
 using CarsManager.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Liabilities.Queries.GetLiability
 {
+    [Authorise]
     public class GetLiabilityQuery : IRequest<LiabilityVm>
     {
         public int Id { get; set; }

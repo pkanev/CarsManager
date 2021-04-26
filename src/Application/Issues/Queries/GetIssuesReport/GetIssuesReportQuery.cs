@@ -3,12 +3,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Interfaces;
-using CarsManager.Domain.Entities;
+using CarsManager.Application.Common.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Issues.Queries.GetIssuesReport
 {
+    [Authorise]
     public class GetIssuesReportQuery : IRequest<IList<IssueReportDto>>
     {
         public RepairIssueType IssueType { get; set; }
