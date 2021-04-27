@@ -31,8 +31,8 @@ namespace Client.Core.ViewModels.RepairShops
 
         public bool CanSave => !string.IsNullOrWhiteSpace(repairShop.Name);
 
-        public IMvxCommand SaveRepairShopCommand { get; set; }
-        public IMvxCommand CancelCommand { get; set; }
+        public IMvxCommand SaveRepairShopCommand { get; private set; }
+        public IMvxCommand CancelCommand { get; private set; }
 
         public RepairShopViewModel(IApiService apiService, IMvxNavigationService navigationService)
             : base(apiService, navigationService)
