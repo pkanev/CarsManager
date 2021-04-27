@@ -2,17 +2,14 @@
 using Client.Core.Models.Authentication;
 using Client.Core.Rest;
 using Client.Core.Services;
-using Client.Core.ViewModels.Common;
 using Client.Core.ViewModels.Home;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 
 namespace Client.Core.ViewModels.Account
 {
-    public class RegisterViewModel : BaseViewModel
+    public class RegisterViewModel : EntryViewModel
     {
-        private readonly IAuthService authService;
-
         private string firstName;
         private string lastName;
         private string username;
@@ -35,14 +32,11 @@ namespace Client.Core.ViewModels.Account
             set => SetProperty(ref username, value);
         }
 
-        public IMvxCommand GoToLoginCommand { get; private set; }
         public IMvxCommand<string> RegisterCommand { get; private set; }
 
         public RegisterViewModel(IAuthService authService, IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+            : base(authService, apiService, navigationService)
         {
-            this.authService = authService;
-            GoToLoginCommand = new MvxAsyncCommand(() => navigationService.Navigate<LoginViewModel>());
             RegisterCommand = new MvxAsyncCommand<string>(Register);
         }
 
@@ -54,7 +48,7 @@ namespace Client.Core.ViewModels.Account
                 || string.IsNullOrWhiteSpace(password))
                 return;
 
-            var result = await authService.Register(new RegisterModel
+            var result = await AuthService.Register(new RegisterModel
             {
                 FirstName = FirstName,
                 LastName = LastName,

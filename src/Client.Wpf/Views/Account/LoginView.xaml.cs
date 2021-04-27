@@ -1,11 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Client.Wpf.Views.Common;
 
 namespace Client.Wpf.Views.Account
 {
-    public partial class LoginView : BaseView
+    public partial class LoginView : EntryView
     {
         public LoginView()
         {

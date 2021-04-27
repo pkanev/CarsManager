@@ -1,16 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Client.Core.Rest;
 using Client.Core.Services;
-using Client.Core.ViewModels.Common;
 using Client.Core.ViewModels.Home;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 
 namespace Client.Core.ViewModels.Account
 {
-    public class LoginViewModel : BaseViewModel
+    public class LoginViewModel : EntryViewModel
     {
-        private readonly IAuthService authService;
         private string username;
 
         public string Username
@@ -20,14 +18,12 @@ namespace Client.Core.ViewModels.Account
         }
 
         public IMvxCommand<string> LoginCommand { get; private set; }
-        public IMvxCommand GoToRegisterCommand { get; private set; }
 
         public LoginViewModel(IAuthService authService, IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+            : base(authService, apiService, navigationService)
         {
-            this.authService = authService;
             LoginCommand = new MvxAsyncCommand<string>(Login);
-            GoToRegisterCommand = new MvxAsyncCommand(() => navigationService.Navigate<RegisterViewModel>());
+
         }
 
         public async Task Login(string password)
@@ -35,7 +31,7 @@ namespace Client.Core.ViewModels.Account
             if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(password))
                 return;
 
-            var result = await authService.Login(Username, password);
+            var result = await AuthService.Login(Username, password);
 
             if (result.IsSuccessfull)
                 await NavigationService.Navigate<HomeViewModel>();

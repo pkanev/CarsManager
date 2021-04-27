@@ -6,6 +6,7 @@
     <UseWPF>true</UseWPF>
     <AppDesignerFolder>Resources</AppDesignerFolder>
     <ApplicationIcon>Images\icon.ico</ApplicationIcon>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

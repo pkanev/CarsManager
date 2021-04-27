@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	
+	<?if $(var.Platform)=x64 ?>
+	<?define ProductCode="{3C0C2B4E-6DF4-4B10-B9AE-ADDBEE833B73}"?>
+	<?else?>
+	<?define ProductCode="{8E04B623-E54B-4EC2-809B-EB9C9A4513F2}"?>
+	<?endif?>
+	
+	<?define UpgradeCode="{DF1FD724-9A19-42E7-8488-B796374D8676}"?>
+	
+	<Product
+		Id="$(var.ProductCode)"
+		Name="!(loc.ProductName_$(var.Platform))"
+		Language="!(loc.Language)"
+		Version="$(var.BuildVersion)"
+		Manufacturer="!(loc.Company)"
+		UpgradeCode="$(var.UpgradeCode)">
+		<Package
+			InstallerVersion="200"
+			Compressed="yes"
+			InstallScope="perMachine"
+			Platform="$(var.Platform)"
+			Manufacturer="!(loc.Company)"
+			Description="!(loc.Description)"
+			Keywords="!(loc.Keywords)"
+			Comments="!(loc.Comments)"
+			Languages="!(loc.Language)"
+			/>
+
+		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" />
+		
+		<MediaTemplate EmbedCab="yes"/>
+
+		<Icon Id="icon.ico" SourceFile="$(var.Client.Wpf.ProjectDir)\images\icon.ico"/>
+
+		<Property Id="ARPPRODUCTICON">icon.ico</Property>
+		<Property Id="ARPURLINFOABOUT">!(loc.Website)</Property>
+
+		<UIRef Id="WixUI_Minimal"/>
+
+		<WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\Assets\License.rtf" />
+		<WixVariable Id="WixUIDialogBmp" Value="$(var.ProjectDir)\Assets\Background.bmp" />
+		<WixVariable Id="WixUIBannerBmp" Value="$(var.ProjectDir)\Assets\Banner.bmp" />
+		
+		<Feature Id="ProductFeature" Title="Cars Manager" Level="1">
+			
+			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="PublishedComponents" />
+			
+		</Feature>
+	</Product>
+</Wix>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents">
+			<ComponentRef Id="MainAppShortcut" />
+		</ComponentGroup>
+
+		<DirectoryRef Id="INSTALLFOLDER" FileSource="..\Client.Wpf\bin\Release\netcoreapp3.1\win-$(var.Platform)\publish\">
+			<Component Id="MainAppShortcut" Guid="{B5CE422C-BCF2-40B1-967E-7E828E6E20E1}">
+
+				<Shortcut Id="MainAppShortcut"
+						  Name="!(loc.ProductName_$(var.Platform))"
+						  Target="[INSTALLFOLDER]Client.Wpf.exe"
+						  Directory="InstallProgramMenuFolder"
+						  WorkingDirectory="INSTALLFOLDER"
+						  Icon="icon.ico"
+						  />
+
+				<RegistryValue Id="RegShortcutKey" Root="HKCU" Key="SOFTWARE\!(loc.ProductNameFolder)" Name="Shortcut" Value="1" Type="integer" KeyPath="yes" />
+
+				<RemoveFolder Id="RemoveStartMenu" Directory="InstallProgramMenuFolder" On="uninstall" />
+
+			</Component>
+		</DirectoryRef>
+	</Fragment>
+</Wix>

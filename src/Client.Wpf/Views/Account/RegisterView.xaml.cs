@@ -1,10 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using Client.Wpf.Views.Common;
 
 namespace Client.Wpf.Views.Account
 {
-    public partial class RegisterView : BaseView
+    public partial class RegisterView : EntryView
     {
         public RegisterView()
         {

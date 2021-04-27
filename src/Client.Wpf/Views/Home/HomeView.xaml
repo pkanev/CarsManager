@@ -13,7 +13,7 @@
         <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
     </common:BaseView.Resources>
     <StackPanel Orientation="Vertical">
-        <Menu Name="Open" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Menu Height="22" HorizontalAlignment="Left" VerticalAlignment="Top">
             <MenuItem Header="Автомобил">
                 <MenuItem Header="Добавяне на автомобил" mvx:Bi.nd="Command GoToAddVehicleCommand" InputGestureText="F2" />
                 <MenuItem Header="Редактиране на автомобил" mvx:Bi.nd="Command GoToEditVehicleCommand" />
