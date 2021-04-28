@@ -34,8 +34,8 @@ namespace Client.Core.ViewModels.Account
 
         public IMvxCommand<string> RegisterCommand { get; private set; }
 
-        public RegisterViewModel(IAuthService authService, IApiService apiService, IMvxNavigationService navigationService)
-            : base(authService, apiService, navigationService)
+        public RegisterViewModel(IAuthService authService, IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(authService, apiService, navigationService, currentUserService)
         {
             RegisterCommand = new MvxAsyncCommand<string>(Register);
         }

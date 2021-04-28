@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Client.Core.Models;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -27,8 +28,8 @@ namespace Client.Core.ViewModels.Makes
 
         public IMvxCommand EditMakeCommand { get; set; }
 
-        public EditMakeViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public EditMakeViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             EditMakeCommand = new MvxAsyncCommand(EditMake);
         }

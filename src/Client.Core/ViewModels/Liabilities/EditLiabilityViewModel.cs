@@ -2,6 +2,7 @@
 using Client.Core.Models;
 using Client.Core.Models.Liabilities;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.Utils;
 using MvvmCross.Navigation;
 
@@ -18,8 +19,8 @@ namespace Client.Core.ViewModels.Liabilities
             _ => string.Empty
         };
 
-        public EditLiabilityViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public EditLiabilityViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
         }
 

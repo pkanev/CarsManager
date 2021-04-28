@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Client.Core.Dtos;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.Utils;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Commands;
@@ -31,12 +32,12 @@ namespace Client.Core.ViewModels.Vehicles
             }
         }
 
-        public bool CanDelete => Vehicle != null;
+        public bool CanDelete => Vehicle != null && IsAdmin;
 
         public IMvxCommand DeleteVehicleCommand { get; set; }
 
-        public DeleteVehicleViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public DeleteVehicleViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             DeleteVehicleCommand = new MvxAsyncCommand(DeleteVehicle);
         }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Client.Core.Models;
 using Client.Core.Rest;
+using Client.Core.Services;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 
@@ -22,8 +23,8 @@ namespace Client.Core.ViewModels.Common
         public IMvxCommand ConfirmCommand { get; set; }
         public IMvxCommand CancelCommand { get; set; }
 
-        public MessageViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public MessageViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             ConfirmCommand = new MvxAsyncCommand(ConfirmMessage);
             CancelCommand = new MvxAsyncCommand(Cancel);
@@ -44,7 +45,9 @@ namespace Client.Core.ViewModels.Common
 
         private async Task Cancel()
         {
-            await onCancel?.Invoke();
+            if (onCancel != null)
+                await onCancel();
+
             await NavigationService.Close(this);
         }
     }

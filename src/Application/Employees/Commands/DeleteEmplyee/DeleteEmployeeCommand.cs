@@ -38,6 +38,8 @@ namespace CarsManager.Application.Employees.Commands.DeleteEmplyee
                 imageManager.DeleteFile(request.PhotoPath, entity.Image);
 
             entity.Vehicles.Clear();
+            entity.RoadBookEntries.Clear();
+            entity.ActiveRecords.Clear();
             context.Employees.Remove(entity);
             await context.SaveChangesAsync(cancellationToken);
             return Unit.Value;

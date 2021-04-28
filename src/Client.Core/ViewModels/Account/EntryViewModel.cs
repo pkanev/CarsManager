@@ -25,8 +25,8 @@ namespace Client.Core.ViewModels.Account
         public IMvxInteraction CloseAppInteraction => closeAppInteraction;
         protected IAuthService AuthService => authService;
 
-        protected EntryViewModel(IAuthService authService, IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        protected EntryViewModel(IAuthService authService, IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             this.authService = authService;
 

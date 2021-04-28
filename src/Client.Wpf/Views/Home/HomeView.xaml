@@ -17,7 +17,7 @@
             <MenuItem Header="Автомобил">
                 <MenuItem Header="Добавяне на автомобил" mvx:Bi.nd="Command GoToAddVehicleCommand" InputGestureText="F2" />
                 <MenuItem Header="Редактиране на автомобил" mvx:Bi.nd="Command GoToEditVehicleCommand" />
-                <MenuItem Header="Премахване на автомобил" mvx:Bi.nd="Command GoToDeleteVehicleCommand" />
+                <MenuItem Header="Премахване на автомобил" mvx:Bi.nd="Command GoToDeleteVehicleCommand" IsEnabled="{Binding IsAdmin}"/>
                 <Separator />
                 <MenuItem Header="Въвеждане на пробег" mvx:Bi.nd="Command GoToAddRepairCommand" InputGestureText="F3" />
                 <MenuItem Header="Нов ремонт" mvx:Bi.nd="Command GoToAddRepairCommand" InputGestureText="F4" />
@@ -207,11 +207,11 @@
                     <Button Grid.Column="0" Grid.Row="0" Margin="5" mvx:Bi.nd="Command GoToAddVehicleCommand">
                         <TextBlock Text="Добавяне на нов автомобил" TextWrapping="Wrap" />
                     </Button>
-                    <Button Grid.Column="1" Grid.Row="0" Margin="5" mvx:Bi.nd="Command GoToDeleteVehicleCommand">
-                        <TextBlock Text="Премахване на автомобил от базата" TextWrapping="Wrap" />
-                    </Button>
-                    <Button Grid.Column="2" Grid.Row="0" Margin="5" mvx:Bi.nd="Command GoToEditVehicleCommand">
+                    <Button Grid.Column="1" Grid.Row="0" Margin="5" mvx:Bi.nd="Command GoToEditVehicleCommand">
                         <TextBlock Text="Редактиране на  автомобилни данни" TextWrapping="Wrap" />
+                    </Button>
+                    <Button Grid.Column="2" Grid.Row="0" Margin="5" mvx:Bi.nd="Command GoToDeleteVehicleCommand" IsEnabled="{Binding IsAdmin}">
+                        <TextBlock Text="Премахване на автомобил от базата" TextWrapping="Wrap"/>
                     </Button>
                     <Button Grid.Column="0" Grid.Row="1" Margin="5" mvx:Bi.nd="Command GoToMileageReportCommand">
                         <TextBlock Text="Въвеждане на пробег" TextWrapping="Wrap" />

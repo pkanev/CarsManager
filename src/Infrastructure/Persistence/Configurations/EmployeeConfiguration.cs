@@ -20,6 +20,9 @@ namespace CarsManager.Infrastructure.Persistence.Configurations
                 .HasMaxLength(EmployeeConstants.NAME_MAX_LENGTH)
                 .IsRequired();
 
+            builder.Property(e => e.IsEmployed)
+                .HasDefaultValue(true);
+
             builder.HasMany(e => e.RoadBookEntries)
                 .WithMany(rbe => rbe.Employees);
 

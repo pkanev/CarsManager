@@ -6,6 +6,7 @@ using Client.Core.Dtos;
 using Client.Core.Models.Repairs;
 using Client.Core.Models.Vehicles;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.Utils;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Navigation;
@@ -43,8 +44,8 @@ namespace Client.Core.ViewModels
 
         protected override IList<string> Properties => properties;
 
-        public RepairsViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public RepairsViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
         }
 

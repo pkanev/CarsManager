@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Client.Core.Data;
 using Client.Core.Models;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -42,8 +43,8 @@ namespace Client.Core.ViewModels.Models
 
         public IMvxCommand EditModelCommand { get; set; }
 
-        public EditModelViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public EditModelViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             EditModelCommand = new MvxAsyncCommand(EditModel);
         }

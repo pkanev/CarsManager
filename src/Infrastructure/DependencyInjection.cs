@@ -1,9 +1,9 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
 using CarsManager.Application.Common.Interfaces;
-using CarsManager.Infrastructure.Helpers;
 using CarsManager.Infrastructure.Persistence;
 using CarsManager.Infrastructure.Services;
+using CarsManager.Infrastructure.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,19 +29,14 @@ namespace CarsManager.Infrastructure
                         b =>
                         {
                             b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
-                            b.ProvidePasswordCallback((string host, int port, string database, string username) => configuration["DbPassword"]);
+                            b.ProvidePasswordCallback((string host, int port, string database, string username) => configuration[Constants.DB_PASSWORD]);
                         }));
             }
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
-            // configure strongly typed settings objects
-            var appSettingsSection = configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-
             // configure jwt authentication
-            var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(configuration[Constants.JWT_KEY]);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

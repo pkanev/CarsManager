@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Client.Core.Data;
 using Client.Core.Models;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -42,8 +43,8 @@ namespace Client.Core.ViewModels.Models
         public List<VehicleTypeModel> VehicleTypes => VehicleResources.VehicleTypes;
         public IMvxCommand CreateModelCommand { get; set; }
 
-        public AddModelViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public AddModelViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             CreateModelCommand = new MvxAsyncCommand(CreateModel);
         }

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace Server
 {
@@ -98,6 +99,8 @@ namespace Server
                 ServeUnknownFileTypes = true,
                 DefaultContentType = "image/png"
             });
+
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 

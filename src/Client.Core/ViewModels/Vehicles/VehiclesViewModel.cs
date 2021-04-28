@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Client.Core.Dtos;
 using Client.Core.Models.Vehicles;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Navigation;
 
@@ -22,8 +23,8 @@ namespace Client.Core.ViewModels.Vehicles
 
         protected override IList<string> Properties => properties;
 
-        public VehiclesViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public VehiclesViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
         }
 

@@ -10,8 +10,6 @@ namespace Client.Core.ViewModels.Account
 {
     public class ProfileViewModel : SubPageViewModel
     {
-        private readonly ICurrentUserService currentUserService;
-
         private string username;
         private string firstName;
         private string lastName;
@@ -42,35 +40,33 @@ namespace Client.Core.ViewModels.Account
 
         public IMvxCommand UpdateUserCommand { get; private set; }
 
-        public ProfileViewModel(ICurrentUserService currentUserService, IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public ProfileViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
-            this.currentUserService = currentUserService;
-
             UpdateUserCommand = new MvxAsyncCommand(UpdateUser);
         }
 
         public override Task Initialize()
         {
-            username = currentUserService.CurrentUser.Username;
-            FirstName = currentUserService.CurrentUser.FirstName;
-            LastName = currentUserService.CurrentUser.LastName;
+            username = CurrentUserService.CurrentUser.Username;
+            FirstName = CurrentUserService.CurrentUser.FirstName;
+            LastName = CurrentUserService.CurrentUser.LastName;
             return base.Initialize();
         }
 
         private async Task UpdateUser()
         {
-            var response = await ApiService.PutAsync<string>($"account/{currentUserService.CurrentUser.Id}", new UserModel
+            var response = await ApiService.PutAsync<string>($"account/{CurrentUserService.CurrentUser.Id}", new UserModel
             {
-                Id = currentUserService.CurrentUser.Id,
+                Id = CurrentUserService.CurrentUser.Id,
                 FirstName = FirstName,
                 LastName = lastName,
             });
 
             if (response.IsSuccessStatusCode)
             {
-                currentUserService.CurrentUser.FirstName = FirstName;
-                currentUserService.CurrentUser.LastName = LastName;
+                CurrentUserService.CurrentUser.FirstName = FirstName;
+                CurrentUserService.CurrentUser.LastName = LastName;
 
                 GoHome();
             }

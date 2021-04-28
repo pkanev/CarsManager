@@ -5,6 +5,7 @@ using Client.Core.Data;
 using Client.Core.Dtos;
 using Client.Core.Models.Issues;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Navigation;
 
@@ -47,8 +48,8 @@ namespace Client.Core.ViewModels.Issues
 
         protected override IList<string> Properties => properties;
 
-        public IssuesViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public IssuesViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
         }
 

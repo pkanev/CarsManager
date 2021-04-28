@@ -1,4 +1,5 @@
 ﻿using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -20,8 +21,8 @@ namespace Client.Core.ViewModels.Settings
 
         public IMvxCommand CloseCommand { get; private set; }
 
-        public ServerSettingViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public ServerSettingViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             CloseCommand = new MvxAsyncCommand(async() => await navigationService.Close(this));
         }

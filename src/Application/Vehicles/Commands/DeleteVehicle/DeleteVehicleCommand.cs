@@ -42,6 +42,7 @@ namespace CarsManager.Application.Vehicles.Commands.DeleteVehicle
             entity.CivilLiabilities.Clear();
             entity.CarInsurances.Clear();
             entity.Vignettes.Clear();
+            entity.RoadBookEntries.Clear();
             context.Vehicles.Remove(entity);
 
             await context.SaveChangesAsync(cancellationToken);

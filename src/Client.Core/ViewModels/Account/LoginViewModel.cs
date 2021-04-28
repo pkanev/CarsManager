@@ -19,8 +19,8 @@ namespace Client.Core.ViewModels.Account
 
         public IMvxCommand<string> LoginCommand { get; private set; }
 
-        public LoginViewModel(IAuthService authService, IApiService apiService, IMvxNavigationService navigationService)
-            : base(authService, apiService, navigationService)
+        public LoginViewModel(IAuthService authService, IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(authService, apiService, navigationService, currentUserService)
         {
             LoginCommand = new MvxAsyncCommand<string>(Login);
 

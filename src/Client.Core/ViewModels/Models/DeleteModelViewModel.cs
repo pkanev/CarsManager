@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Client.Core.Models;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -28,8 +29,8 @@ namespace Client.Core.ViewModels.Models
         public IMvxCommand DeleteModelCommand { get; set; }
         public IMvxCommand CancelCommand { get; set; }
 
-        public DeleteModelViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public DeleteModelViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             DeleteModelCommand = new MvxAsyncCommand(DeleteModel);
             CancelCommand = new MvxCommand(() => NavigationService.Close(this));

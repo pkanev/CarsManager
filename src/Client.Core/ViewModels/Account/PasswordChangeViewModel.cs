@@ -12,7 +12,6 @@ namespace Client.Core.ViewModels.Account
     public class PasswordChangeViewModel : SubPageViewModel
     {
         private readonly IAuthService authService;
-        private readonly ICurrentUserService currentUserService;
 
         private string username;
 
@@ -22,19 +21,18 @@ namespace Client.Core.ViewModels.Account
 
         public PasswordChangeViewModel(
             IAuthService authService,
-            ICurrentUserService currentUserService,
             IApiService apiService,
-            IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+            IMvxNavigationService navigationService,
+            ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             this.authService = authService;
-            this.currentUserService = currentUserService;
             ChangePasswordCommand = new MvxAsyncCommand<(string, string)>(ChangePassword);
         }
 
         public override Task Initialize()
         {
-            username = currentUserService.CurrentUser.Username;
+            username = CurrentUserService.CurrentUser.Username;
             return base.Initialize();
         }
 
@@ -46,7 +44,7 @@ namespace Client.Core.ViewModels.Account
 
             var result = await authService.ChangePassword(new PasswordChangeModel
             {
-                Id = currentUserService.CurrentUser.Id,
+                Id = CurrentUserService.CurrentUser.Id,
                 OldPassword = passwords.Item1,
                 NewPassword = passwords.Item2,
             });

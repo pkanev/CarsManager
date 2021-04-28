@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Client.Core.Models.RoadBook;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -28,8 +29,8 @@ namespace Client.Core.ViewModels.RoadBook
         public IMvxCommand CompleteCommand { get; set; }
         public IMvxCommand CancelCommand { get; set; }
 
-        protected RoadBookEntryViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        protected RoadBookEntryViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             CompleteCommand = new MvxAsyncCommand(Complete);
             CancelCommand = new MvxAsyncCommand(async () => await NavigationService.Close(this));

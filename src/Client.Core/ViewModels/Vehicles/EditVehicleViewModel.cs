@@ -338,8 +338,8 @@ namespace Client.Core.ViewModels.Vehicles
 
         public IMvxInteraction<UploadInteractionHandler> UploadInteraction => uploadInteraction;
 
-        public EditVehicleViewModel(IApiService apiService, IMvxNavigationService navigationService, IVatService vatService)
-            : base(apiService, navigationService)
+        public EditVehicleViewModel(IApiService apiService, IMvxNavigationService navigationService, IVatService vatService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             this.vatService = vatService;
 

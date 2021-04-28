@@ -8,6 +8,7 @@ using Client.Core.Models.Employees;
 using Client.Core.Models.RoadBook;
 using Client.Core.Models.Vehicles;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.Utils;
 using Client.Core.ViewModels.Common;
 using Client.Core.ViewModels.RoadBook;
@@ -186,7 +187,7 @@ namespace Client.Core.ViewModels.Employees
             {
                 selectedEmployee = value;
                 RaisePropertyChanged(() => SelectedEmployee);
-                RaisePropertyChanged(() => IsSelectedEmployee);
+                RaisePropertyChanged(() => CanDeleteEmployee);
                 Task.Run(GetEmployeeInfo);
             }
         }
@@ -293,7 +294,8 @@ namespace Client.Core.ViewModels.Employees
             && SelectedEmployeeVehicles != null
             && !SelectedEmployeeVehicles.Any(v => v.Id == SelectedAvailableVehicleForSelectedEmployee.Id);
 
-        public bool IsSelectedEmployee => SelectedEmployee != null;
+        public bool CanDeleteEmployee => SelectedEmployee != null && IsAdmin;
+
         public bool IsValidSelectedEmployee => EmployeeInfo?.Employee != null
             && !string.IsNullOrWhiteSpace(EmployeeInfo.Employee.GivenName)
             && Regex.IsMatch(EmployeeInfo.Employee.GivenName.ToLower(), NAME_PATTERN)
@@ -316,8 +318,8 @@ namespace Client.Core.ViewModels.Employees
         public IMvxCommand EditTownCommand { get; set; }
         public IMvxCommand DeleteTownCommand { get; set; }
 
-        public EmployeesViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public EmployeesViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             SelectImageCommand = new MvxCommand<bool>(SelectImage);
             RemoveImageCommand = new MvxCommand<bool>(RemoveImage);
