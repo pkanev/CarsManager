@@ -48,9 +48,9 @@
                 <DataGridTextColumn Header="Взета (дата и час)" Binding="{Binding CheckedOut}" IsReadOnly="True" Width="140" />
                 <DataGridTextColumn Header="Марка и модел" Binding="{Binding MakeAndModel}" IsReadOnly="True" Width="125"/>
                 <DataGridTextColumn Header="Цвят" Binding="{Binding Color}" IsReadOnly="True" Width="60"/>
-                <DataGridTextColumn Header="Стар пробег" Binding="{Binding OldMileage}" Width="80"/>
+                <DataGridTextColumn Header="Стар пробег" Binding="{Binding OldMileage}" IsReadOnly="True" Width="80"/>
                 <DataGridTextColumn Header="Върната (дата и час)" Binding="{Binding CheckedIn}" IsReadOnly="True" Width="140" />
-                <DataGridTextColumn Header="Нов пробег" Binding="{Binding NewMileage}" Width="80"/>
+                <DataGridTextColumn Header="Нов пробег" Binding="{Binding NewMileage}" IsReadOnly="True" Width="80"/>
                 <DataGridTemplateColumn Header="Шофьори"  Width="150">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -58,8 +58,8 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Дестинация" Binding="{Binding Destination}" Width="80"/>
-                <DataGridCheckBoxColumn Header="Върната" Binding="{Binding IsFullyCheckedIn}" Width="80"/>
+                <DataGridTextColumn Header="Дестинация" Binding="{Binding Destination}" IsReadOnly="True" Width="80"/>
+                <DataGridCheckBoxColumn Header="Върната" Binding="{Binding IsFullyCheckedIn}" IsReadOnly="True" Width="80"/>
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 15 0 0">

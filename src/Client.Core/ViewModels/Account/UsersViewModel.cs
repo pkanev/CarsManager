@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Client.Core.Dtos;
 using Client.Core.Models.Authentication;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -29,8 +30,8 @@ namespace Client.Core.ViewModels.Account
         public IMvxCommand<UserModel> CheckAdminCommand { get; private set; }
         public IMvxCommand<UserModel> RemoveUserCommand { get; private set; }
 
-        public UsersViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public UsersViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             CheckAdminCommand = new MvxAsyncCommand<UserModel>(ChangeAdminStatus);
             RemoveUserCommand = new MvxAsyncCommand<UserModel>(RemoveUser);

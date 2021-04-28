@@ -8,6 +8,7 @@ using Client.Core.Dtos;
 using Client.Core.Models.RoadBook;
 using Client.Core.Models.Vehicles;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.Utils;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Commands;
@@ -77,8 +78,8 @@ namespace Client.Core.ViewModels.RoadBook
 
         public IMvxCommand ReloadCommand { get; private set; }
 
-        public RoadBookViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public RoadBookViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             var now = DateTime.Now;
             From = new DateTime(now.Year, now.Month, 1);

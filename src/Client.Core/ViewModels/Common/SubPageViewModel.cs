@@ -1,4 +1,5 @@
 ﻿using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Home;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -9,8 +10,8 @@ namespace Client.Core.ViewModels.Common
     {
         public IMvxCommand GoHomeCommand { get; set; }
         
-        protected SubPageViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        protected SubPageViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             GoHomeCommand = new MvxCommand(GoHome);
         }
@@ -25,8 +26,8 @@ namespace Client.Core.ViewModels.Common
     {
         public IMvxCommand GoHomeCommand { get; set; }
 
-        protected SubPageViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        protected SubPageViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             GoHomeCommand = new MvxCommand(GoHome);
         }

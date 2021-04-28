@@ -9,6 +9,7 @@ using Client.Core.Dtos;
 using Client.Core.Models;
 using Client.Core.Models.Liabilities;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.Utils;
 using Client.Core.ViewModels.Common;
 using Client.Core.ViewModels.Makes;
@@ -345,8 +346,8 @@ namespace Client.Core.ViewModels.Vehicles
 
         public IMvxInteraction<UploadInteractionHandler> UploadInteraction => uploadInteraction;
 
-        public AddVehicleViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public AddVehicleViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             ChooseVehicleTypeCommand = new MvxCommand<VehicleType>(v => SelectedVehicleType = v);
             SaveVehicleAndCloseCommand = new MvxAsyncCommand(SaveVehicleAndClose);

@@ -5,6 +5,7 @@ using Client.Core.Data;
 using Client.Core.Dtos;
 using Client.Core.Models;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.Utils;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -56,8 +57,8 @@ namespace Client.Core.ViewModels.Common
         public IMvxAsyncCommand GetAllItemsCommand { get; set; }
         public IMvxAsyncCommand<ExportType> ExportCommand { get; set; }
 
-        protected ReportViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        protected ReportViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             GoToNextPageCommand = new MvxAsyncCommand(GoToNextPage);
             GoToPreviousPageCommand = new MvxAsyncCommand(GoToPreviousPage);
@@ -149,8 +150,8 @@ namespace Client.Core.ViewModels.Common
         public IMvxAsyncCommand GetAllItemsCommand { get; set; }
         public IMvxAsyncCommand<ExportType> ExportCommand { get; set; }
 
-        protected ReportViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        protected ReportViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             GoToNextPageCommand = new MvxAsyncCommand(GoToNextPage);
             GoToPreviousPageCommand = new MvxAsyncCommand(GoToPreviousPage);

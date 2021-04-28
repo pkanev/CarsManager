@@ -223,7 +223,7 @@
                         </Border>
                         <StackPanel Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Right" Orientation="Horizontal">
                             <Button Content="Откажи" mvx:Bi.nd="Command GoHomeCommand" Padding="15 5" Margin="0 0 5 0" />
-                            <Button Content="Изтрий" mvx:Bi.nd="Command DeleteSelectedEmployeeCommand" IsEnabled="{Binding IsSelectedEmployee}" Padding="15 5" Margin="0 0 5 0" />
+                            <Button Content="Изтрий" mvx:Bi.nd="Command DeleteSelectedEmployeeCommand" IsEnabled="{Binding CanDeleteEmployee}" Padding="15 5" Margin="0 0 5 0" />
                             <Button Content="Запиши" mvx:Bi.nd="Command SaveSelectedEmployeeCommand" IsEnabled="{Binding IsValidSelectedEmployee}" Padding="15 5"/>
                         </StackPanel>
                         <Line Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Stroke="#ccc" StrokeThickness="1" X1="0" X2="1000" Height="10" Y1="5" Y2="5"/>

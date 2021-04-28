@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Client.Core.Dtos;
 using Client.Core.Models.Vehicles;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -24,8 +25,8 @@ namespace Client.Core.ViewModels.Mileages
 
         protected override IList<string> Properties => properties;
 
-        public MileagesViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public MileagesViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             SaveMileageCommand = new MvxAsyncCommand<(int, int)>(SaveMileage);
         }

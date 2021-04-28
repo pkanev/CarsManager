@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Client.Core.Models;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -34,8 +35,8 @@ namespace Client.Core.ViewModels.RepairShops
         public IMvxCommand SaveRepairShopCommand { get; private set; }
         public IMvxCommand CancelCommand { get; private set; }
 
-        public RepairShopViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public RepairShopViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             SaveRepairShopCommand = new MvxAsyncCommand(SaveRepairShop);
             CancelCommand = new MvxCommand(() => NavigationService.Close(this));

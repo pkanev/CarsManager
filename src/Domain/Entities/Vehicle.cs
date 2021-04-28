@@ -23,6 +23,7 @@ namespace CarsManager.Domain.Entities
         public int FuelConsumption { get; set; }
         public int OilMileage { get; set; }
         public string Image { get; set; }
+        public bool IsBlocked { get; set; }
 
         public ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
         public ICollection<Repair> Repairs { get; private set; } = new HashSet<Repair>();

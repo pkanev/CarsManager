@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Client.Core.Models;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -34,8 +35,8 @@ namespace Client.Core.ViewModels.Towns
         public IMvxCommand SaveTownCommand { get; set; }
         public IMvxCommand CancelCommand { get; set; }
 
-        public TownViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public TownViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             SaveTownCommand = new MvxAsyncCommand(SaveTown);
             CancelCommand = new MvxCommand(() => NavigationService.Close(this));

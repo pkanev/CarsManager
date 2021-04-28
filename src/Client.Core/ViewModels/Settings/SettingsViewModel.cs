@@ -1,4 +1,5 @@
 ﻿using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.ViewModels.Common;
 using MvvmCross.Navigation;
 
@@ -380,8 +381,8 @@ namespace Client.Core.ViewModels.Settings
             }
         }
 
-        public SettingsViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public SettingsViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
         }
     }

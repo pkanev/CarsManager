@@ -14,6 +14,7 @@ namespace CarsManager.Domain.Entities
         public string PostCode { get; set; }
         public string Telephone { get; set; }
         public string Image { get; set; }
+        public bool? IsEmployed { get; set; }
 
         public ICollection<Vehicle> Vehicles { get; private set; } = new HashSet<Vehicle>();
         public ICollection<RoadBookEntry> RoadBookEntries { get; private set; } = new HashSet<RoadBookEntry>();

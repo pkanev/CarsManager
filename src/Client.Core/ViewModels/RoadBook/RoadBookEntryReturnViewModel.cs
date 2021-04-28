@@ -1,5 +1,6 @@
 ﻿using System;
 using Client.Core.Rest;
+using Client.Core.Services;
 using MvvmCross.Navigation;
 
 namespace Client.Core.ViewModels.RoadBook
@@ -44,8 +45,8 @@ namespace Client.Core.ViewModels.RoadBook
             && Model.NewMileage.GetValueOrDefault() >= Model.OldMileage
             && !string.IsNullOrWhiteSpace(Model.Destination);
 
-        public RoadBookEntryReturnViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public RoadBookEntryReturnViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
         }
 

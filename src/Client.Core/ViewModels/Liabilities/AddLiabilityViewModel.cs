@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Client.Core.Models;
 using Client.Core.Models.Liabilities;
 using Client.Core.Rest;
+using Client.Core.Services;
 using Client.Core.Utils;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -20,8 +21,8 @@ namespace Client.Core.ViewModels.Liabilities
             _ => string.Empty
         };
 
-        public AddLiabilityViewModel(IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public AddLiabilityViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             SaveCommand = new MvxAsyncCommand(Save);
             CancelCommand = new MvxCommand(() => NavigationService.Close(this));

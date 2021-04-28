@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Client.Core.Models;
 using Client.Core.Rest;
+using Client.Core.Services;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 
@@ -11,17 +12,22 @@ namespace Client.Core.ViewModels.Common
     {
         private readonly IApiService apiService;
         private readonly IMvxNavigationService navigationService;
+        private readonly ICurrentUserService currentUserService;
         private MvxInteraction<NotificationBox> notificationInteraction = new MvxInteraction<NotificationBox>();
 
         protected IMvxNavigationService NavigationService => navigationService;
         protected IApiService ApiService => apiService;
+        protected ICurrentUserService CurrentUserService => currentUserService;
+
+        public bool IsAdmin => currentUserService.CurrentUser.IsAdmin;
 
         public IMvxInteraction<NotificationBox> NotificationInteraction => notificationInteraction;
 
-        protected BaseViewModel(IApiService apiService, IMvxNavigationService navigationService)
+        protected BaseViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
         {
             this.apiService = apiService;
             this.navigationService = navigationService;
+            this.currentUserService = currentUserService;
         }
 
         protected async Task ShowMessage(string message, string caption, Func<Task> callback, Func<Task> cancelCallback = null)
@@ -76,17 +82,22 @@ namespace Client.Core.ViewModels.Common
     {
         private readonly IApiService apiService;
         private readonly IMvxNavigationService navigationService;
+        private readonly ICurrentUserService currentUserService;
         private MvxInteraction<NotificationBox> notificationInteraction = new MvxInteraction<NotificationBox>();
 
         protected IMvxNavigationService NavigationService => navigationService;
         protected IApiService ApiService => apiService;
+        protected ICurrentUserService CurrentUserService => currentUserService;
+
+        public bool IsAdmin => currentUserService.CurrentUser.IsAdmin;
 
         public IMvxInteraction<NotificationBox> NotificationInteraction => notificationInteraction;
 
-        protected BaseViewModel(IApiService apiService, IMvxNavigationService navigationService)
+        protected BaseViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
         {
             this.apiService = apiService;
             this.navigationService = navigationService;
+            this.currentUserService = currentUserService;
         }
 
         protected async Task ShowMessage(string message, string caption, Func<Task> callback, Func<Task> cancelCallback = null)

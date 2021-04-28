@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Client.Core.Models.Issues;
 using Client.Core.Models.Liabilities;
 using Client.Core.Models.Vehicles;
-using Client.Core.Properties;
 using Client.Core.Rest;
 using Client.Core.Services;
 using Client.Core.ViewModels.Account;
@@ -28,7 +27,6 @@ namespace Client.Core.ViewModels.Home
     public class HomeViewModel : BaseViewModel
     {
         private readonly IAuthService authService;
-        private readonly ICurrentUserService currentUserService;
         private MvxInteraction closeAppInteraction = new MvxInteraction();
 
         private IssuesCountModel issues;
@@ -45,8 +43,6 @@ namespace Client.Core.ViewModels.Home
                 RaiseAllPropertiesChanged();
             }
         }
-
-        public bool IsAdmin => currentUserService.CurrentUser.IsAdmin;
 
         public int BeltMileageWarnings => AppSettings.Default.EnableBeltNotifications && Issues != null ? Issues.BeltMileageWarnings : 0;
         public int BeltMileageAlerts => AppSettings.Default.EnableBeltNotifications && Issues != null ? Issues.BeltMileageAlerts : 0;
@@ -108,11 +104,10 @@ namespace Client.Core.ViewModels.Home
         public IMvxCommand GoToChangePasswordCommand { get; private set; }
         public IMvxCommand LogoutCommand { get; private set; }
 
-        public HomeViewModel(IAuthService authService, ICurrentUserService currentUserService, IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public HomeViewModel(IAuthService authService, IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             this.authService = authService;
-            this.currentUserService = currentUserService;
 
             GoHomeCommand = new MvxCommand(() => navigationService.Navigate<HomeViewModel>());
             GoToAddVehicleCommand = new MvxCommand(() => navigationService.Navigate<AddVehicleViewModel>());

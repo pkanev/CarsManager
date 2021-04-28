@@ -96,8 +96,8 @@ namespace Client.Core.ViewModels.Repairs
         public IMvxCommand CancelCommand { get; set; }
         public IMvxCommand<string> RepairCheckedCommand { get; set; }
 
-        public AddRepairViewModel(IVatService vatService, IApiService apiService, IMvxNavigationService navigationService)
-            : base(apiService, navigationService)
+        public AddRepairViewModel(IVatService vatService, IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
+            : base(apiService, navigationService, currentUserService)
         {
             this.vatService = vatService;
 
