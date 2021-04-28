@@ -2,7 +2,7 @@
 {
     public static class Constants
     {
-        public static string JWT_KEY = "JwtKey";
-        public static string DB_PASSWORD = "DbPassword";
+        public static string JWT_KEY = "Jwt:Key";
+        public static string DB_PASSWORD = "ConnectionStrings:DbPassword";
     }
 }

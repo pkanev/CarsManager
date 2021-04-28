@@ -2,8 +2,6 @@ using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Configuration;
 using Serilog;
 
 namespace Server
@@ -13,7 +11,8 @@ namespace Server
         public static void Main(string[] args)
         {
             var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
                 .Build();
 
             Log.Logger = new LoggerConfiguration()
@@ -38,13 +37,6 @@ namespace Server
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseSerilog()
-                .ConfigureLogging((context, logging) =>
-                {
-                    logging.ClearProviders();
-                    logging.AddConfiguration(context.Configuration.GetSection("logging"));
-                    logging.AddDebug();
-                    logging.AddConsole();
-                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
