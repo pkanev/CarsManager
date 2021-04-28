@@ -25,10 +25,12 @@ namespace CarsManager.Server.Filters
                 { typeof(NonMatchingMakeException), HandleNonMatchingMakeException },
                 { typeof(InvalidDeleteOperationException), HandleInvalidDeleteOperationException },
                 { typeof(InvalidImageTypeException), HandleInvalidImageTypeException },
-                { typeof(VehicleAlreadyRegisteredException), HandleVehicleAlreadyRegisteredException},
-                { typeof(InvalidLiabilityTypeException), HandleInvalidLiabilityTypeException},
-                { typeof(InvalidRoadEntryDataException), HandleInvalidRoadEntryDataException},
-                { typeof(IdentityException), HandleIdentityException},
+                { typeof(VehicleAlreadyRegisteredException), HandleVehicleAlreadyRegisteredException },
+                { typeof(InvalidLiabilityTypeException), HandleInvalidLiabilityTypeException },
+                { typeof(InvalidRoadEntryDataException), HandleInvalidRoadEntryDataException },
+                { typeof(IdentityException), HandleIdentityException },
+                { typeof(ForbiddenVehicleDeletionException), HandleForbiddenVehicleDeletionException },
+                { typeof(ForbiddenEmployeeDeletionException), HandleForbiddenEmployeeDeletionException },
             };
         }
 
@@ -237,6 +239,34 @@ namespace CarsManager.Server.Filters
         private void HandleIdentityException(ExceptionContext context)
         {
             var exception = context.Exception as IdentityException;
+            var details = new ValidationProblemDetails(context.ModelState)
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Detail = exception.Message,
+            };
+
+            context.Result = new BadRequestObjectResult(details);
+
+            context.ExceptionHandled = true;
+        }
+
+        private void HandleForbiddenVehicleDeletionException(ExceptionContext context)
+        {
+            var exception = context.Exception as ForbiddenVehicleDeletionException;
+            var details = new ValidationProblemDetails(context.ModelState)
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Detail = exception.Message,
+            };
+
+            context.Result = new BadRequestObjectResult(details);
+
+            context.ExceptionHandled = true;
+        }
+
+        private void HandleForbiddenEmployeeDeletionException(ExceptionContext context)
+        {
+            var exception = context.Exception as ForbiddenEmployeeDeletionException;
             var details = new ValidationProblemDetails(context.ModelState)
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",

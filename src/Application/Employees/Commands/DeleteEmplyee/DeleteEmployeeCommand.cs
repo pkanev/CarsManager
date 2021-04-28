@@ -6,6 +6,7 @@ using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Security;
 using CarsManager.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Employees.Commands.DeleteEmplyee
 {
@@ -29,10 +30,15 @@ namespace CarsManager.Application.Employees.Commands.DeleteEmplyee
 
         public async Task<Unit> Handle(DeleteEmployeeCommand request, CancellationToken cancellationToken)
         {
-            var entity = await context.Employees.FindAsync(request.Id);
+            var entity = await context.Employees
+                .Include(e => e.ActiveRecords)
+                .FirstOrDefaultAsync(e => e.Id == request.Id);
 
             if (entity == null)
                 throw new NotFoundException(nameof(Employee), request.Id);
+
+            if (entity.ActiveRecords.Count > 0)
+                throw new ForbiddenEmployeeDeletionException($"Employee {entity.GivenName} {entity.Surname} has an assigned vehicle.");
 
             if (!string.IsNullOrEmpty(entity.Image))
                 imageManager.DeleteFile(request.PhotoPath, entity.Image);
