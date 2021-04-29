@@ -25,7 +25,7 @@ namespace Client.Core.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:5001/api/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:5000/api/")]
         public string ApiAddress {
             get {
                 return ((string)(this["ApiAddress"]));

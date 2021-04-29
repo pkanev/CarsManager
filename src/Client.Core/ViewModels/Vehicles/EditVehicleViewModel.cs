@@ -591,7 +591,6 @@ namespace Client.Core.ViewModels.Vehicles
                 await RaisePropertyChanged(() => Vehicles);
                 await RaisePropertyChanged(() => Vehicle);
                 await RaisePropertyChanged(() => IsValid);
-                RaiseNotification("Успешен запис", "Редактиране на данни");
                 return;
             }
 

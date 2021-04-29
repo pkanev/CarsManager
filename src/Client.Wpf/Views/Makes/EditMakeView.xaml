@@ -6,13 +6,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:common="clr-namespace:Client.Wpf.Views.Common"
         mc:Ignorable="d"
-        Title="Редактиране на автомобилна марка" Height="115" Width="400" WindowStartupLocation="CenterScreen">
+        Title="Редактиране на автомобилна марка" Height="115" Width="400" WindowStartupLocation="CenterScreen" KeyDown="OnKeyDownHandler">
     <Grid Margin="25">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <TextBox mvx:Bi.nd="Text Make.Name" Grid.Column="0" FontSize="15" Margin="0 0 20 0" d:Text="Make" />
-        <Button mvx:Bi.nd="Command EditMakeCommand" IsEnabled="{Binding CanSave}" Grid.Column="1" Padding="20 0" Content="Запази" />
+        <Button x:Name="EditButton" mvx:Bi.nd="Command EditMakeCommand" IsEnabled="{Binding CanSave}" Grid.Column="1" Padding="20 0" Content="Запази" />
     </Grid>
 </common:BaseWindow>

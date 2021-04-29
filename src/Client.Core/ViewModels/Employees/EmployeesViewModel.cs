@@ -525,10 +525,7 @@ namespace Client.Core.ViewModels.Employees
             var response = await ApiService.PutAsync<string>($"employees/{SelectedEmployee.Id}", EmployeeInfo.Employee);
 
             if (response.IsSuccessStatusCode)
-            {
-                RaiseNotification("Успешен запис", "Редактиране на данни");
                 return;
-            }
 
             if (isImageStored)
                 await ApiService.DeleteFileAsync(EmployeeInfo.Employee.ImageName);

@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:common="clr-namespace:Client.Wpf.Views.Common"
     mc:Ignorable="d"
-    Title="{Binding Caption}" Height="200" Width="400" WindowStartupLocation="CenterScreen">
+    Title="{Binding Caption}" Height="200" Width="400" WindowStartupLocation="CenterScreen" KeyDown="OnKeyDownHandler">
     <Grid Margin="10 0 10 10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width=".8*"/>
@@ -34,7 +34,7 @@
         <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"
  HorizontalAlignment="Center" Margin="0 0 0 5">
             <Button Content="Откажи" mvx:Bi.nd="Command CancelCommand" Margin="0 0 15 0" Padding="15 5" />
-            <Button Content="Запиши" mvx:Bi.nd="Command SaveCommand" IsEnabled="{Binding CanSave}" Padding="15 5" />
+            <Button x:Name="SaveButton" Content="Запиши" mvx:Bi.nd="Command SaveCommand" IsEnabled="{Binding CanSave}" Padding="15 5" />
         </StackPanel>
     </Grid>
 </common:BaseWindow>
