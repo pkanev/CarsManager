@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ApiAddress" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://localhost:5001/api/</Value>
+      <Value Profile="(Default)">http://localhost:5000/api/</Value>
     </Setting>
     <Setting Name="VAT" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">20</Value>

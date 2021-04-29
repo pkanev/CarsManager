@@ -18,7 +18,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <common:RequiredLabel Label="Адрес:" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" Margin="0 0 5 0"/>
-        <TextBox Grid.Row="0" Grid.Column="1" mvx:Bi.nd="Text ServerAddress" VerticalAlignment="Center" HorizontalAlignment="Left" Width="175" d:Text="192.168.1.105:7775"/>
-        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Затвори" mvx:Bi.nd="Command CloseCommand" Margin="15" Padding="15 5" HorizontalAlignment="Center" />
+        <TextBox Grid.Row="0" Grid.Column="1" mvx:Bi.nd="Text ServerAddress" VerticalAlignment="Center" HorizontalAlignment="Left" KeyDown="OnKeyDownHandler" Width="175" d:Text="192.168.1.105:7775"/>
+        <Button x:Name="CloseButton" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Затвори" mvx:Bi.nd="Command CloseCommand" Margin="15" Padding="15 5" HorizontalAlignment="Center" />
     </Grid>
 </common:BaseWindow>

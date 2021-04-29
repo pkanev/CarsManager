@@ -18,11 +18,11 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <common:RequiredLabel Label="Име:" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" Margin="0 0 5 0"/>
-        <TextBox Grid.Row="0" Grid.Column="1" mvx:Bi.nd="Text Name" VerticalAlignment="Center" HorizontalAlignment="Left" Width="125" d:Text="София"/>
+        <TextBox Grid.Row="0" Grid.Column="1" mvx:Bi.nd="Text Name" VerticalAlignment="Center" HorizontalAlignment="Left" Width="125" KeyDown="OnKeyDownHandler" d:Text="София"/>
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"
  HorizontalAlignment="Center" Margin="0 0 0 5" VerticalAlignment="Bottom">
             <Button Content="Откажи" mvx:Bi.nd="Command CancelCommand" Margin="0 0 15 0" Padding="15 5" />
-            <Button Content="Запиши" mvx:Bi.nd="Command SaveTownCommand" IsEnabled="{Binding CanSave}" Padding="15 5" />
+            <Button x:Name="SaveButton" Content="Запиши" mvx:Bi.nd="Command SaveTownCommand" IsEnabled="{Binding CanSave}" Padding="15 5" />
         </StackPanel>
     </Grid>
 </common:BaseWindow>

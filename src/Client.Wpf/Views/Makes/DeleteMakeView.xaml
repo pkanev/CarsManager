@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:common="clr-namespace:Client.Wpf.Views.Common"
     mc:Ignorable="d"
-    Title="Изтриване на автомобилна марка" Height="150" Width="400" WindowStartupLocation="CenterScreen">
+    Title="Изтриване на автомобилна марка" Height="150" Width="400" WindowStartupLocation="CenterScreen" KeyDown="OnKeyDownHandler">
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -16,7 +16,7 @@
         <TextBlock Text="{Binding ConfirmationMessage}" Margin="0 0 0 15" d:Text="Message" />
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
             <Button mvx:Bi.nd="Command CancelCommand" Content="Откажи" Margin="0 0 15 0" Padding="15 5"/>
-            <Button mvx:Bi.nd="Command DeleteMakeCommand" Content="Потвърди" Padding="15 5"/>
+            <Button x:Name="DeleteButton" mvx:Bi.nd="Command DeleteMakeCommand" Content="Потвърди" Padding="15 5"/>
         </StackPanel>
     </Grid>
 </common:BaseWindow>

@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:common="clr-namespace:Client.Wpf.Views.Common"
         mc:Ignorable="d"
-        Title="Редакция на модел" Height="200" Width="400" WindowStartupLocation="CenterScreen">
+        Title="Редакция на модел" Height="200" Width="400" WindowStartupLocation="CenterScreen" KeyDown="OnKeyDownHandler">
     <Window.Resources>
         <Style TargetType="{x:Type TextBlock}" x:Key="Label">
             <Setter Property="FontSize" Value="14"/>
@@ -37,7 +37,7 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <Button Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Content="Запази" mvx:Bi.nd="Command EditModelCommand" Padding="15 5" Margin="0 10 0 0" HorizontalAlignment="Center" IsEnabled="{Binding CanSave}"/>
+            <Button x:Name="EditButton" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Content="Запази" mvx:Bi.nd="Command EditModelCommand" Padding="15 5" Margin="0 10 0 0" HorizontalAlignment="Center" IsEnabled="{Binding CanSave}"/>
         </Grid>
     </StackPanel>
 </common:BaseWindow>
