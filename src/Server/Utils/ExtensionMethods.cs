@@ -17,9 +17,11 @@ namespace CarsManager.Server.Utils
             return builder;
         }
 
-        public static UriBuilder WithPort(this UriBuilder builder, int port)
+        public static UriBuilder WithPort(this UriBuilder builder, int? port)
         {
-            builder.Port = port;
+            if (port.HasValue)
+                builder.Port = port.Value;
+
             return builder;
         }
 
@@ -34,7 +36,7 @@ namespace CarsManager.Server.Utils
             var b = new UriBuilder()
                 .WithScheme(request.Scheme)
                 .WithHost(request.Host.Host)
-                .WithPort(request.Host.Port.GetValueOrDefault())
+                .WithPort(request.Host.Port)
                 .WithPath(path);
 
             return b.Uri.AbsoluteUri;

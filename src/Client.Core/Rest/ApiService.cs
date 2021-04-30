@@ -110,6 +110,9 @@ namespace Client.Core.Rest
 
             using (var httpClient = httpClientFactory.CreateClient())
             {
+                if (currentUserService.CurrentUser != null)
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", currentUserService.CurrentUser.Token);
+
                 using var form = new MultipartFormDataContent();
                 using var fileContent = new ByteArrayContent(await File.ReadAllBytesAsync(filePath));
                 fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");

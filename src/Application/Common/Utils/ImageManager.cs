@@ -21,8 +21,6 @@ namespace CarsManager.Application.Common.Utils
             if (file.Length == 0)
                 throw new ArgumentNullException("Image file length cannot be null");
 
-            Directory.CreateDirectory(directory);
-
             string extension = Path.GetExtension(file.FileName).ToLower();
             if (!IsValidImage(extension))
                 throw new InvalidImageTypeException("Unsupported image type.");
