@@ -13,6 +13,8 @@
     <local:BaseVehicleView.Resources>
         <converters:ImageValueConverter x:Key="ImageValueConverter"/>
         <converters:PriceToDecimalsConverter x:Key="PriceToDecimalsConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:BaseVehicleView.Resources>
     <StackPanel Orientation="Vertical">
@@ -27,10 +29,13 @@
             <ComboBox mvx:Bi.nd="ItemsSource Vehicles" SelectedItem="{Binding Vehicle}" Width="100">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding LicencePlate}"/>
+                        <TextBlock Text="{Binding LicencePlate}" Foreground="{Binding IsBlocked, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=true}"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
+            <Button mvx:Bi.nd="Command RefreshCommand" ToolTip="Презареди" Margin="10 0 0 0">
+                <Image Source="{StaticResource Refresh}" Width="16"/>
+            </Button>
         </StackPanel>
         <TabControl Margin="15 5 15 15" SelectedIndex="{Binding SelectedTab}" IsSynchronizedWithCurrentItem="True">
             <TabItem Header="Обща информация">
@@ -187,7 +192,9 @@
                             <Button Grid.Row="4" Grid.Column="3" mvx:Bi.nd="Command CreateLiabilityCommand, CommandParameter=Vignette" IsEnabled="{Binding IsVehicleLoaded}" Content="&#10133;" Style="{StaticResource SmallButton}" />
                         </Grid>
                     </Border>
-                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                    <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                        <Button mvx:Bi.nd="Command BlockVehicleCommandCommand, CommandParameter=true" Visibility="{Binding IsBlocked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=false}" Content="Блокирай" Padding="15 5" Margin="0 0 15 0"/>
+                        <Button mvx:Bi.nd="Command BlockVehicleCommandCommand, CommandParameter=false" Visibility="{Binding IsBlocked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}" Content="Пусни в движение" Padding="15 5" Margin="0 0 15 0"/>
                         <Button mvx:Bi.nd="Command CancelCommand" Content="Откажи" Margin="0 0 15 0" Padding="15 5"/>
                         <Button mvx:Bi.nd="Command SaveCommand" IsEnabled="{Binding IsValid}" Content="Запиши" Padding="15 5"/>
                     </StackPanel>
@@ -613,11 +620,11 @@
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock mvx:Bi.nd="Text Surname" />
+                                                <TextBlock mvx:Bi.nd="Text Surname" Foreground="{Binding IsEmployed, Converter={StaticResource BoolToBrushConverter}}"/>
                                                 <TextBlock Text=", " />
-                                                <TextBlock mvx:Bi.nd="Text GivenName" />
+                                                <TextBlock mvx:Bi.nd="Text GivenName" Foreground="{Binding IsEmployed, Converter={StaticResource BoolToBrushConverter}}"/>
                                                 <TextBlock Text=" " />
-                                                <TextBlock mvx:Bi.nd="Text MiddleName" />
+                                                <TextBlock mvx:Bi.nd="Text MiddleName" Foreground="{Binding IsEmployed, Converter={StaticResource BoolToBrushConverter}}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>

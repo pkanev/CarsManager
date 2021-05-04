@@ -2,7 +2,7 @@
 using Client.Core.Dtos;
 using Client.Core.Models.Employees;
 
-namespace Client.Core.Models
+namespace Client.Core.Models.Vehicles
 {
     public class VehicleExtendedModel
     {

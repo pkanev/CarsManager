@@ -5,6 +5,7 @@ using AutoMapper;
 using CarsManager.Application.Common.Models;
 using CarsManager.Application.Vehicles.Commands.CreateVehicle;
 using CarsManager.Application.Vehicles.Commands.DeleteVehicle;
+using CarsManager.Application.Vehicles.Commands.UpdateBlockedStatus;
 using CarsManager.Application.Vehicles.Commands.UpdateMileage;
 using CarsManager.Application.Vehicles.Commands.UpdateVehicle;
 using CarsManager.Application.Vehicles.Queries.GetAllBasicVehicles;
@@ -77,6 +78,17 @@ namespace CarsManager.Server.Controllers
         public async Task<ActionResult>UpdateMileage(int id, UpdateMileageCommand command)
         {
             if (id != command.VehicleId)
+                return BadRequest();
+
+            await Mediator.Send(command);
+
+            return NoContent();
+        }
+
+        [HttpPost("{id}/blocked")]
+        public async Task<ActionResult> UpdateBlockedStatus(int id, UpdateBlockedStatusCommand command)
+        {
+            if (id != command.Id)
                 return BadRequest();
 
             await Mediator.Send(command);

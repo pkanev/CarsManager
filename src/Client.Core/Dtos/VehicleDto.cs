@@ -26,5 +26,6 @@ namespace Client.Core.Dtos
         public string ImageName { get; set; }
         public string ImageAddress { get; set; }
         public int ActiveRecordEntryId { get; set; }
+        public bool IsBlocked { get; set; }
     }
 }

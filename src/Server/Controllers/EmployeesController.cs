@@ -5,6 +5,7 @@ using CarsManager.Application.Employees.Commands.AssignVehicle;
 using CarsManager.Application.Employees.Commands.CreateEmployee;
 using CarsManager.Application.Employees.Commands.DeleteEmplyee;
 using CarsManager.Application.Employees.Commands.RemoveVehicle;
+using CarsManager.Application.Employees.Commands.UpdateEmployedStatus;
 using CarsManager.Application.Employees.Commands.UpdateEmployee;
 using CarsManager.Application.Employees.Commands.UploadPhoto;
 using CarsManager.Application.Employees.Queries.GetEmployee;
@@ -58,6 +59,17 @@ namespace CarsManager.Server.Controllers
 
             var command = mapper.Map<UploadPhotoCommand>(dto);
             command.PhotoPath = path;
+            await Mediator.Send(command);
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> UpdateIsEmployedStatus(int id, UpdateEmployedStatusCommand command)
+        {
+            if (id != command.Id)
+                return BadRequest();
+
             await Mediator.Send(command);
 
             return NoContent();

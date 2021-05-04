@@ -25,6 +25,7 @@ namespace CarsManager.Application.Vehicles.Queries.GetVehiclesSummary
             => Task.FromResult(new VehiclesSummaryDto
             {
                 InUse = context.Vehicles.Where(v => v.Employees.Count() > 0).Count(),
+                Blocked = context.Vehicles.Where(v => v.IsBlocked).Count(),
                 Total = context.Vehicles.Count()
             });
     }

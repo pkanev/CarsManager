@@ -234,16 +234,12 @@
                 </Grid>
             </Border>
         </StackPanel>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
+        <Grid Margin="0 0 30 0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                 <Border Style="{StaticResource Summary}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Напомняния: "/>
@@ -258,6 +254,16 @@
                         <TextBlock mvx:Bi.nd="Text VehicleSummary.Total" d:Text="25" />
                     </StackPanel>
                 </Border>
+                <Border Style="{StaticResource Summary}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Блокирани автомобили: "/>
+                        <TextBlock mvx:Bi.nd="Text VehicleSummary.Blocked" d:Text="5" />
+                        <TextBlock Text="/"/>
+                        <TextBlock mvx:Bi.nd="Text VehicleSummary.Total" d:Text="25" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                 <Border Style="{StaticResource Summary}">
                     <TextBlock x:Name="Date" d:Text="31/12/2025"/>
                 </Border>

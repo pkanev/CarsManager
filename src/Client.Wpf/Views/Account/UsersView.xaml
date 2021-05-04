@@ -8,12 +8,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:common="clr-namespace:Client.Wpf.Views.Common"
     xmlns:bvm="clr-namespace:Client.Core.Models.Authentication;assembly=Client.Core"
-    xmlns:converters="clr-namespace:Client.Wpf.Converters"
     mc:Ignorable="d" 
     d:DesignHeight="700" d:DesignWidth="1000">
-    <common:BaseView.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-    </common:BaseView.Resources>
     <StackPanel Orientation="Vertical" x:Name="PageContent">
         <StackPanel Orientation="Horizontal" Margin="15 0 0 0">
             <Button Width="25" Height="25" FontSize="14" VerticalAlignment="Top" VerticalContentAlignment="Top" mvx:Bi.nd="Command GoHomeCommand">

@@ -31,6 +31,8 @@ namespace CarsManager.Server.Filters
                 { typeof(IdentityException), HandleIdentityException },
                 { typeof(ForbiddenVehicleDeletionException), HandleForbiddenVehicleDeletionException },
                 { typeof(ForbiddenEmployeeDeletionException), HandleForbiddenEmployeeDeletionException },
+                { typeof(InvalidBlockVehicleException), HandleInvalidBlockVehicleException },
+                { typeof(InvalidAssignVehicleException), HandleInvalidAssignVehicleException },
             };
         }
 
@@ -267,6 +269,34 @@ namespace CarsManager.Server.Filters
         private void HandleForbiddenEmployeeDeletionException(ExceptionContext context)
         {
             var exception = context.Exception as ForbiddenEmployeeDeletionException;
+            var details = new ValidationProblemDetails(context.ModelState)
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Detail = exception.Message,
+            };
+
+            context.Result = new BadRequestObjectResult(details);
+
+            context.ExceptionHandled = true;
+        }
+
+        private void HandleInvalidBlockVehicleException(ExceptionContext context)
+        {
+            var exception = context.Exception as InvalidBlockVehicleException;
+            var details = new ValidationProblemDetails(context.ModelState)
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Detail = exception.Message,
+            };
+
+            context.Result = new BadRequestObjectResult(details);
+
+            context.ExceptionHandled = true;
+        }
+
+        private void HandleInvalidAssignVehicleException(ExceptionContext context)
+        {
+            var exception = context.Exception as InvalidAssignVehicleException;
             var details = new ValidationProblemDetails(context.ModelState)
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",

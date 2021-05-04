@@ -11,6 +11,7 @@
     d:DesignHeight="750" d:DesignWidth="1000">
     <common:BaseView.Resources>
         <converters:ImageValueConverter x:Key="ImageValueConverter"/>
+        <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
     </common:BaseView.Resources>
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal" Margin="15 0 0 0">
@@ -30,6 +31,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
@@ -93,7 +95,7 @@
                         <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{Binding AvailableVehiclesForNewEmployee}" SelectedItem="{Binding SelectedVehicleForNewEmployee}" IsSynchronizedWithCurrentItem="True" Width="215" VerticalAlignment="Top" HorizontalAlignment="Left">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding LicencePlate}" />
+                                    <TextBlock Text="{Binding LicencePlate}" Foreground="{Binding IsBlocked, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=true}"/>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
@@ -102,18 +104,20 @@
                         <TextBlock Grid.Row="11" Grid.Column="0" Text="Модел:" />
                         <TextBlock Grid.Row="11" Grid.Column="1" mvx:Bi.nd="Text SelectedVehicleForNewEmployee.ModelName" />
                         <TextBlock Grid.Row="12" Grid.Column="0" Text="Цвят:" />
-                        <TextBlock Grid.Row="12" Grid.Column="1" Text="{Binding SelectedVehicleForNewEmployeeColor}" Height="20" />
+                        <TextBlock Grid.Row="12" Grid.Column="1" Text="{Binding SelectedVehicleForNewEmployeeColor}"/>
                         <TextBlock Grid.Row="13" Grid.Column="0" Text="Пробег:" />
                         <TextBlock Grid.Row="13" Grid.Column="1" Text="{Binding SelectedVehicleForNewEmployee.Mileage, StringFormat=0;;#}" />
-                        <Border Grid.Row="9" Grid.Column="2" Grid.RowSpan="6" Grid.ColumnSpan="2" Style="{StaticResource SectionBorder}" Margin="5">
+                        <TextBlock Grid.Row="14" Grid.Column="0" Text="Блокиран:" />
+                        <CheckBox Grid.Row="14" Grid.Column="1" IsChecked="{Binding SelectedVehicleForNewEmployee.IsBlocked}" IsEnabled="False"/>
+                        <Border Grid.Row="9" Grid.Column="2" Grid.RowSpan="7" Grid.ColumnSpan="2" Style="{StaticResource SectionBorder}" Margin="5">
                             <Image Source="{Binding SelectedVehicleForNewEmployee.ImageAddress, Converter={StaticResource ImageValueConverter}, FallbackValue={StaticResource Van}}" Height="175"/>
                         </Border>
-                        <StackPanel Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <StackPanel Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
                             <Button mvx:Bi.nd="Command AddVehicleForNewEmployeeCommand" Content="Добави към зачислени" Padding="15 5" IsEnabled="{Binding CanAddVehicleToNewEmployee}" />
                         </StackPanel>
-                        <Line Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="4" Stroke="#ccc" StrokeThickness="1" X1="0" X2="1000" Height="10" Y1="5" Y2="5" />
-                        <TextBlock Grid.Row="16" Grid.Column="0" Text="Зачислени автомобили" Style="{StaticResource SectionHeader}" Grid.ColumnSpan="2" />
-                        <Border Grid.Row="17" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource SectionBorder}">
+                        <Line Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="4" Stroke="#ccc" StrokeThickness="1" X1="0" X2="1000" Height="10" Y1="5" Y2="5" />
+                        <TextBlock Grid.Row="17" Grid.Column="0" Text="Зачислени автомобили" Style="{StaticResource SectionHeader}" Grid.ColumnSpan="2" />
+                        <Border Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource SectionBorder}">
                             <ScrollViewer Height="150">
                                 <ItemsControl ItemsSource="{Binding VehiclesForNewEmployee}" x:Name="VehiclesForNewEmployee">
                                     <ItemsControl.ItemTemplate>
@@ -148,9 +152,9 @@
                 <StackPanel Orientation="Vertical">
                     <Grid Margin="5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width=".6*" />
-                            <ColumnDefinition Width=".8*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width=".7*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -172,11 +176,11 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Surname}" />
+                                        <TextBlock Text="{Binding Surname}" Foreground="{Binding IsEmployed, Converter={StaticResource BoolToBrushConverter}}"/>
                                         <TextBlock Text=", " />
-                                        <TextBlock Text="{Binding GivenName}" />
+                                        <TextBlock Text="{Binding GivenName}" Foreground="{Binding IsEmployed, Converter={StaticResource BoolToBrushConverter}}"/>
                                         <TextBlock Text=" " />
-                                        <TextBlock Text="{Binding MiddleName}" />
+                                        <TextBlock Text="{Binding MiddleName}" Foreground="{Binding IsEmployed, Converter={StaticResource BoolToBrushConverter}}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -190,7 +194,7 @@
                         <Line Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Stroke="#ccc" StrokeThickness="1" X1="0" X2="570" Height="10" Y1="5" Y2="5"/>
                         <TextBlock Text="Град:" Grid.Row="4" Grid.Column="1"/>
                         <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal">
-                            <ComboBox ItemsSource="{Binding SelectedEmployeeTowns}" SelectedItem="{Binding SelectedEmployeeTown}" IsSynchronizedWithCurrentItem="True" Margin="0 0 2 0" Width="150" VerticalAlignment="Top">
+                            <ComboBox ItemsSource="{Binding SelectedEmployeeTowns}" SelectedItem="{Binding SelectedEmployeeTown}" IsSynchronizedWithCurrentItem="True" Margin="0 0 2 0" Width="140" VerticalAlignment="Top">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Name}" />
@@ -221,7 +225,13 @@
                                 </StackPanel>
                             </Grid>
                         </Border>
-                        <StackPanel Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Right" Orientation="Horizontal">
+                        <Border Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource SectionBorder}">
+                            <StackPanel Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+                                <TextBlock Text="На разположение:" Style="{StaticResource SectionHeader}" />
+                                <CheckBox IsChecked="{Binding SelectedEmployee.IsEmployed}" IsEnabled="{Binding CanReleaseEmployee}" mvx:Bi.nd="Command UpdateIsEmployedStatusCommand" VerticalAlignment="Center" Margin="15 0 0 0"/>
+                            </StackPanel>
+                        </Border>
+                        <StackPanel Grid.Row="9" Grid.Column="3" HorizontalAlignment="Right" Orientation="Horizontal">
                             <Button Content="Откажи" mvx:Bi.nd="Command GoHomeCommand" Padding="15 5" Margin="0 0 5 0" />
                             <Button Content="Изтрий" mvx:Bi.nd="Command DeleteSelectedEmployeeCommand" IsEnabled="{Binding CanDeleteEmployee}" Padding="15 5" Margin="0 0 5 0" />
                             <Button Content="Запиши" mvx:Bi.nd="Command SaveSelectedEmployeeCommand" IsEnabled="{Binding IsValidSelectedEmployee}" Padding="15 5"/>
@@ -263,36 +273,41 @@
                                     <RowDefinition Height="22"/>
                                     <RowDefinition Height="22"/>
                                     <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
                                     <RowDefinition Height="*"/>
-                                    <RowDefinition Height="35"/>
+                                    <RowDefinition Height="40"/>
                                 </Grid.RowDefinitions>
-                                <ListView Grid.Row="0" Grid.Column="0" Grid.RowSpan="6" ItemsSource="{Binding AvailableVehiclesForSelectedEmployee}" SelectedItem="{Binding SelectedAvailableVehicleForSelectedEmployee}" IsSynchronizedWithCurrentItem="True" Margin="0 0 5 0" Height="300">
+                                <ListView Grid.Row="0" Grid.Column="0" Grid.RowSpan="7" ItemsSource="{Binding AvailableVehiclesForSelectedEmployee}" SelectedItem="{Binding SelectedAvailableVehicleForSelectedEmployee}" IsSynchronizedWithCurrentItem="True" Margin="0 0 5 0" Height="300">
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding LicencePlate}" />
+                                            <TextBlock Text="{Binding LicencePlate}" Foreground="{Binding IsBlocked, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=true}"/>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
                                 </ListView>
                                 <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                                    <TextBlock Width="70" Text="Марка:" />
+                                    <TextBlock Width="80" Text="Марка:" />
                                     <TextBlock Text="{Binding SelectedAvailableVehicleForSelectedEmployee.MakeName}" />
                                 </StackPanel>
                                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-                                    <TextBlock Width="70" Text="Модел:" />
+                                    <TextBlock Width="80" Text="Модел:" />
                                     <TextBlock Text="{Binding SelectedAvailableVehicleForSelectedEmployee.ModelName}" />
                                 </StackPanel>
                                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-                                    <TextBlock Width="70" Text="Цвят:" />
+                                    <TextBlock Width="80" Text="Цвят:" />
                                     <TextBlock Text="{Binding SelectedAvailableVehicleForSelectedEmployee.Color}" />
                                 </StackPanel>
                                 <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
-                                    <TextBlock Width="70" Text="Пробег:" />
+                                    <TextBlock Width="80" Text="Пробег:" />
                                     <TextBlock Text="{Binding SelectedAvailableVehicleForSelectedEmployee.Mileage}" />
                                 </StackPanel>
-                                <Border Grid.Row="4" Grid.Column="1"  Style="{StaticResource SectionBorder}">
-                                    <Image Height="150" Margin="0 20 0 0" Source="{Binding SelectedAvailableVehicleForSelectedEmployee.ImageAddress, Converter={StaticResource ImageValueConverter}, FallbackValue={StaticResource Van}}" />
+                                <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+                                    <TextBlock Width="80" Text="Блокиран:" />
+                                    <CheckBox IsEnabled="False" IsChecked="{Binding SelectedAvailableVehicleForSelectedEmployee.IsBlocked}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <Border Grid.Row="5" Grid.Column="1"  Style="{StaticResource SectionBorder}">
+                                    <Image Height="115" Margin="0 20 0 0" Source="{Binding SelectedAvailableVehicleForSelectedEmployee.ImageAddress, Converter={StaticResource ImageValueConverter}, FallbackValue={StaticResource Van}}" />
                                 </Border>
-                                <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 5 0 0">
                                     <Button Padding="15 5" mvx:Bi.nd="Command AddVehicleForSelectedEmployeeCommand" IsEnabled="{Binding CanAddSelectedAvailableVehicleForSelectedEmployee}" Content="Добави" />
                                 </StackPanel>
                             </Grid>

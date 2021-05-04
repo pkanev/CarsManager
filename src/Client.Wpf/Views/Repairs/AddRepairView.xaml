@@ -11,7 +11,8 @@
     d:DesignHeight="700" d:DesignWidth="1000">
     <common:BaseView.Resources>
         <converters:ImageValueConverter x:Key="ImageValueConverter"/>
-        <converters:PriceToDecimalsConverter x:Key="PriceToDecimalsConverter" />
+        <converters:PriceToDecimalsConverter x:Key="PriceToDecimalsConverter"/>
+        <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
     </common:BaseView.Resources>
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal" Margin="15 0 0 0">
@@ -62,7 +63,7 @@
                         <ComboBox Grid.Row="1" Grid.Column="1" Width="192" ItemsSource="{Binding Vehicles}" SelectedItem="{Binding Vehicle}" IsSynchronizedWithCurrentItem="True" VerticalAlignment="Top">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock mvx:Bi.nd="Text LicencePlate" />
+                                    <TextBlock mvx:Bi.nd="Text LicencePlate" Foreground="{Binding IsBlocked, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=true}"/>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>

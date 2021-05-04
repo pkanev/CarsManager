@@ -8,6 +8,7 @@ using Client.Core.Data;
 using Client.Core.Dtos;
 using Client.Core.Models;
 using Client.Core.Models.Liabilities;
+using Client.Core.Models.Vehicles;
 using Client.Core.Rest;
 using Client.Core.Services;
 using Client.Core.Utils;

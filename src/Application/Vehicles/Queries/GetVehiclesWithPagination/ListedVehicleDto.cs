@@ -17,6 +17,7 @@ namespace CarsManager.Application.Vehicles.Queries.GetVehiclesWithPagination
         public int Mileage { get; set; }
         public int ActiveRecordEntryId { get; set; }
         public bool IsCheckedOut => ActiveRecordEntryId > 0;
+        public bool IsBlocked { get; set; }
 
         public void Mapping(Profile profile)
         {

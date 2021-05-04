@@ -166,6 +166,7 @@ namespace Client.Core.ViewModels.Employees
 
         public bool CanAddVehicleToNewEmployee => SelectedVehicleForNewEmployee != null
             && SelectedVehicleForNewEmployee != nullVehicle
+            && !SelectedVehicleForNewEmployee.IsBlocked
             && !VehiclesForNewEmployee.Contains(SelectedVehicleForNewEmployee);
 
         public bool CanSaveNewEmployee => !string.IsNullOrWhiteSpace(NewGivenName)
@@ -188,6 +189,7 @@ namespace Client.Core.ViewModels.Employees
                 selectedEmployee = value;
                 RaisePropertyChanged(() => SelectedEmployee);
                 RaisePropertyChanged(() => CanDeleteEmployee);
+                RaisePropertyChanged(() => CanReleaseEmployee);
                 Task.Run(GetEmployeeInfo);
             }
         }
@@ -270,6 +272,7 @@ namespace Client.Core.ViewModels.Employees
             {
                 SetProperty(ref selectedEmployeeVehicles, value);
                 RaisePropertyChanged(() => CanAddSelectedAvailableVehicleForSelectedEmployee);
+                RaisePropertyChanged(() => CanReleaseEmployee);
             }
         }
 
@@ -290,11 +293,15 @@ namespace Client.Core.ViewModels.Employees
         }
 
         public bool CanAddSelectedAvailableVehicleForSelectedEmployee =>
-            SelectedAvailableVehicleForSelectedEmployee != null
+            SelectedEmployee != null
+            && SelectedEmployee.IsEmployed
+            && SelectedAvailableVehicleForSelectedEmployee != null
+            && !SelectedAvailableVehicleForSelectedEmployee.IsBlocked
             && SelectedEmployeeVehicles != null
             && !SelectedEmployeeVehicles.Any(v => v.Id == SelectedAvailableVehicleForSelectedEmployee.Id);
 
         public bool CanDeleteEmployee => SelectedEmployee != null && IsAdmin;
+        public bool CanReleaseEmployee => SelectedEmployee != null && SelectedEmployeeVehicles != null && SelectedEmployeeVehicles.Count == 0;
 
         public bool IsValidSelectedEmployee => EmployeeInfo?.Employee != null
             && !string.IsNullOrWhiteSpace(EmployeeInfo.Employee.GivenName)
@@ -304,19 +311,21 @@ namespace Client.Core.ViewModels.Employees
             && (string.IsNullOrWhiteSpace(EmployeeInfo.Employee.Telephone) || Regex.IsMatch(EmployeeInfo.Employee.Telephone, PHONE_PATTERN));
 
         public IMvxInteraction<UploadInteractionHandler> UploadInteraction => uploadInteraction;
-        public IMvxCommand<bool> SelectImageCommand { get; set; }
-        public IMvxCommand<bool> RemoveImageCommand { get; set; }
-        public IMvxCommand AddVehicleForNewEmployeeCommand { get; set; }
-        public IMvxCommand<VehicleDto> RemoveVehicleForNewEmployeeCommand { get; set; }
-        public IMvxCommand SaveNewEmployeeCommand { get; set; }
-        public IMvxCommand ClearNewEmployeeCommand { get; set; }
-        public IMvxCommand SaveSelectedEmployeeCommand { get; set; }
-        public IMvxCommand DeleteSelectedEmployeeCommand { get; set; }
-        public IMvxCommand AddVehicleForSelectedEmployeeCommand { get; set; }
-        public IMvxCommand<BasicVehicleModel> RemoveVehicleForSelectedEmployeeCommand { get; set; }
-        public IMvxCommand AddTownCommand { get; set; }
-        public IMvxCommand EditTownCommand { get; set; }
-        public IMvxCommand DeleteTownCommand { get; set; }
+
+        public IMvxCommand<bool> SelectImageCommand { get; private set; }
+        public IMvxCommand<bool> RemoveImageCommand { get; private set; }
+        public IMvxCommand AddVehicleForNewEmployeeCommand { get; private set; }
+        public IMvxCommand<VehicleDto> RemoveVehicleForNewEmployeeCommand { get; private set; }
+        public IMvxCommand SaveNewEmployeeCommand { get; private set; }
+        public IMvxCommand ClearNewEmployeeCommand { get; private set; }
+        public IMvxCommand SaveSelectedEmployeeCommand { get; private set; }
+        public IMvxCommand DeleteSelectedEmployeeCommand { get; private set; }
+        public IMvxCommand AddVehicleForSelectedEmployeeCommand { get; private set; }
+        public IMvxCommand<BasicVehicleModel> RemoveVehicleForSelectedEmployeeCommand { get; private set; }
+        public IMvxCommand AddTownCommand { get; private set; }
+        public IMvxCommand EditTownCommand { get; private set; }
+        public IMvxCommand DeleteTownCommand { get; private set; }
+        public IMvxCommand UpdateIsEmployedStatusCommand { get; private set; }
 
         public EmployeesViewModel(IApiService apiService, IMvxNavigationService navigationService, ICurrentUserService currentUserService)
             : base(apiService, navigationService, currentUserService)
@@ -340,6 +349,7 @@ namespace Client.Core.ViewModels.Employees
                     Callback = GetTowns
                 }));
             DeleteTownCommand = new MvxAsyncCommand(DeleteTown);
+            UpdateIsEmployedStatusCommand = new MvxAsyncCommand(UpdateIsEmployedStatus);
         }
 
         public override async Task Initialize()
@@ -572,25 +582,26 @@ namespace Client.Core.ViewModels.Employees
             entry.VehicleId = SelectedAvailableVehicleForSelectedEmployee.Id;
             var response = await ApiService.PostAsync<int>($"employees/{SelectedEmployee.Id}/vehicle/{SelectedAvailableVehicleForSelectedEmployee.Id}", entry);
 
-            if (response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
-                SelectedEmployeeVehicles.Add(new BasicVehicleModel
-                {
-                    Id = SelectedAvailableVehicleForSelectedEmployee.Id,
-                    LicencePlate = SelectedAvailableVehicleForSelectedEmployee.LicencePlate,
-                    Color = SelectedAvailableVehicleForSelectedEmployee.Color,
-                    Make = SelectedAvailableVehicleForSelectedEmployee.MakeName,
-                    Model = SelectedAvailableVehicleForSelectedEmployee.ModelName,
-                    Mileage = SelectedAvailableVehicleForSelectedEmployee.Mileage,
-                    ActiveRecordEntryId = response.Content
-                });
-
-                SelectedAvailableVehicleForSelectedEmployee.ActiveRecordEntryId = response.Content;
-                await RaisePropertyChanged(() => CanAddSelectedAvailableVehicleForSelectedEmployee);
+                RaiseNotification(response.Error, "Грешка!!!");
+                return;
             }
 
-            else
-                RaiseNotification(response.Error, "Грешка!!!");
+            SelectedEmployeeVehicles.Add(new BasicVehicleModel
+            {
+                Id = SelectedAvailableVehicleForSelectedEmployee.Id,
+                LicencePlate = SelectedAvailableVehicleForSelectedEmployee.LicencePlate,
+                Color = SelectedAvailableVehicleForSelectedEmployee.Color,
+                Make = SelectedAvailableVehicleForSelectedEmployee.MakeName,
+                Model = SelectedAvailableVehicleForSelectedEmployee.ModelName,
+                Mileage = SelectedAvailableVehicleForSelectedEmployee.Mileage,
+                ActiveRecordEntryId = response.Content
+            });
+
+            SelectedAvailableVehicleForSelectedEmployee.ActiveRecordEntryId = response.Content;
+            await RaisePropertyChanged(() => CanAddSelectedAvailableVehicleForSelectedEmployee);
+            await RaisePropertyChanged(() => CanReleaseEmployee);
         }
 
         private async Task RemoveVehicleForSelectedEmployee(BasicVehicleModel vehicle)
@@ -632,8 +643,14 @@ namespace Client.Core.ViewModels.Employees
                 return;
             }
 
+            var availableVehicle = AvailableVehiclesForSelectedEmployee.FirstOrDefault(v => v.Id == vehicle.Id);
+            if (availableVehicle != null)
+                availableVehicle.Mileage = entry.NewMileage.GetValueOrDefault();
+
             vehicleInList.ActiveRecordEntryId = response.Content;
             await RaisePropertyChanged(() => CanAddSelectedAvailableVehicleForSelectedEmployee);
+            await RaisePropertyChanged(() => SelectedAvailableVehicleForSelectedEmployee);
+            await RaisePropertyChanged(() => CanReleaseEmployee);
         }
 
         private async Task<bool> StoreImageForSelectedEmployee()
@@ -683,6 +700,20 @@ namespace Client.Core.ViewModels.Employees
                     else
                         RaiseNotification(response.Error, "Грешка!!!");
                 });
+        }
+
+        private async Task UpdateIsEmployedStatus()
+        {
+            var response = await ApiService.PatchAsync<string>($"employees/{SelectedEmployee.Id}", new { Id = SelectedEmployee.Id, IsEmployed = SelectedEmployee.IsEmployed });
+
+            if (response.IsSuccessStatusCode)
+            {
+                await RaisePropertyChanged(() => CanAddSelectedAvailableVehicleForSelectedEmployee);
+                return;
+            }
+
+            SelectedEmployee.IsEmployed = !SelectedEmployee.IsEmployed;
+            RaiseNotification(response.Error, "Грешка!!!");
         }
     }
 }

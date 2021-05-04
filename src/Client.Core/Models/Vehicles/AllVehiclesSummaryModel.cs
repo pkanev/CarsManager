@@ -3,6 +3,7 @@
     public class AllVehiclesSummaryModel
     {
         public int InUse { get; set; }
+        public int Blocked { get; set; }
         public int Total { get; set; }
     }
 }

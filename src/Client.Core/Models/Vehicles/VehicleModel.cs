@@ -1,6 +1,6 @@
 ﻿using Client.Core.Dtos;
 
-namespace Client.Core.Models
+namespace Client.Core.Models.Vehicles
 {
     public class VehicleModel
     {

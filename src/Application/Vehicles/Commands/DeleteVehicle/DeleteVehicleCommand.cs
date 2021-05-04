@@ -32,6 +32,7 @@ namespace CarsManager.Application.Vehicles.Commands.DeleteVehicle
         {
             var entity = await context.Vehicles
                 .Include(v => v.RoadBookEntries)
+                .ThenInclude(r => r.ActiveUsers)
                 .FirstOrDefaultAsync(v => v.Id == request.Id);
 
             if (entity == null)
