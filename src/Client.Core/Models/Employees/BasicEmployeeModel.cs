@@ -7,5 +7,6 @@
         public string MiddleName { get; set; }
         public string Surname { get; set; }
         public string ImageAddress { get; set; }
+        public bool IsEmployed { get; set; }
     }
 }

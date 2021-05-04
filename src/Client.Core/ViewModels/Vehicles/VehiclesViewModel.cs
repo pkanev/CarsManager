@@ -19,6 +19,7 @@ namespace Client.Core.ViewModels.Vehicles
             nameof(BasicVehicleModel.Color),
             nameof(BasicVehicleModel.Mileage),
             nameof(BasicVehicleModel.IsCheckedOut),
+            nameof(BasicVehicleModel.IsBlocked),
         };
 
         protected override IList<string> Properties => properties;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using CarsManager.Application.Common.Constants;
 using CarsManager.Application.Common.Exceptions;
 using CarsManager.Application.Common.Interfaces;
 using CarsManager.Application.Common.Security;
@@ -11,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarsManager.Application.Employees.Commands.RemoveVehicle
 {
-    [Authorise(Roles = RoleConstants.ADMIN)]
+    [Authorise]
     public class RemoveVehicleCommand : IRequest<int>
     {
         public int Id { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Client.Core.Models;
+using Client.Core.Models.Vehicles;
 
 namespace Client.Core.Data
 {

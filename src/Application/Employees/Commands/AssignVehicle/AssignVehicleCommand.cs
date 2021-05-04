@@ -45,6 +45,12 @@ namespace CarsManager.Application.Employees.Commands.AssignVehicle
             if (vehicle == null)
                 throw new NotFoundException(nameof(Vehicle), request.VehicleId);
 
+            if (!employee.IsEmployed.GetValueOrDefault())
+                throw new InvalidAssignVehicleException($"{employee.GivenName} {employee.Surname} is not available.");
+
+            if (vehicle.IsBlocked)
+                throw new InvalidAssignVehicleException($"Vehicle {vehicle.LicencePlate} is in a blocked state.");
+
             var roadBookEntry = request.Id == 0
                 ? new RoadBookEntry()
                 : await context.RoadBookEntries.FindAsync(request.Id);

@@ -66,7 +66,6 @@ namespace Client.Core.Rest
                     {
                         OnCallStart?.Invoke();
                         var response = await httpClient.SendAsync(request).ConfigureAwait(false);
-                        OnCallEnd?.Invoke();
                         result.StatusCode = response.StatusCode;
                         result.IsSuccessStatusCode = response.IsSuccessStatusCode;
 
@@ -87,6 +86,10 @@ namespace Client.Core.Rest
                     {
                         mvxLog.ErrorException("MakeApiCall failed", ex);
                         result.Error = ex.Message;
+                    }
+                    finally
+                    {
+                        OnCallEnd?.Invoke();
                     }
 
                     return result;
@@ -122,6 +125,7 @@ namespace Client.Core.Rest
 
                 try
                 {
+                    OnCallStart?.Invoke();
                     var response = await httpClient.PostAsync(targetUrl, form);
 
                     result.StatusCode = response.StatusCode;
@@ -137,6 +141,10 @@ namespace Client.Core.Rest
 
                     mvxLog.ErrorException("MakeApiCall failed", ex);
                     result.Error = ex.Message;
+                }
+                finally
+                {
+                    OnCallEnd?.Invoke();
                 }
 
                 return result;

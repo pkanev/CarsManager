@@ -34,8 +34,9 @@
                 <DataGridTextColumn Header="Марка" Binding="{Binding Make}" IsReadOnly="True" Width="175"/>
                 <DataGridTextColumn Header="Модел" Binding="{Binding Model}" IsReadOnly="True" Width="175"/>
                 <DataGridTextColumn Header="Цвят" Binding="{Binding Color}" IsReadOnly="True" Width="140"/>
-                <DataGridTextColumn Header="Пробег" Binding="{Binding Mileage}" IsReadOnly="True" Width="175"/>
+                <DataGridTextColumn Header="Пробег" Binding="{Binding Mileage}" IsReadOnly="True" Width="100"/>
                 <DataGridCheckBoxColumn Header="Зачислен" Binding="{Binding IsCheckedOut}" IsReadOnly="True" Width="75"/>
+                <DataGridCheckBoxColumn Header="Блокиран" Binding="{Binding IsBlocked}" IsReadOnly="True" Width="75"/>
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 15 0 0">

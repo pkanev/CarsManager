@@ -83,7 +83,7 @@ namespace Client.Core.ViewModels.RoadBook
         {
             var now = DateTime.Now;
             From = new DateTime(now.Year, now.Month, 1);
-            To = From.AddMonths(1).AddDays(-1);
+            To = From.AddMonths(1);
 
             ReloadCommand = new MvxAsyncCommand(() => GetItems(1));
         }

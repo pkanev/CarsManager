@@ -12,6 +12,7 @@ namespace CarsManager.Application.Employees.Queries.GetEmployees
         public string Surname { get; set; }
         public string ImageName { get; set; }
         public string ImageAddress { get; set; }
+        public bool? IsEmployed { get; set; }
 
         public void Mapping(Profile profile)
         {

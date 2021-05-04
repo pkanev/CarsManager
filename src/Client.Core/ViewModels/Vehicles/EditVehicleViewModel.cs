@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Client.Core.Models.Employees;
 using Client.Core.Models.Liabilities;
 using Client.Core.Models.Repairs;
 using Client.Core.Models.RoadBook;
+using Client.Core.Models.Vehicles;
 using Client.Core.Rest;
 using Client.Core.Services;
 using Client.Core.Utils;
@@ -37,6 +39,7 @@ namespace Client.Core.ViewModels.Vehicles
         private string licencePlate;
         private string color;
         private string image;
+        private bool isBlocked;
         private bool isImageUpdated;
         private int selectedTab;
         private MvxInteraction<UploadInteractionHandler> uploadInteraction = new MvxInteraction<UploadInteractionHandler>();
@@ -78,6 +81,7 @@ namespace Client.Core.ViewModels.Vehicles
                 Color = Vehicle.Color;
                 ImageAddress = vehicle.ImageAddress;
                 LicencePlate = vehicle.LicencePlate;
+                IsBlocked = vehicle.IsBlocked;
 
                 if (Makes != null && Make?.Id != vehicle.MakeId)
                     Make = Makes.FirstOrDefault(m => m.Id == vehicle.MakeId);
@@ -150,6 +154,11 @@ namespace Client.Core.ViewModels.Vehicles
                 RaisePropertyChanged(() => IsValid);
             }
         }
+        public bool IsBlocked
+        {
+            get => isBlocked;
+            set => SetProperty(ref isBlocked, value);
+        }
 
         public string ImageAddress
         {
@@ -181,7 +190,12 @@ namespace Client.Core.ViewModels.Vehicles
         public bool IsValid => Model != null
             && Regex.IsMatch(LicencePlate.ToUpper(), @"^[ETYOPAHKXCBMВЕРТОАСХКНМ]{1,2}[0-9]{4}[ETYOPAHKXCBMВЕРТОАСХКНМ]{1,2}$");
 
-        public bool CanAssignEmployee => NonAssignedEmployee != null && !EmployeesForVehicle.Any(e => e.Id == NonAssignedEmployee.Id);
+        public bool CanAssignEmployee =>
+            Vehicle != null
+            && !Vehicle.IsBlocked
+            && NonAssignedEmployee != null
+            && NonAssignedEmployee.IsEmployed
+            && !EmployeesForVehicle.Any(e => e.Id == NonAssignedEmployee.Id);
 
         public ObservableCollection<LiabilityExtendedModel> MOTs
         {
@@ -302,7 +316,7 @@ namespace Client.Core.ViewModels.Vehicles
             get => selectedTab;
             set
             {
-                if (selectedTab == 0)
+                if (selectedTab == 0 && Vehicle != null)
                 {
                     Vehicle.VehicleType = vehicleType.Id;
                     Vehicle.MakeId = Make.Id;
@@ -313,7 +327,9 @@ namespace Client.Core.ViewModels.Vehicles
                     Vehicle.Color = Color;
                     Vehicle.LicencePlate = LicencePlate;
                     Vehicle.ImageAddress = ImageAddress;
+                    Vehicle.IsBlocked = IsBlocked;
                 }
+
                 SetProperty(ref selectedTab, value);
                 Task.Run(LoadBindings);
             }
@@ -323,18 +339,20 @@ namespace Client.Core.ViewModels.Vehicles
         public ObservableCollection<VehicleTypeModel> VehicleTypes => VehicleResources.VehicleTypes.ToObservableCollection();
         public ObservableCollection<string> Colors => VehicleResources.Colors.ToObservableCollection();
 
-        public IMvxCommand SelectImageCommand { get; set; }
-        public IMvxCommand RemoveImageCommand { get; set; }
-        public IMvxCommand SaveCommand { get; set; }
-        public IMvxCommand CancelCommand { get; set; }
-        public IMvxCommand<LiabilityType> CreateLiabilityCommand { get; set; }
-        public IMvxCommand<LiabilityExtendedModel> EditLiabilityCommand { get; set; }
-        public IMvxCommand<LiabilityExtendedModel> DeleteLiabilityCommand { get; set; }
-        public IMvxCommand<string> RepairCheckedCommand { get; set; }
-        public IMvxCommand SaveRepairCommand { get; set; }
-        public IMvxCommand DeleteRepairCommand { get; set; }
-        public IMvxCommand AddVehicleForEmployeeCommand { get; set; }
-        public IMvxCommand RemoveVehicleForEmployeeCommand { get; set; }
+        public IMvxCommand SelectImageCommand { get; private set; }
+        public IMvxCommand RemoveImageCommand { get; private set; }
+        public IMvxCommand SaveCommand { get; private set; }
+        public IMvxCommand CancelCommand { get; private set; }
+        public IMvxCommand<LiabilityType> CreateLiabilityCommand { get; private set; }
+        public IMvxCommand<LiabilityExtendedModel> EditLiabilityCommand { get; private set; }
+        public IMvxCommand<LiabilityExtendedModel> DeleteLiabilityCommand { get; private set; }
+        public IMvxCommand<string> RepairCheckedCommand { get; private set; }
+        public IMvxCommand SaveRepairCommand { get; private set; }
+        public IMvxCommand DeleteRepairCommand { get; private set; }
+        public IMvxCommand AddVehicleForEmployeeCommand { get; private set; }
+        public IMvxCommand RemoveVehicleForEmployeeCommand { get; private set; }
+        public IMvxCommand<bool> BlockVehicleCommandCommand { get; private set; }
+        public IMvxCommand RefreshCommand { get; private set; }
 
         public IMvxInteraction<UploadInteractionHandler> UploadInteraction => uploadInteraction;
 
@@ -368,6 +386,8 @@ namespace Client.Core.ViewModels.Vehicles
             DeleteRepairCommand = new MvxAsyncCommand(DeleteRepair);
             AddVehicleForEmployeeCommand = new MvxAsyncCommand(AddVehicleForEmployee);
             RemoveVehicleForEmployeeCommand = new MvxAsyncCommand(RemoveVehicleForEmployee);
+            BlockVehicleCommandCommand = new MvxAsyncCommand<bool>(BlockVehicle);
+            RefreshCommand = new MvxAsyncCommand(async () => await NavigationService.Navigate<EditVehicleViewModel>());
         }
 
         public override async Task Initialize()
@@ -389,6 +409,7 @@ namespace Client.Core.ViewModels.Vehicles
                 Color = Vehicle.Color;
                 ImageAddress = Vehicle.ImageAddress;
                 LicencePlate = Vehicle.LicencePlate;
+                IsBlocked = Vehicle.IsBlocked;
                 await GetVehicleExtended();
             }
 
@@ -752,5 +773,23 @@ namespace Client.Core.ViewModels.Vehicles
             await RaisePropertyChanged(() => CanAssignEmployee);
             Vehicle.ActiveRecordEntryId = response.Content;
         }
+
+        private async Task BlockVehicle(bool isBlockedParam)
+        {
+            if (isBlockedParam == IsBlocked)
+                return;
+
+            var response = await ApiService.PostAsync<int>($"vehicles/{Vehicle.Id}/blocked", new { Id = Vehicle.Id, IsBlocked = isBlockedParam });
+
+            if (!response.IsSuccessStatusCode)
+            {
+                RaiseNotification(response.Error, "Грешка!!!");
+                return;
+            }
+
+            Vehicle.IsBlocked = isBlockedParam;
+            IsBlocked = isBlockedParam;
+        }
+
     }
 }
