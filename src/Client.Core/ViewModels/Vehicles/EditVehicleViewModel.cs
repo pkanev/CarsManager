@@ -772,6 +772,7 @@ namespace Client.Core.ViewModels.Vehicles
             EmployeesForVehicle.Remove(AssignedEmployee);
             await RaisePropertyChanged(() => CanAssignEmployee);
             Vehicle.ActiveRecordEntryId = response.Content;
+            Vehicle.Mileage = entry.NewMileage.GetValueOrDefault();
         }
 
         private async Task BlockVehicle(bool isBlockedParam)

@@ -136,7 +136,7 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Text="Масло:" />
                             <TextBox Grid.Row="1" mvx:Bi.nd="Text Vehicle.OilMileage" PreviewTextInput="NumberValidationTextBox" />
-                            <TextBlock Grid.Row="2" Text="Ролкки и ремъци:" />
+                            <TextBlock Grid.Row="2" Text="Ролки и ремъци:" />
                             <TextBox Grid.Row="3" mvx:Bi.nd="Text Vehicle.BeltMileage" PreviewTextInput="NumberValidationTextBox" />
                             <TextBlock Grid.Row="4" Text="Накладки:" />
                             <TextBox Grid.Row="5" mvx:Bi.nd="Text Vehicle.BrakeLiningsMileage" PreviewTextInput="NumberValidationTextBox" />
