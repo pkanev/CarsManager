@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Client.Core.Models;
+using Client.Core.Models.MakesAndModels;
 using Client.Core.Rest;
 using Client.Core.Services;
 using Client.Core.ViewModels.Common;

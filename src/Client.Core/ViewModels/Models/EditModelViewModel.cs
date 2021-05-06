@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Client.Core.Data;
 using Client.Core.Models;
+using Client.Core.Models.MakesAndModels;
 using Client.Core.Models.Vehicles;
 using Client.Core.Rest;
 using Client.Core.Services;

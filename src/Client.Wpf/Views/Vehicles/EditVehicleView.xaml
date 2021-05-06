@@ -39,16 +39,16 @@
         </StackPanel>
         <TabControl Margin="15 5 15 15" SelectedIndex="{Binding SelectedTab}" IsSynchronizedWithCurrentItem="True">
             <TabItem Header="Обща информация">
-                <Grid>
+                <Grid Margin="5 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="250"/>
-                        <RowDefinition />
-                        <RowDefinition Height="250"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="275"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="240"/>
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Основни данни" Style="{StaticResource SectionHeader}" />
@@ -59,6 +59,7 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
@@ -114,6 +115,8 @@
                             <TextBox Grid.Column="1" Grid.Row="8" mvx:Bi.nd="Text Vehicle.Mileage" PreviewTextInput="NumberValidationTextBox" />
                             <TextBlock Grid.Column="0" Grid.Row="9" Text="Първа регистрация:" />
                             <DatePicker Grid.Column="1" Grid.Row="9" mvx:Bi.nd="SelectedDate Vehicle.FirstRegistration"/>
+                            <TextBlock Grid.Column="0" Grid.Row="10" Text="Среден разход на гориво:" />
+                            <TextBox Grid.Column="1" Grid.Row="10" mvx:Bi.nd="Text Vehicle.FuelConsumption" />
                         </Grid>
                     </Border>
                     <TextBlock Grid.Row="0" Grid.Column="1" Text="Пробег при смяна" Style="{StaticResource SectionHeader}" />
@@ -148,7 +151,7 @@
                     </Border>
                     <TextBlock Grid.Row="2" Grid.Column="1" Text="Снимка" Style="{StaticResource SectionHeader}" />
                     <Border Grid.Row="3" Grid.Column="2" Style="{StaticResource SectionBorder}">
-                        <StackPanel Orientation="Vertical" Margin="15">
+                        <StackPanel Orientation="Vertical" Margin="15 15 15 0">
                             <Image Height="175" Source="{Binding ImageAddress, Converter={StaticResource ImageValueConverter}, FallbackValue={StaticResource Van}}" />
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                 <Button mvx:Bi.nd="Command SelectImageCommand" Content="&#10133;" />
@@ -193,8 +196,8 @@
                         </Grid>
                     </Border>
                     <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-                        <Button mvx:Bi.nd="Command BlockVehicleCommandCommand, CommandParameter=true" Visibility="{Binding IsBlocked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=false}" Content="Блокирай" Padding="15 5" Margin="0 0 15 0"/>
-                        <Button mvx:Bi.nd="Command BlockVehicleCommandCommand, CommandParameter=false" Visibility="{Binding IsBlocked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}" Content="Пусни в движение" Padding="15 5" Margin="0 0 15 0"/>
+                        <Button mvx:Bi.nd="Command BlockVehicleCommandCommand, CommandParameter=true" Visibility="{Binding IsBlocked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=false}" Content="Блокирай" IsEnabled="{Binding IsVehicleLoaded}" Padding="15 5" Margin="0 0 15 0"/>
+                        <Button mvx:Bi.nd="Command BlockVehicleCommandCommand, CommandParameter=false" Visibility="{Binding IsBlocked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}" Content="Пусни в движение" IsEnabled="{Binding IsVehicleLoaded}" Padding="15 5" Margin="0 0 15 0"/>
                         <Button mvx:Bi.nd="Command CancelCommand" Content="Откажи" Margin="0 0 15 0" Padding="15 5"/>
                         <Button mvx:Bi.nd="Command SaveCommand" IsEnabled="{Binding IsValid}" Content="Запиши" Padding="15 5"/>
                     </StackPanel>
@@ -608,7 +611,7 @@
                             </StackPanel>
                         </Grid>
                     </Border>
-                    <Border Style="{StaticResource SectionBorder}" Height="250" Margin="0 15 0 0">
+                    <Border Style="{StaticResource SectionBorder}" Height="325" Margin="0 15 0 0">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -616,7 +619,7 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Orientation="Vertical">
                                 <TextBlock Text="Всички служители:" Style="{StaticResource SectionHeader}" />
-                                <ListView ItemsSource="{Binding AllEmployees}" SelectedItem="{Binding NonAssignedEmployee}" IsSynchronizedWithCurrentItem="True" Height="210">
+                                <ListView ItemsSource="{Binding AllEmployees}" SelectedItem="{Binding NonAssignedEmployee}" IsSynchronizedWithCurrentItem="True" Height="285">
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
@@ -631,7 +634,7 @@
                                 </ListView>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Orientation="Vertical">
-                                <Image Height="175" Margin="0 0 0 20" Source="{Binding NonAssignedEmployee.ImageAddress, Converter={StaticResource ImageValueConverter}, FallbackValue={StaticResource Profile}}" />
+                                <Image Height="175" Margin="0 50 0 20" Source="{Binding NonAssignedEmployee.ImageAddress, Converter={StaticResource ImageValueConverter}, FallbackValue={StaticResource Profile}}" />
                                 <Button Content="Добави" mvx:Bi.nd="Command AddVehicleForEmployeeCommand" IsEnabled="{Binding CanAssignEmployee}" Padding="15 5" HorizontalAlignment="Center" />
                             </StackPanel>
                         </Grid>

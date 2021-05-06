@@ -53,6 +53,9 @@ namespace Client.Core.ViewModels
 
         protected override async Task GetItems(int pageNumber = 1)
         {
+            if (SelectedVehicle == null)
+                return;
+
             var response = await ApiService.GetAsync<PaginatedListDto<BasicRepairModel>> ($"repairs/vehicle/{SelectedVehicle.Id}/pages?pagenumber={pageNumber}");
 
             if (response.IsSuccessStatusCode)

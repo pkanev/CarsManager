@@ -1,4 +1,4 @@
-﻿namespace Client.Core.Models
+﻿namespace Client.Core.Models.MakesAndModels
 {
     public class ModelModel
     {

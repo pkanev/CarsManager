@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using CarsManager.Application.Makes.Commands.CreateMake;
 using CarsManager.Application.Makes.Commands.DeleteMake;
 using CarsManager.Application.Makes.Commands.UpdateMake;
+using CarsManager.Application.Makes.Queries.Dtos;
+using CarsManager.Application.Makes.Queries.GetCompleteMakes;
 using CarsManager.Application.Makes.Queries.GetMake;
 using CarsManager.Application.Makes.Queries.GetMakes;
 using CarsManager.Application.Makes.Queries.GetMakesForVehicleType;
@@ -15,6 +18,10 @@ namespace CarsManager.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<MakesVm>> Get()
             => await Mediator.Send(new GetMakesQuery());
+
+        [HttpGet("complete")]
+        public async Task<IList<MakeAndModelDto>> GetComplete()
+            => await Mediator.Send(new GetCompleteMakesQuery());
 
         [HttpGet("{id}")]
         public async Task<ActionResult<MakeVm>> Get(int id)

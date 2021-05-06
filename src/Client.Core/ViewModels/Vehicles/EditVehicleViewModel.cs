@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,6 +8,7 @@ using Client.Core.Dtos;
 using Client.Core.Models;
 using Client.Core.Models.Employees;
 using Client.Core.Models.Liabilities;
+using Client.Core.Models.MakesAndModels;
 using Client.Core.Models.Repairs;
 using Client.Core.Models.RoadBook;
 using Client.Core.Models.Vehicles;
@@ -27,6 +28,7 @@ namespace Client.Core.ViewModels.Vehicles
     {
         private decimal vatRate = Properties.Settings.Default.VAT / 100;
 
+        private ObservableCollection<MakeAndModelModel> makesAndModels;
         private ObservableCollection<VehicleDto> vehicles;
         private VehicleDto vehicle;
         private VehicleRecentLiabilitiesDto recentLiabilities;
@@ -36,6 +38,7 @@ namespace Client.Core.ViewModels.Vehicles
         private ObservableCollection<ModelModel> models;
         private FuelTypeModel fuelType;
         private VehicleTypeModel vehicleType;
+        private ObservableCollection<VehicleTypeModel> vehicleTypes;
         private string licencePlate;
         private string color;
         private string image;
@@ -56,6 +59,12 @@ namespace Client.Core.ViewModels.Vehicles
         private ObservableCollection<BasicEmployeeModel> allEmployees;
         private BasicEmployeeModel nonAssignedEmployee;
         private readonly IVatService vatService;
+
+        public ObservableCollection<MakeAndModelModel> MakesAndModels
+        {
+            get => makesAndModels;
+            set => SetProperty(ref makesAndModels, value);
+        }
 
         public ObservableCollection<VehicleDto> Vehicles
         {
@@ -83,8 +92,7 @@ namespace Client.Core.ViewModels.Vehicles
                 LicencePlate = vehicle.LicencePlate;
                 IsBlocked = vehicle.IsBlocked;
 
-                if (Makes != null && Make?.Id != vehicle.MakeId)
-                    Make = Makes.FirstOrDefault(m => m.Id == vehicle.MakeId);
+                Make = Makes.FirstOrDefault(m => m.Id == vehicle.MakeId);
 
                 Task.Run(GetLiabilities);
                 Task.Run(GetRepairs);
@@ -110,8 +118,13 @@ namespace Client.Core.ViewModels.Vehicles
             get => make;
             set
             {
+                if (value == null || VehicleType == null)
+                    return;
+
                 SetProperty(ref make, value);
-                Task.Run(async () => await GetModels());
+
+                var sourceMake = MakesAndModels.Where(m => m.Id == make.Id).First();
+                Models = sourceMake.Models.Where(m => m.VehicleType == VehicleType.Id).ToObservableCollection();
             }
         }
 
@@ -120,9 +133,12 @@ namespace Client.Core.ViewModels.Vehicles
             get => models;
             set
             {
+                if (Vehicle == null)
+                    return;
+
                 SetProperty(ref models, value);
                 RaisePropertyChanged(() => CanSelectModel);
-                Model = Models.FirstOrDefault(m => m.Id == Vehicle.ModelId);
+                Model = models.FirstOrDefault(m => m.Id == Vehicle.ModelId);
                 if (Model == null)
                     Model = Models.FirstOrDefault();
             }
@@ -133,6 +149,9 @@ namespace Client.Core.ViewModels.Vehicles
             get => model;
             set
             {
+                if (Vehicle == null)
+                    return;
+
                 SetProperty(ref model, value);
                 RaisePropertyChanged(() => IsVehicleLoaded);
                 RaisePropertyChanged(() => IsValid);
@@ -177,17 +196,35 @@ namespace Client.Core.ViewModels.Vehicles
             get => vehicleType;
             set
             {
+                if (value == null)
+                    return;
+
                 SetProperty(ref vehicleType, value);
-                Task.Run(() => GetModels());
+
+                if (Make == null)
+                    return;
+
+                var sourceMake = MakesAndModels.Where(m => m.Id == Make.Id).FirstOrDefault();
+                if (sourceMake == null)
+                    return;
+
+                Models = sourceMake.Models.Where(m => m.VehicleType == vehicleType.Id).ToList().ToObservableCollection();
             }
         }
 
-        public bool IsVehicleLoaded => Vehicle != null;
+        public ObservableCollection<VehicleTypeModel> VehicleTypes
+        {
+            get => vehicleTypes;
+            set => SetProperty(ref vehicleTypes, value);
+        }
+
+        public bool IsVehicleLoaded => Vehicle != null && (SelectedTab != 0 || (Make != null && Model != null));
         public bool CanSelectModel => Models?.Count > 0;
         public bool HasSelectedRepair => SelectedRepair != null;
         public bool CanSaveRepair => SelectedRepairShop != null && Vehicle != null && SelectedRepair != null && RepairPrice > 0;
 
         public bool IsValid => Model != null
+            && LicencePlate != null
             && Regex.IsMatch(LicencePlate.ToUpper(), @"^[ETYOPAHKXCBMВЕРТОАСХКНМ]{1,2}[0-9]{4}[ETYOPAHKXCBMВЕРТОАСХКНМ]{1,2}$");
 
         public bool CanAssignEmployee =>
@@ -336,7 +373,6 @@ namespace Client.Core.ViewModels.Vehicles
         }
 
         public ObservableCollection<FuelTypeModel> FuelTypes => VehicleResources.FuelTypes.ToObservableCollection();
-        public ObservableCollection<VehicleTypeModel> VehicleTypes => VehicleResources.VehicleTypes.ToObservableCollection();
         public ObservableCollection<string> Colors => VehicleResources.Colors.ToObservableCollection();
 
         public IMvxCommand SelectImageCommand { get; private set; }
@@ -392,8 +428,9 @@ namespace Client.Core.ViewModels.Vehicles
 
         public override async Task Initialize()
         {
+            VehicleTypes = VehicleResources.VehicleTypes.ToObservableCollection();
+            await GetMakesAndModels();
             await GetVehicles();
-            await base.Initialize();
         }
 
         private async Task LoadBindings()
@@ -470,6 +507,24 @@ namespace Client.Core.ViewModels.Vehicles
                 RaiseNotification(response.Error, "Грешка!!!");
         }
 
+        private async Task GetMakesAndModels()
+        {
+            var response = await ApiService.GetAsync<IList<MakeAndModelModel>>("makes/complete");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                RaiseNotification(response.Error, "Грешка!!!");
+                return;
+            }
+
+            MakesAndModels = response.Content.ToObservableCollection();
+            Makes = response.Content.Select(m => new MakeModel
+            {
+                Id = m.Id,
+                Name = m.Name,
+            }).ToObservableCollection();
+        }
+
         private async Task GetVehicles()
         {
             var response = await ApiService.GetAsync<GetVehiclesDto>("vehicles");
@@ -478,7 +533,6 @@ namespace Client.Core.ViewModels.Vehicles
             {
                 Vehicles = response.Content.Vehicles.ToObservableCollection();
                 Vehicle = Vehicles.FirstOrDefault();
-                await GetMakes();
             }
             else
                 RaiseNotification(response.Error, "Грешка!!!");
@@ -495,32 +549,6 @@ namespace Client.Core.ViewModels.Vehicles
                 AssignedEmployee = EmployeesForVehicle.FirstOrDefault();
                 await GetLiabilities();
             }
-            else
-                RaiseNotification(response.Error, "Грешка!!!");
-        }
-
-        private async Task GetMakes()
-        {
-            var response = await ApiService.GetAsync<GetMakesDto>("makes");
-
-            if (response.IsSuccessStatusCode)
-            {
-                Makes = response.Content.Makes.ToObservableCollection();
-                Make = Makes.First(m => m.Id == Vehicle.MakeId);
-            }
-            else
-                RaiseNotification(response.Error, "Грешка!!!");
-        }
-
-        private async Task GetModels()
-        {
-            if (Make == null || VehicleType == null)
-                return;
-
-            var response = await ApiService.GetAsync<GetModelsDto>($"models/make/{Make.Id}/type/{VehicleType.Id}");
-
-            if (response.IsSuccessStatusCode)
-                Models = response.Content.Models.ToObservableCollection();
             else
                 RaiseNotification(response.Error, "Грешка!!!");
         }
@@ -777,7 +805,7 @@ namespace Client.Core.ViewModels.Vehicles
 
         private async Task BlockVehicle(bool isBlockedParam)
         {
-            if (isBlockedParam == IsBlocked)
+            if (isBlockedParam == IsBlocked || Vehicle == null)
                 return;
 
             var response = await ApiService.PostAsync<int>($"vehicles/{Vehicle.Id}/blocked", new { Id = Vehicle.Id, IsBlocked = isBlockedParam });

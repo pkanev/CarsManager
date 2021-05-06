@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using Client.Core.Models.MakesAndModels;
 
-namespace Client.Core.Dtos
+namespace Client.Core.Models.MakesAndModels
 {
-    public class GetModelsDto
+    public class MakeAndModelModel : MakeModel
     {
         public IList<ModelModel> Models { get; set; } = new List<ModelModel>();
     }
